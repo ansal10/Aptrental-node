@@ -6,7 +6,8 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 autoIncrement: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+
             },
             name: {
                 allowNull: false,
@@ -15,19 +16,17 @@ module.exports = {
             email: {
                 type: Sequelize.STRING,
                 allowNull:false,
-                unique:true
+                unique:true,
+
             },
-            passwordHash: {
-                type: Sequelize.STRING,
-                allowNull: true
+
+            emailAttributes: {              // token, created, expired, updated, verified
+                type: Sequelize.JSONB,
+                defaultValue: {}
             },
-            passwordSalt: {
-                type: Sequelize.UUID,
-                allowNull: true
-            },
-            emailVerified: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false
+            passwordAttributes:{           // token, created, expired, updated, hash, salt
+                type: Sequelize.JSONB,
+                defaultValue: {}
             },
             role: {
                 type: Sequelize.ENUM('admin', 'realtor', 'consumer'),

@@ -17,6 +17,28 @@ module.exports = {
                 type: Sequelize.STRING(1024),
                 allowNull: false
             },
+
+            // rentants related
+            rent:{
+                type:Sequelize.DOUBLE,
+                allowNull: false
+            },
+            maintenance:{   // monthly, deposit, brokerage, annually
+                type:Sequelize.JSONB,
+                defaultValue: {}
+            },
+
+            // size related
+            builtArea:{
+                type: Sequelize.DOUBLE,
+                allowNull:false
+            },
+            carpetArea:{
+                type: Sequelize.DOUBLE,
+                allowNull: false
+            },
+
+            // address and location related
             city:{
                 type: Sequelize.STRING,
                 allowNull: false
@@ -29,6 +51,10 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
+            address:{
+                type:Sequelize.STRING,
+                allowNull: false
+            },
             latitude:{
                 type:Sequelize.DOUBLE,
                 defaultValue:0
@@ -37,10 +63,8 @@ module.exports = {
                 type:Sequelize.DOUBLE,
                 defaultValue:0
             },
-            tags:{
-                type: Sequelize.JSONB,
-                defaultValue: {}
-            },
+
+            // type and availiblity
             type:{
                 type:Sequelize.ENUM('1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+')
             },
@@ -48,29 +72,49 @@ module.exports = {
                 type:Sequelize.ENUM('yes', 'no', 'archive'),
                 defaultValue: 'archive'
             },
-            images:{
+            availableFor:{
+                type: Sequelize.ENUM('all', 'family', 'couples', 'bachelors'),
+                defaultValue: 'all'
+            },
+            availableFrom: {
+                type:Sequelize.DATE,
+                allowNull: false
+            },
+
+
+            floor:{
+                type:Sequelize.INTEGER,
+                allowNull:false
+            },
+            powerBackup:{
+                type: Sequelize.ENUM('full', 'partial', 'no'),
+                defaultValue: 'no'
+            },
+            amenities: {  // type: value ()
                 type: Sequelize.JSONB,
                 defaultValue: {}
             },
-            floor:{
-                type:Sequelize.INTEGER
+
+            features: {
+                type: Sequelize.JSONB, // air conditioned
+                defaultValue: []
             },
-            areaSize:{
-                type:Sequelize.DOUBLE
+
+
+            tags:{  // array of string
+                type: Sequelize.JSONB,
+                defaultValue: []
             },
-            carpetSize:{
-                type:Sequelize.DOUBLE
+
+            images:{   // array of urls
+                type: Sequelize.JSONB,
+                defaultValue: []
             },
+
             furnishingStatus:{
                 type:Sequelize.ENUM('furnished', 'unfurnished', 'semifurnished')
             },
-            items:{
-                type:Sequelize.JSONB,
-                defaultValue:{}
-            },
-            rate:{
-                type:Sequelize.DOUBLE
-            },
+
             UserId:{
                 type: Sequelize.INTEGER,
                 references:{

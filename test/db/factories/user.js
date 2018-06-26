@@ -13,10 +13,9 @@ const data = async (props = {}) => {
     const defaultProps = {
         email: faker.internet.email(),
         name: faker.name.firstName(),
-        emailVerified: true,
         role: 'consumer',
         status: 'active',
-        sex: 'male'
+        sex: 'male',
 
     };
     return Object.assign({}, defaultProps, props);

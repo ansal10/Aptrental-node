@@ -8,10 +8,10 @@ module.exports = {
         dialect: 'postgres'
     },
     test: {
-        username: 'database_test',
+        username: 'ansal',
         password: null,
-        database: 'database_test',
+        database: 'aptrental_test',
         host: '127.0.0.1',
-        dialect: 'mysql'
+        dialect: 'postgres'
     }
 };

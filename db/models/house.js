@@ -1,4 +1,6 @@
 'use strict';
+const sequelizeTransforms = require('sequelize-transforms');
+const validator = require('validator');
 module.exports = (DataType, Sequelize) => {
     const House = DataType.define('House', {
         id: {
@@ -9,76 +11,294 @@ module.exports = (DataType, Sequelize) => {
         },
         title: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull:false,
+            trim: true,
+            validate:{
+                len:{
+                    args: [10, 50],
+                    msg: 'Title should be in range 10 to 50 words'
+                }
+            }
 
         },
         description: {
             type: Sequelize.STRING(1024),
-            allowNull: false
+            allowNull: false,
+            trim: true,
+            validate:{
+                len:{
+                    args: [50, 1000],
+                    msg: 'Title should be in range 50 to 1000 words'
+                }
+            }
         },
-        city: {
-            type: Sequelize.STRING,
-            allowNull: false
+
+        // rentants related
+        rent:{
+            type:Sequelize.DOUBLE,
+            allowNull: false,
+            toDouble: true,
+            validate: {
+                min:{
+                    args: [100],
+                    msg: 'Minimum rent should be 100'
+                },
+                max:{
+                    args: [999000],
+                    msg: 'Maximum rent should be 999,000'
+                }
+            }
+
         },
-        locality: {
-            type: Sequelize.STRING,
-            allowNull: false
+        maintenance:{   // monthly, deposit, brokerage, annually
+            type:Sequelize.JSONB,
+            defaultValue: {},
+            validate:{
+                isValidJson: (val ,next) =>{
+                    for( let k in val){
+                        if(['monthly', 'deposit', 'brokerage', 'annually'].includes(k)){
+                            if((!Number(val[k]) || Number(val[k]) < 0))
+                                next('Maintenance: '+k+' should be greater than 0')
+
+                        }
+                    }
+                    next();
+                }
+            }
         },
-        country: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        latitude: {
+
+        // size related
+        builtArea:{
             type: Sequelize.DOUBLE,
-            defaultValue: 0
+            allowNull:false,
+            toDouble:true,
+            validate:{
+                min:{
+                    args:[250],
+                    msg: 'Built area cant be less than 250'
+                }
+            }
         },
-        longitude: {
+        carpetArea:{
             type: Sequelize.DOUBLE,
-            defaultValue: 0
+            allowNull: false,
+            toDouble: true,
+            validate:{
+                min:{
+                    args:[250],
+                    msg: 'Carpet area cannot be less than 250'
+                },
+                isLessThanBuilt: (val , next) => {
+                    if(!Number(val) || Number(val) > this.carpetArea)
+                        next('Carpet Area cannot be greater than built area')
+                    else
+                        next();
+                }
+            }
         },
-        tags: {
+
+        // address and location related
+        city:{
+            type: Sequelize.STRING,
+            allowNull: false,
+            trim: true,
+            validate:{
+                len: {
+                    args: [2,30],
+                    msg: "City length should be in range of 2 to 30"
+                }
+            }
+        },
+        locality:{
+            type: Sequelize.STRING,
+            allowNull: false,
+            trim: true,
+            validate:{
+                len: {
+                    args: [2,30],
+                    msg: "Locality length should be in range of 2 to 30"
+                }
+            }
+        },
+        country:{
+            type: Sequelize.STRING,
+            allowNull: false,
+            trim: true,
+            validate:{
+                len: {
+                    args: [2,30],
+                    msg: "Country length should be in range of 2 to 30"
+                }
+            }
+        },
+        address:{
+            type:Sequelize.STRING,
+            allowNull: false,
+            trim: true,
+            validate:{
+                len: {
+                    args: [10,150],
+                    msg: "Address length should be in range of 10 to 150"
+                }
+            }
+        },
+        latitude:{
+            type:Sequelize.DOUBLE,
+            defaultValue:0,
+            toDouble: true,
+            validate: {
+                min:{
+                    args: [-180],
+                    msg: 'Minimum latitude should be -180'
+                },
+                max:{
+                    args: [180],
+                    msg: 'Maximum latitude should be 180'
+                }
+            }
+
+        },
+        longitude:{
+            type:Sequelize.DOUBLE,
+            defaultValue:0,
+            toDouble: true,
+            validate: {
+                min:{
+                    args: [-180],
+                    msg: 'Minimum latitude should be -180'
+                },
+                max:{
+                    args: [180],
+                    msg: 'Maximum latitude should be 180'
+                }
+            }
+        },
+
+        // type and availiblity
+        type:{
+            type:Sequelize.ENUM('1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+'),
+            trim: true,
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!House.rawAttributes.type.values.includes(val))
+                        return next('Type should be only '+House.rawAttributes.type.values );
+                    else next();
+                }
+            }
+        },
+        availability:{
+            type:Sequelize.ENUM('yes', 'no', 'archive'),
+            defaultValue: 'archive',
+            trim: true,
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!House.rawAttributes.availability.values.includes(val))
+                        return next('Availability should be only '+House.rawAttributes.availability.values );
+                    else next();
+                }
+            }
+        },
+        availableFor:{
+            type: Sequelize.ENUM('all', 'family', 'couples', 'bachelors'),
+            defaultValue: 'all',
+            trim: true,
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!House.rawAttributes.availableFor.values.includes(val))
+                        return next('Available For should be only '+House.rawAttributes.availableFor.values );
+                    else next();
+                }
+            }
+
+        },
+        availableFrom: {
+            type:Sequelize.DATE,
+            allowNull: false
+        },
+
+
+        floor:{
+            type:Sequelize.INTEGER,
+            allowNull:false,
+            toDouble: true,
+            validate: {
+                min:{
+                    args: [0],
+                    msg: 'Minimum floor should be Zero'
+                },
+                max:{
+                    args: [150],
+                    msg: 'Maximum floor should be 150'
+                }
+            }
+        },
+
+        powerBackup:{
+            type: Sequelize.ENUM('full', 'partial', 'no'),
+            defaultValue: 'no',
+            trim: true,
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!House.rawAttributes.powerBackup.values.includes(val))
+                        return next('Power Backup For should be only '+House.rawAttributes.powerBackup.values );
+                    else next();
+                }
+            }
+        },
+        amenities: {  // type: value ()
             type: Sequelize.JSONB,
             defaultValue: {}
         },
-        type: {
-            type: Sequelize.ENUM('1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+')
+
+        features: {
+            type: Sequelize.JSONB, // air conditioned
+            defaultValue: []
         },
-        availability: {
-            type: Sequelize.ENUM('yes', 'no', 'archive'),
-            defaultValue: 'archive'
-        },
-        images: {
+
+
+        tags:{  // array of string
             type: Sequelize.JSONB,
-            defaultValue: {}
+            defaultValue: []
         },
-        floor: {
-            type: Sequelize.INTEGER
+
+        images:{   // array of urls
+            type: Sequelize.JSONB,
+            defaultValue: [],
+            validate:{
+                isValidField: (val, next) => {
+                    if(!val || val.length <= 0)
+                        next('At least one image is required');
+                    for(let i = 0 ; i < val.length; i++){
+                        if(!validator.isURL(val[i]))
+                            next('Images does not contain valid urls')
+                    }
+                    next();
+                }
+            }
         },
-        areaSize: {
-            type: Sequelize.DOUBLE
+
+        furnishingStatus:{
+            type:Sequelize.ENUM('furnished', 'unfurnished', 'semifurnished'),
+            trim: true,
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!House.rawAttributes.furnishingStatus.values.includes(val))
+                        return next('Furnishing Status should be only '+House.rawAttributes.furnishingStatus.values );
+                    else next();
+                }
+            }
         },
-        carpetSize: {
-            type: Sequelize.DOUBLE
-        },
-        furnishingStatus: {
-            type: Sequelize.ENUM('furnished', 'unfurnished', 'semifurnished')
-        },
-        UserId: {
+
+        UserId:{
             type: Sequelize.INTEGER,
-            references: {
+            references:{
                 model: 'Users',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
             onDelete: 'SET NULL'
         },
-        items: {
-            type: Sequelize.JSONB,
-            defaultValue: {}
-        },
-        rate: {
-            type: Sequelize.DOUBLE
-        },
+
         createdAt: {
             allowNull: false,
             type: Sequelize.DATE
@@ -95,5 +315,10 @@ module.exports = (DataType, Sequelize) => {
         House.belongsTo(models.User)
     };
 
+    sequelizeTransforms(House, {
+        toDouble: (val, def) =>{
+            return Number(val);
+        }
+    });
     return House;
 };

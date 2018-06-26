@@ -1,4 +1,7 @@
 'use strict';
+const validator = require('validator');
+const sequelizeTransforms = require('sequelize-transforms');
+
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define('User', {
         id: {
@@ -14,30 +17,72 @@ module.exports = (sequelize, Sequelize) => {
         email: {
             type: Sequelize.STRING,
             allowNull:false,
-            unique:true
+            unique:true,
+            validate: {
+                notEmpty: {
+                    args: true,
+                    msg: "Email is Required field"
+                },
+                isValidField: (value, next) =>{
+                    if(!validator.isEmail(value))
+                        return next('Not an valid email');
+                    else {
+                        User.findOne({where:{email: value.toLowerCase()}}).then((u)=>{
+                            if(u)
+                                return next("Email already exist");
+                            else
+                                next();
+                        })
+
+                    }
+                },
+                len: {
+                    args: [6,140],
+                    msg: "Email length is not in this range of 6 to 140"
+                },
+            },
+            trim: true
         },
-        passwordHash: {
-            type: Sequelize.STRING,
-            allowNull: true
+
+        emailAttributes: {              // token, created, expired, updated, verified
+            type: Sequelize.JSONB,
+            defaultValue: {}
         },
-        passwordSalt: {
-            type: Sequelize.UUID,
-            allowNull: true
-        },
-        emailVerified: {
-            type: Sequelize.BOOLEAN,
-            defaultValue: false
+        passwordAttributes:{           // token, created, expired, updated, hash, salt
+            type: Sequelize.JSONB,
+            defaultValue: {}
         },
         role: {
             type: Sequelize.ENUM('admin', 'realtor', 'consumer'),
-            defaultValue: 'consumer'
+            defaultValue: 'consumer',
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!User.rawAttributes.role.values.includes(val))
+                        return next('Role should be only '+User.rawAttributes.role.values );
+                    else next();
+                }
+            }
         },
         status:{
             type: Sequelize.ENUM('active', 'inactive'),
-            defaultValue: 'active'
+            defaultValue: 'active',
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!User.rawAttributes.status.values.includes(val))
+                        return next('Status should be only '+User.rawAttributes.status.values );
+                    else next();
+                }
+            }
         },
         sex: {
-            type: Sequelize.ENUM('male', 'female', 'other')
+            type: Sequelize.ENUM('male', 'female', 'other'),
+            validate:{
+                isValidField: (val, next)=>{
+                    if(!User.rawAttributes.sex.values.includes(val))
+                        return next('Sex should be only '+User.rawAttributes.sex.values );
+                    else next();
+                }
+            }
         },
         createdAt: {
             allowNull: false,
@@ -52,5 +97,7 @@ module.exports = (sequelize, Sequelize) => {
     User.associate = function (models) {
         // associations can be defined here
     };
+
+    sequelizeTransforms(User);
     return User;
 };
