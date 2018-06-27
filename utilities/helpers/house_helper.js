@@ -6,7 +6,7 @@ const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 const permission = require('../permisson_utility');
 const pageLimit = 50;
-
+const _ = require('underscore');
 
 const listAllHouse = async (user, searchParams) => {
     let params = {};
@@ -17,13 +17,17 @@ const listAllHouse = async (user, searchParams) => {
             params[attr] = searchParams[attr];
     });
 
+    if(!params.availability) params.availability = 'yes';
 
-    let houses = await models.House({
+
+    let houses = await models.House.findAll({
         limit: pageLimit,
         offset: pageLimit * pageNumber,
-        attributes: ['name', 'sex', 'email', 'role', 'status'],
+        attributes: ['title', 'country', 'city', 'locality', 'rent', 'builtArea', 'latitude', 'longitude', 'type', 'availability', 'images', 'UserId'],
         where: params
     });
+
+    houses = _.map(houses, (h) => { return h.dataValues; });
 
     for (let i = 0; i < houses.length; i++) {
         houses[i].edit = permission.canUpdateProperty(user, houses[i])

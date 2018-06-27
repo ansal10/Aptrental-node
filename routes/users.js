@@ -7,6 +7,7 @@ const middlewares = require('../utilities/controller_middlewares');
 const permissions = require('../utilities/permisson_utility');
 const pageLimit = 50;
 const models = require('../db/models/index');
+const notifier = require('../utilities/notifier/index');
 
 const router = express.Router();
 
@@ -25,7 +26,8 @@ router.post('/signup', async (req, res, next) => {
     if(retVal.status === false)
         genUtil.sendJsonResponse(res, 400, retVal.message, null);
     else{
-        retVal = await userHelper.createUserInDatabase(retVal.args.name, retVal.args.email, retVal.args.password, retVal.args.sex);
+        retVal = await userHelper.createUserInDatabase(retVal.args);
+        notifier.notifyPasswordReset(retVal.args.user);
         genUtil.sendJsonResponse(res, 201, retVal.message, null);
     }
 
@@ -65,6 +67,7 @@ router.get('/verify_email', async (req, res, next)=>{
 router.get('/email_confirmation', async (req, res, next)=>{
     let email = req.body.email;
     let retVal = await userHelper.resendEmailConfirmation(email);
+    await notifier.notifyEmailConfirmation(retVal.args.user);
     genUtil.sendJsonResponse(res, retVal.status ? 200:400, retVal.message, null);
 
 });

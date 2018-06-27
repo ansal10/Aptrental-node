@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
-    let houses = houseHelper.listAllHouse(user, req.params);
+    let houses = await houseHelper.listAllHouse(user, req.params);
     genUtil.sendJsonResponse(res, 200, '', houses);
 });
 
@@ -33,3 +33,5 @@ router.post('/', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
     let retVal = houseHelper.cre
 });
+
+module.exports = router;

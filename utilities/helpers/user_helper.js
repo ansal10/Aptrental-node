@@ -27,13 +27,13 @@ const STRS = {
 };
 
 
-const createUserInDatabase = async function (name, email, password, sex) {
+const createUserInDatabase = async function (userParams) {
 
     let uuid = uuidv4();
     try {
         let user = await models.User.create({
-            email: email,
-            name: name,
+            email: userParams.email || '',
+            name: userParams.name || '',
             emailAttributes: {
                 token: uuidv4(),
                 created: moment().toISOString(),
@@ -42,11 +42,11 @@ const createUserInDatabase = async function (name, email, password, sex) {
             },
             passwordAttributes: {
                 salt: uuid,
-                hash: md5(password + uuid),
+                hash: md5(userParams.password + uuid),
             },
-            sex: sex,
-            status: 'active',
-            role: 'consumer'
+            sex: userParams.sex || '',
+            status: models.User.rawAttributes.status.defaultValue,
+            role: models.User.rawAttributes.role.defaultValue,
         });
 
         return {
@@ -122,7 +122,13 @@ const resetPassword = async function (email, password_token, password) {
             updated: moment().toISOString()
         };
         await user.save();
-        return {status: true, message: STRS.SUCCESSFULLY_PASSWORD_RESET}
+        return {
+            status: true,
+            message: STRS.SUCCESSFULLY_PASSWORD_RESET,
+            args:{
+                user: user
+            }
+        }
     }
     return {status: false, message: STRS.PASSWORD_RESET_FAILED}
 };

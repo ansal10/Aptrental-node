@@ -50,7 +50,7 @@ module.exports = (DataType, Sequelize) => {
             }
 
         },
-        maintenance:{   // monthly, deposit, brokerage, annually
+        maintenance:{   // monthly, deposit, brokerage, annually only
             type:Sequelize.JSONB,
             defaultValue: {},
             validate:{
@@ -148,12 +148,12 @@ module.exports = (DataType, Sequelize) => {
             toDouble: true,
             validate: {
                 min:{
-                    args: [-180],
-                    msg: 'Minimum latitude should be -180'
+                    args: [-90],
+                    msg: 'Minimum latitude should be -90'
                 },
                 max:{
-                    args: [180],
-                    msg: 'Maximum latitude should be 180'
+                    args: [90],
+                    msg: 'Maximum latitude should be 90'
                 }
             }
 
@@ -165,11 +165,11 @@ module.exports = (DataType, Sequelize) => {
             validate: {
                 min:{
                     args: [-180],
-                    msg: 'Minimum latitude should be -180'
+                    msg: 'Minimum longitude should be -180'
                 },
                 max:{
                     args: [180],
-                    msg: 'Maximum latitude should be 180'
+                    msg: 'Maximum longitude should be 180'
                 }
             }
         },
@@ -245,18 +245,18 @@ module.exports = (DataType, Sequelize) => {
                 }
             }
         },
-        amenities: {  // type: value ()
+        amenities: {  // type: value () like fridge: yes, ac's : 5, bathroom:3 .....
             type: Sequelize.JSONB,
             defaultValue: {}
         },
 
-        features: {
+        features: {  // [ 'closed parking', 'centraly air conditioned', '24 hour security' ]
             type: Sequelize.JSONB, // air conditioned
             defaultValue: []
         },
 
 
-        tags:{  // array of string
+        tags:{  // array of string optional , good for search
             type: Sequelize.JSONB,
             defaultValue: []
         },

@@ -43,7 +43,7 @@ describe('Users', async () => {
 
             let u = await models.User.findOne({where:{email: user.email}});
             res.should.have.status(201);
-            assert(u.emailAttributes.verified != true);
+            assert(u.emailAttributes.verified !== true);
         });
 
         it('it should not signup duplicate user', async () => {
@@ -55,7 +55,7 @@ describe('Users', async () => {
                 role: 'consumer',
                 status: 'active'
             };
-            await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+            await userHelper.createUserInDatabase(user);
 
             let res = await chai.request(server)
                 .post('/user/signup')
@@ -74,7 +74,7 @@ describe('Users', async () => {
                 status: 'active'
             };
 
-            let retVal = await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+            let retVal = await userHelper.createUserInDatabase(user);
             assert(retVal.status === false)
 
         });
@@ -90,7 +90,7 @@ describe('Users', async () => {
                 role: 'consumer',
                 status: 'active'
             };
-            let retVal = await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+            let retVal = await userHelper.createUserInDatabase(user);
             let u = retVal.args.user;
             u.emailAttributes = Object.assign({}, u.emailAttributes, {verified: true});
             await u.save();
@@ -121,7 +121,7 @@ describe('Users', async () => {
                 role: 'consumer',
                 status: 'active'
             };
-            await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+            await userHelper.createUserInDatabase(user);
             let res = await chai.request(server)
                 .post('/user/login')
                 .send({email:user.email, password: 'hello'});
@@ -131,7 +131,7 @@ describe('Users', async () => {
 
     describe('/verify_email user', ()=>{
         it('should verify email with correct token', async ()=>{
-            let retVal = await userHelper.createUserInDatabase(defaultUser.name, defaultUser.email, defaultUser.password, defaultUser.sex);
+            let retVal = await userHelper.createUserInDatabase(defaultUser);
             let res = await chai.request(server)
                 .get('/user/verify_email')
                 .query({email:retVal.args.user.email, emailToken:retVal.args.user.emailAttributes.token});
@@ -140,7 +140,7 @@ describe('Users', async () => {
         });
 
         it('should not verify email with wrong token', async ()=>{
-            let retVal = await userHelper.createUserInDatabase(defaultUser.name, defaultUser.email, defaultUser.password, defaultUser.sex);
+            let retVal = await userHelper.createUserInDatabase(defaultUser);
             let res = await chai.request(server)
                 .get('/user/verify_email')
                 .query({email:retVal.args.user.email, emailToken:retVal.args.user.emailAttributes.token + '-'});
@@ -149,7 +149,7 @@ describe('Users', async () => {
         });
 
         it('should not verify email with expired token', async ()=>{
-            let retVal = await userHelper.createUserInDatabase(defaultUser.name, defaultUser.email, defaultUser.password, defaultUser.sex);
+            let retVal = await userHelper.createUserInDatabase(defaultUser);
             let user = retVal.args.user;
             let emailAttributes = Object.assign({}, user.emailAttributes,  {expired:moment().add(-1, 'hour').toISOString()});
             user.emailAttributes = emailAttributes;
@@ -165,7 +165,7 @@ describe('Users', async () => {
 
     describe('/password_reset user', ()=>{
         it('should reset password with correct token', async ()=> {
-            await userHelper.createUserInDatabase(defaultUser.name, defaultUser.email, defaultUser.password, defaultUser.sex);
+            await userHelper.createUserInDatabase(defaultUser);
             let retVal = await userHelper.resendPasswordResetToken(defaultUser.email);
             expect(retVal.status).to.be.equal(true);
 
@@ -173,7 +173,7 @@ describe('Users', async () => {
 
             let res = await chai.request(server)
                 .post('/user/password_reset')
-                .send({email:user.email, password:'123456', passwordToken:user.passwordAttributes.token})
+                .send({email:user.email, password:'123456', passwordToken:user.passwordAttributes.token});
             res.should.have.status(200);
 
         });

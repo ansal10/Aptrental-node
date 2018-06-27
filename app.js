@@ -9,7 +9,7 @@ const session = require('express-session');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const uploadsRouter = require('./routes/uploads');
-
+const houseRouter = require('./routes/houses');
 const app = express();
 
 app.use(session({secret: 'SecretNumber%$^&$^', cookie: {maxAge: 1000 * 60 * 60 * 24}}));  // 24 hour max age
@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/house', houseRouter);
 app.use('/uploads', uploadsRouter);
 
 // catch 404 and forward to error handler

@@ -31,7 +31,7 @@ describe('User model', () => {
             role: 'consumer',
             status: 'active'
         };
-        await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+        await userHelper.createUserInDatabase(user);
         let u = await models.User.findOne({where: {email: user.email}});
         assert(u.emailAttributes.verified === false);
         assert(u.status === 'active');
@@ -52,7 +52,7 @@ describe('User model', () => {
             role: 'consumer',
             status: 'active'
         };
-        let retVal = await userHelper.createUserInDatabase(user.name, user.email, user.password, user.sex);
+        let retVal = await userHelper.createUserInDatabase(user);
         assert(retVal.status===true);
         try{
             let u = await models.User.findOne({where:{email: user.email}});
