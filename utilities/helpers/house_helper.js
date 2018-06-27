@@ -10,7 +10,7 @@ const _ = require('underscore');
 
 const listAllHouse = async (user, searchParams) => {
     let params = {};
-    let pageNumber = searchParams.page || 0;
+    let pageNumber = Number(searchParams.page || 0);
 
     await Object.keys(models.House.attributes).forEach(async (attr) => {
         if (searchParams[attr])

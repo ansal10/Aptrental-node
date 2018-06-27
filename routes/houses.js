@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
-    let houses = await houseHelper.listAllHouse(user, req.params);
+    let houses = await houseHelper.listAllHouse(user, req.query);
     genUtil.sendJsonResponse(res, 200, '', houses);
 });
 
