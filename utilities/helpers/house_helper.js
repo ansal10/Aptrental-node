@@ -44,21 +44,42 @@ const houseDetails = async (user, houseId) => {
             message:'',
             args:{house:house}
         }
+    }else{
+        return{
+            status: false,
+            message: 'Could not find any property with this id'
+        }
     }
 };
 
 const updateHouse = async (user, houseParams) => {
     let house = await models.House.findOne({where: {id: houseParams.id}});
-    if(permission.canUpdateProperty(user, house)) {
-        await models.House.update(houseParams, {where: {id: houseParams.id}});
-        return {
-            status: true,
-            message: 'House have been updated successfully',
+    if(house && permission.canUpdateProperty(user, house)) {
+
+        try {
+            Object.assign({}, house, houseParams);
+            await house.validate();
+            await house.save();
+            return {
+                status: true,
+                message: 'House have been updated successfully',
+                args:{
+                    house:house
+                }
+            }
+        }catch (e) {
+            return {
+                status: false,
+                message: e.errors[0].message,
+                args:{}
+            }
         }
+
     }else{
         return{
             status: false,
-            message: 'You cannot perform this action'
+            message: 'You cannot perform this action',
+            args:{}
         }
     }
 };
@@ -77,13 +98,15 @@ const createHouseInDatabase = async (user, houseParams) => {
         }catch (e) {
             return {
                 status: false,
-                message: e.errors[0].message
+                message: e.errors[0].message,
+                args:{}
             }
         }
     }else{
-        return{
+        return {
             status: false,
-            message: 'You are not authorized'
+            message: 'You are not authorized',
+            args: {}
         }
     }
 };
