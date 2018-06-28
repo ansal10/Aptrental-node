@@ -16,20 +16,20 @@ router.get('/', middlewares.isAuthenticated, async (req, res, next)=>{
 
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = houseHelper.houseDetails(user, req.params.id);
+    let retVal = await houseHelper.houseDetails(user, req.params.id);
     genUtil.sendJsonResponse(res, retVal.status ? 200: 400, retVal.message, retVal.args.house);
 });
 
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = houseHelper.updateHouse(user, req.params);
+    let retVal = await houseHelper.updateHouse(user, req.params);
     genUtil.sendJsonResponse(res, retVal.status ? 200: 400, retVal.message, null);
 });
 
 router.post('/', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
-    let retVal = houseHelper.createHouseInDatabase(user, req.body);
-    genUtil.sendJsonResponse(res, retVal.status ? 200: 400, retVal.message, retVal.args.user)
+    let retVal = await houseHelper.createHouseInDatabase(user, req.body);
+    genUtil.sendJsonResponse(res, retVal.status ? 201: 400, retVal.message, retVal.args.user)
 });
 
 module.exports = router;

@@ -11,7 +11,7 @@ const moment = require('moment');
  */
 const data = async (props = {}) => {
     const defaultProps = {
-        title: faker.name.firstName() + faker.name.lastName(),
+        title: faker.name.findName() + faker.name.findName(),
         description: "This is just a test desription that will check what is valid description here around",
         city: faker.address.city(),
         locality: faker.address.streetName(),
@@ -22,10 +22,17 @@ const data = async (props = {}) => {
         images: [faker.image.imageUrl(), faker.image.imageUrl(), faker.image.imageUrl()],
         type: '2bhk',
         floor: 2,
+        availability: 'yes',
+        amenities: [
+            {amenity:'bathroom', quantity:Math.floor(Math.random()*10) +1},
+            {amenity:'bedroom', quantity:Math.floor(Math.random()*10)+1},
+            {amenity:'ac installed', quantity: Math.floor(Math.random()*10)+1},
+        ],
+        features: ['Cover car parking', 'Centrally air conditioned', '24 hours security'],
         builtArea: faker.random.number() + 250,
         carpetArea: faker.random.number() + 250,
         furnishingStatus: 'furnished',
-        rent: faker.random.number(),
+        rent: faker.random.number() + 100,
         address: faker.address.streetName() + " " + faker.address.city,
         availableFrom: moment(),
     };

@@ -92,7 +92,7 @@ module.exports = {
             },
             amenities: {  // type: value ()
                 type: Sequelize.JSONB,
-                defaultValue: {}
+                defaultValue: []
             },
 
             features: {

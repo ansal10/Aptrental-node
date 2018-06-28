@@ -1,6 +1,11 @@
 'use strict';
 const sequelizeTransforms = require('sequelize-transforms');
 const validator = require('validator');
+const config = require('../../config/index');
+const util = require('util');
+
+Array.prototype.isArray = true;
+
 module.exports = (DataType, Sequelize) => {
     const House = DataType.define('House', {
         id: {
@@ -55,11 +60,14 @@ module.exports = (DataType, Sequelize) => {
             defaultValue: {},
             validate:{
                 isValidJson: (val ,next) =>{
+                    if(val && !(typeof val === 'object'))
+                        next('Maintenance needs nested fields of '+ ['monthly', 'deposit', 'brokerage', 'annually']);
                     for( let k in val){
                         if(['monthly', 'deposit', 'brokerage', 'annually'].includes(k)){
                             if((!Number(val[k]) || Number(val[k]) < 0))
                                 next('Maintenance: '+k+' should be greater than 0')
-
+                        }else{
+                            next('Only '+['monthly', 'deposit', 'brokerage', 'annually']+'  are required in maintenance');
                         }
                     }
                     next();
@@ -247,18 +255,58 @@ module.exports = (DataType, Sequelize) => {
         },
         amenities: {  // type: value () like fridge: yes, ac's : 5, bathroom:3 .....
             type: Sequelize.JSONB,
-            defaultValue: {}
+            defaultValue: [],
+            validate:{
+                isValidField: (val, next) => {
+                    if(val && !val.isArray)
+                        next('Invalid value in Amenities, expect array of object { amenity:\'xyz\', quantity: 2 }');
+                    for(let i = 0 ; i < val.length ; i++){
+                        if(!val[i].amenity || !config.amenities.includes((val[i].amenity+'').toLowerCase()))
+                            next('Amenity can be only '+ config.amenities);
+                        else if(!Number(val[i].quantity) || Number(val[i].quantity) <= 0)
+                            next(util.format('Amenity %s should be equal and greater than 0', val[i].amenity))
+                    }
+                    next();
+                }
+            }
         },
 
         features: {  // [ 'closed parking', 'centraly air conditioned', '24 hour security' ]
             type: Sequelize.JSONB, // air conditioned
-            defaultValue: []
+            defaultValue: [],
+            validate:{
+                isValidField: (val , next) => {
+                    if(val && !val.isArray)
+                        next('Invalid value in Features, expect array of strings');
+                    if(val.length > 25)
+                        next('Features cannot be more than 25');
+                    val.forEach((item) => {
+                        if(!item.trim())
+                            next('Empty values not valid in features');
+                    });
+                    next();
+                }
+
+            }
         },
 
 
         tags:{  // array of string optional , good for search
             type: Sequelize.JSONB,
-            defaultValue: []
+            defaultValue: [],
+            validate:{
+                isValidField: (val , next) => {
+                    if(val && !val.isArray)
+                        next('Invalid value in Tags, expect array of strings');
+                    if(val.length > 25)
+                        next('Features cannot be more than 25');
+                    val.forEach((item) => {
+                        if(!item.trim())
+                            next('Empty values not valid in features');
+                    });
+                    next();
+                }
+            }
         },
 
         images:{   // array of urls
@@ -266,6 +314,8 @@ module.exports = (DataType, Sequelize) => {
             defaultValue: [],
             validate:{
                 isValidField: (val, next) => {
+                    if(val && !val.isArray)
+                        next('Invalid value in Images, expect array of urls');
                     if(!val || val.length <= 0)
                         next('At least one image is required');
                     for(let i = 0 ; i < val.length; i++){

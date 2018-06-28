@@ -11,7 +11,7 @@ const models = require('../../../db/models/index');
  */
 const data = async (props = {}) => {
     const defaultProps = {
-        email: faker.internet.email(),
+        email: (faker.name.findName().replace(/ /g, 'a')+'@gmail.com').toLowerCase(),
         name: faker.name.firstName(),
         role: 'consumer',
         status: 'active',

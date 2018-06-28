@@ -1,3 +1,20 @@
 module.exports = {
     baseUrl: 'http://localhost:3000/',
+    amenities: [ 'bathroom',
+        'bedroom',
+        'study room',
+        'ac installed',
+        'curtains',
+        'chimney',
+        'exhaust',
+        'fans',
+        'lights',
+        'tv',
+        'wardrobe',
+        'bed',
+        'dinning table',
+        'fridge',
+        'sofa',
+        'stove',
+        'washing machine' ]
 };

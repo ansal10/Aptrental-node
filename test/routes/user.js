@@ -10,6 +10,7 @@ const truncate = require('../db/truncate');
 const userHelper = require('../../utilities/helpers/user_helper');
 const moment = require('moment');
 const models = require('../../db/models/index');
+
 chai.use(chaiHttp);
 
 describe('Users', async () => {
