@@ -18,7 +18,8 @@
     }
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -27,7 +28,7 @@
     "application/json"
   ],
   "paths": {
-    "/users": {
+    "/user/signup": {
       "post": {
         "tags": [
           "Users"
@@ -47,30 +48,68 @@
           "application/json"
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "New user is created",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/SuccessUserResponse"
             }
+          },
+          "40x" :{
+            "description": "When user creation is failed",
+              "schema":{
+                "$ref": "#/definitions/ErrorResponse"
+              }
           }
-        }
-      },
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get all users in system",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Users"
-            }
-          }
+
         }
       }
     },
-    "/users/{userId}": {
+    "/user/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Login the user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to login",
+            "schema": {
+              "properties":{
+                "email":{
+                  "type": "string",
+                  "example": "manovagyanik1@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "pass1234"
+                }
+              }
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged in success full",
+            "schema": {
+              "$ref": "#/definitions/SuccessUserResponse"
+            }
+          },
+          "40x" :{
+            "description": "Logged in failed",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+
+        }
+      }
+    },
+    "/user/{userId}": {
       "parameters": [
         {
           "name": "userId",
@@ -89,21 +128,24 @@
           "200": {
             "description": "User is found",
             "schema": {
-              "$ref": "#/definitions/User"
+              "properties":{
+                "success":{
+                  "type": "object",
+                  "properties":{
+                    "message":{ "type": "string"},
+                    "data":{
+                      "$ref": "#/definitions/DetailedUser"
+                    }
+                  }
+                }
+              }
+
             }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete user with given ID",
-        "tags": [
-          "Users"
-        ],
-        "responses": {
-          "200": {
-            "description": "User is deleted",
-            "schema": {
-              "$ref": "#/definitions/User"
+          },
+          "4xx": {
+            "description": "User is not found",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -135,31 +177,90 @@
     }
   },
   "definitions": {
-    "User": {
-      "required": [
-        "email",
-        "_id"
-      ],
+    "DetailedUser":{
       "properties": {
-        "_id": {
-          "type": "string",
-          "uniqueItems": true
+        "id":{
+          "type": "integer"
         },
         "email": {
           "type": "string",
           "uniqueItems": true
         },
-        "lastName": {
+        "name": {
           "type": "string"
         },
-        "firstName": {
+        "sex":{
+          "type": "string",
+          "enum": ["male", "female", "other"]
+        },
+        "role":{
+          "type": "string",
+          "enum": ["admin", "realtor", "consumer"]
+        },
+        "status":{
+          "type": "string",
+          "enum": ["active", "inactive"]
+        }
+      }
+    },
+    "User": {
+      "required": [
+        "email",
+        "password",
+        "sex",
+        "name"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "name": {
           "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "sex":{
+          "type": "string",
+          "enum": ["male", "female", "other"]
         }
       }
     },
     "Users": {
       "type": "array",
       "$ref": "#/definitions/User"
+    },
+    "SuccessResponse":{
+      "type": "object",
+      "properties":{
+        "success":{
+          "type": "string"
+        }
+      }
+    },
+
+    "SuccessUserResponse":{
+      "type": "object",
+      "properties":{
+        "success":{
+          "type": "object",
+          "properties":{
+            "message": {"type": "string"}
+          }
+        }
+      }
+    },
+    "ErrorResponse":{
+      "type": "object",
+      "properties":{
+        "error":{
+          "type": "object",
+          "properties":{
+            "message": {"type": "string"}
+          }
+        }
+      }
     }
   }
 }

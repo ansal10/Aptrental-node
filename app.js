@@ -5,11 +5,12 @@ const cookieParser = require('cookie-parser');
 const lessMiddleware = require('less-middleware');
 const logger = require('morgan');
 const session = require('express-session');
-
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const uploadsRouter = require('./routes/uploads');
-const houseRouter = require('./routes/houses');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const indexRouter = require('./controllers/api/v1/index');
+const usersRouter = require('./controllers/api/v1/users');
+const uploadsRouter = require('./controllers/api/v1/uploads');
+const houseRouter = require('./controllers/api/v1/houses');
 const app = express();
 
 app.use(session({secret: 'SecretNumber%$^&$^', cookie: {maxAge: 1000 * 60 * 60 * 24}}));  // 24 hour max age
@@ -25,10 +26,13 @@ app.use(cookieParser());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
 app.use('/', indexRouter);
-app.use('/user', usersRouter);
-app.use('/house', houseRouter);
-app.use('/uploads', uploadsRouter);
+app.use('/api/v1/user', usersRouter);
+app.use('/api/v1/house', houseRouter);
+app.use('/api/v1/uploads', uploadsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

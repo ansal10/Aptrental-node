@@ -39,7 +39,7 @@ describe('Users', async () => {
                 status: 'active'
             };
             let res = await chai.request(server)
-                .post('/user/signup')
+                .post('/api/v1/user/signup')
                 .send(user);
 
             let u = await models.User.findOne({where:{email: user.email}});
@@ -59,7 +59,7 @@ describe('Users', async () => {
             await userHelper.createUserInDatabase(user);
 
             let res = await chai.request(server)
-                .post('/user/signup')
+                .post('/api/v1/user/signup')
                 .send(user);
 
             res.should.have.status(400)
@@ -97,7 +97,7 @@ describe('Users', async () => {
             await u.save();
 
             let res = await chai.request(server)
-                .post('/user/login')
+                .post('/api/v1/user/login')
                 .send(user);
             res.should.have.status(200)
         });
@@ -108,7 +108,7 @@ describe('Users', async () => {
                 password: 'test1234',
             };
             let res = await chai.request(server)
-                .post('/user/login')
+                .post('/api/v1/user/login')
                 .send(user);
             res.should.have.status(401)
         });
@@ -124,7 +124,7 @@ describe('Users', async () => {
             };
             await userHelper.createUserInDatabase(user);
             let res = await chai.request(server)
-                .post('/user/login')
+                .post('/api/v1/user/login')
                 .send({email:user.email, password: 'hello'});
             res.should.have.status(401)
         });
@@ -134,7 +134,7 @@ describe('Users', async () => {
         it('should verify email with correct token', async ()=>{
             let retVal = await userHelper.createUserInDatabase(defaultUser);
             let res = await chai.request(server)
-                .get('/user/verify_email')
+                .get('/api/v1/user/verify_email')
                 .query({email:retVal.args.user.email, emailToken:retVal.args.user.emailAttributes.token});
 
             res.should.have.status(200);
@@ -143,7 +143,7 @@ describe('Users', async () => {
         it('should not verify email with wrong token', async ()=>{
             let retVal = await userHelper.createUserInDatabase(defaultUser);
             let res = await chai.request(server)
-                .get('/user/verify_email')
+                .get('/api/v1/user/verify_email')
                 .query({email:retVal.args.user.email, emailToken:retVal.args.user.emailAttributes.token + '-'});
 
             res.should.have.status(400);
@@ -157,7 +157,7 @@ describe('Users', async () => {
             await user.save();
 
             let res = await chai.request(server)
-                .get('/user/verify_email')
+                .get('/api/v1/user/verify_email')
                 .query({email:retVal.args.user.email, emailToken:retVal.args.user.emailAttributes.token});
 
             res.should.have.status(400);
@@ -173,7 +173,7 @@ describe('Users', async () => {
             let user = retVal.args.user;
 
             let res = await chai.request(server)
-                .post('/user/password_reset')
+                .post('/api/v1/user/password_reset')
                 .send({email:user.email, password:'123456', passwordToken:user.passwordAttributes.token});
             res.should.have.status(200);
 

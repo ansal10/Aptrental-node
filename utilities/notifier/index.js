@@ -5,7 +5,7 @@ const config = require('../../config/index');
 
 const notifyEmailConfirmation = async (user) => {
     if(process.env.NODE_ENV === 'production') {
-        let confirmationUrl = util.format("%s/user/verify_email?email=%s&emailToken=%s", config.baseUrl, user.email, user.emailAttributes.token);
+        let confirmationUrl = util.format("%s/api/v1/user/verify_email?email=%s&emailToken=%s", config.baseUrl, user.email, user.emailAttributes.token);
         await emailUtility.sendEmailConfirmationMail(user.name, user.email, confirmationUrl);
     }else{
         console.log('Notifier Mocked..... not a production environment');

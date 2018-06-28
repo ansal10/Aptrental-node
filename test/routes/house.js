@@ -83,12 +83,12 @@ describe('House', async () => {
         it('it should return all available property user successful', async () => {
             await houseFactory();
             await houseFactory();
-            let res = await chai.request(server).get('/house');
+            let res = await chai.request(server).get('/api/v1/house');
             res.should.have.status(200);
             assert(res.body.success.data.length === 2);
         });
         it('it should return no property', async () => {
-            let res = await chai.request(server).get('/house');
+            let res = await chai.request(server).get('/api/v1/house');
             res.should.have.status(200);
             assert(res.body.success.data.length === 0);
         });
@@ -97,7 +97,7 @@ describe('House', async () => {
 
     describe('/ POST House', () => {
         it('should create house with successfull parameters', async() => {
-            let res = await chai.request(server).post('/house').send(defaultHouseParams);
+            let res = await chai.request(server).post('/api/v1/house').send(defaultHouseParams);
             res.should.have.status(201);
             if(res.body.error)
                 console.log(res.body.error.message);
@@ -105,27 +105,27 @@ describe('House', async () => {
         });
 
         it('should report error for no images', async () => {
-            let res = await chai.request(server).post('/house').send(Object.assign({}, defaultHouseParams, {images:[]}));
+            let res = await chai.request(server).post('/api/v1/house').send(Object.assign({}, defaultHouseParams, {images:[]}));
             res.should.have.status(400);
             expect(res.body.error.message.includes('Images'));
         });
 
         it('should report error on invaid amenity', async () => {
             let params = Object.assign({}, defaultHouseParams, {amenities: [{amenity: 'Invalid', quantity: 2}]});
-            let res = await chai.request(server).post('/house').send(params);
+            let res = await chai.request(server).post('/api/v1/house').send(params);
             res.should.have.status(400);
             expect(res.body.error.message.includes('Amenity'));
         });
 
         it('should report error on invaid features', async () => {
             let params = Object.assign({}, defaultHouseParams, {features: ['  ']});
-            let res = await chai.request(server).post('/house').send(params);
+            let res = await chai.request(server).post('/api/v1/house').send(params);
             res.should.have.status(400);
             expect(res.body.error.message.includes('Amenity'));
         });
 
         it('should report invalid type of data', async () => {
-            let res = await chai.request(server).post('/house').send(Object.assign({}, defaultHouseParams, {images:{}}));
+            let res = await chai.request(server).post('/api/v1/house').send(Object.assign({}, defaultHouseParams, {images:{}}));
             res.should.have.status(400);
             expect(res.body.error.message.includes('Invalid value in Images'));
         });
