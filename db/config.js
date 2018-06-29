@@ -13,5 +13,12 @@ module.exports = {
         database: 'aptrental_test',
         host: '127.0.0.1',
         dialect: 'postgres'
+    },
+    production:{
+        username: 'rental',
+        password: 'rental',
+        database: 'rental',
+        host: '127.0.0.1',
+        dialect: 'postgres'
     }
 };
