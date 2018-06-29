@@ -15,6 +15,10 @@
     {
       "name": "Users",
       "description": "API for users in the system"
+    },
+    {
+      "name": "House",
+      "description": "API for the house in the system"
     }
   ],
   "schemes": [
@@ -105,7 +109,43 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-
+        }
+      }
+    },
+    "/user":{
+      "get":{
+        "tags": ["Users"],
+        "description": "List of users",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page number, by default 1"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user with page size of 50",
+            "schema": {
+              "type": "object",
+              "properties":{
+                "message":{ "type": "string"},
+                "data":{
+                  "type": "array",
+                  "$ref": "#/definitions/DetailedUser"
+                }
+              }
+            }
+          },
+          "4xx" :{
+            "description": "Fetching failed",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
         }
       }
     },
@@ -190,6 +230,8 @@
         }
       }
     }
+
+
   },
   "definitions": {
     "DetailedUser":{
