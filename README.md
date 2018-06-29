@@ -37,7 +37,9 @@ $ NODE_ENV=production ./node_modules/.bin/sequelize db:seed:all
 $ NODE_ENV=production node ./bin/www
 ```
 
-
-
+API Documentation:
+```angular2html
+/api-docs/
+```
 
 
