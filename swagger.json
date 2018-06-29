@@ -139,7 +139,6 @@
                   }
                 }
               }
-
             }
           },
           "4xx": {
@@ -161,15 +160,31 @@
             "in": "body",
             "description": "User with new values of properties",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/DetailedUser"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "User is updated",
+            "description": "User is Updates",
             "schema": {
-              "$ref": "#/definitions/User"
+              "properties":{
+                "success":{
+                  "type": "object",
+                  "properties":{
+                    "message":{ "type": "string"},
+                    "data":{
+                      "$ref": "#/definitions/DetailedUser"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "error",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -200,6 +215,14 @@
         "status":{
           "type": "string",
           "enum": ["active", "inactive"]
+        },
+        "createdAt":{
+          "type":"string",
+          "example": "ISO Format date"
+        },
+        "updatedAt":{
+          "type":"string",
+          "example": "ISO Format date"
         }
       }
     },

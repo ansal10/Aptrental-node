@@ -107,17 +107,21 @@ router.get('/', middlewares.isAuthenticated,  async (req, res, next) => {
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let userArgs = req.body;
-    let retVal = await userHelper.updateUserDetails(user, userArgs);
+    let userId = req.params.id;
+    let retVal = await userHelper.updateUserDetails(user, userArgs, userId);
     genUtil.sendJsonResponse(res, retVal.status ? 200:400, retVal.message, null);
 
 });
 
 // get profile details
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
-    let u = await models.User.findOne({where:{id: req.params.id}, attributes:['id', 'name', 'email', 'sex', 'role', 'status']});
-    if (u)
-        genUtil.sendJsonResponse(res, 200, '', u.dataValues);
-    else genUtil.sendJsonResponse(res, 400, 'Invalid user id', null)
+    let user = req.session.user;
+    let retVal = await userHelper.findUserDetails(user, req.params.id);
+    if (retVal.status)
+        genUtil.sendJsonResponse(res, 200, '', retVal.args.user);
+    else
+        genUtil.sendJsonResponse(res, 400, retVal.message, null);
+
 });
 
 

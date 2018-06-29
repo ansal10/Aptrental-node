@@ -5,13 +5,17 @@ const md5 = require('md5');
 const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 const permission = require('../permisson_utility');
+const _ = require('underscore');
+const ADMIN_UPDATE_ALLOWED_FIELDS = ['role', 'status', 'sex', 'name', 'email'];
+const SELF_UPDATE_ALLOWED_FIELDS = ['name', 'sex', 'email'];
+const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt']
+
 
 const TIME = {
     EMAIL_TOKEN_EXPIRATION: 24 * 60 * 60, // seconds
     PASSWORD_TOKEN_EXPIRATION: 15 * 60  // seconds
 
 };
-
 const STRS = {
     INVALID_EMAIL: 'Your email is invalid',
     EMAIL_VERIFICATION_FAILED: 'Your email verification failed, probably your link expired or email already verified.',
@@ -56,7 +60,7 @@ const createUserInDatabase = async function (userParams) {
                 user: user
             }
         };
-    }catch (e) {
+    } catch (e) {
         return {
             status: false,
             message: e.errors[0].message
@@ -125,7 +129,7 @@ const resetPassword = async function (email, password_token, password) {
         return {
             status: true,
             message: STRS.SUCCESSFULLY_PASSWORD_RESET,
-            args:{
+            args: {
                 user: user
             }
         }
@@ -158,18 +162,26 @@ const listAllUsers = async (pageNumber, pageLimit) => {
     let users = models.User.findAll({
         limit: pageLimit,
         offset: pageLimit * pageNumber,
-        attributes: ['name', 'sex', 'email', 'role', 'status']
+        attributes: USER_DETAILS_FIELDS
     });
     return users;
 };
 
-const updateUserDetails = async (updater, userArgs) => {
-    let user = await models.User.findOne({where:{id:userArgs.id}});
-    if(!user)
-        return { status: false, message:'Could not find details of user to be edited'};
-    if (permission.canUpdateUser(updater, user)){
+const updateUserDetails = async (updater, userArgs, userId) => {
+    let user = await models.User.findOne({where: {id: userId}});
+    if (!user)
+        return {status: false, message: 'Could not find details of user to be edited'};
+    if (permission.canUpdateUser(updater, user)) {
         try {
-            await models.User.update(userArgs, {where: {is: userArgs.id}});
+            let updateVals = {};
+            if (updater.id === userId)  // updating self
+                updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
+            else
+                updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
+
+            Object.assign(user, user, updateVals);
+            await user.validate();
+            await user.save();
             return {
                 status: true,
                 message: 'User updated successfully'
@@ -180,10 +192,24 @@ const updateUserDetails = async (updater, userArgs) => {
                 message: e.errors[0].message
             }
         }
-    }else{
-        return { status: false, message: 'You cannot update the user details'}
+    } else {
+        return {status: false, message: 'Unauthorized Access'}
     }
 };
+
+const findUserDetails = async (requester, userid) => {
+    let u = await models.User.findOne({
+        where: {id: userid},
+        attributes: USER_DETAILS_FIELDS
+    });
+    if (!u)
+        return {status: false, message: 'User not found with given ID'};
+    if (permission.canSeeUserDetails(requester, u)) {
+        return {status: true, message: '', args: {user: u}};
+    } else {
+        return {status: false, message: 'Unauthorized Access'}
+    }
+}
 
 module.exports.createUserInDatabase = createUserInDatabase;
 module.exports.verifyEmail = verifyEmail;
@@ -192,4 +218,5 @@ module.exports.resetPassword = resetPassword;
 module.exports.resendPasswordResetToken = resendPasswordResetToken;
 module.exports.listAllUsers = listAllUsers;
 module.exports.updateUserDetails = updateUserDetails;
+module.exports.findUserDetails = findUserDetails;
 

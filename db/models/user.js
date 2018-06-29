@@ -13,11 +13,20 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             allowNull: false,
             type: Sequelize.STRING,
+            trim: true,
+            validate:{
+                len:{
+                    args: [3,140],
+                    msg: "Name is not valid, it should be min length 3 and max 140"
+                }
+            }
         },
         email: {
             type: Sequelize.STRING,
             allowNull:false,
             unique:true,
+            lowercase: true,
+            trim: true,
             validate: {
                 notEmpty: {
                     args: true,
@@ -41,7 +50,6 @@ module.exports = (sequelize, Sequelize) => {
                     msg: "Email length is not in this range of 6 to 140"
                 },
             },
-            trim: true
         },
 
         emailAttributes: {              // token, created, expired, updated, verified
