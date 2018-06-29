@@ -28,7 +28,7 @@ router.post('/signup', async (req, res, next) => {
     else{
         retVal = await userHelper.createUserInDatabase(retVal.args);
         notifier.notifyPasswordReset(retVal.args.user);
-        genUtil.sendJsonResponse(res, 201, retVal.message, null);
+        genUtil.sendJsonResponse(res, 201, retVal.message, retVal.args.user);
     }
 
 });
@@ -65,20 +65,22 @@ router.get('/verify_email', async (req, res, next)=>{
 
 // request email confirmation
 router.get('/email_confirmation', async (req, res, next)=>{
-    let email = req.body.email;
+    let email = req.query.email;
     let retVal = await userHelper.resendEmailConfirmation(email);
-    await notifier.notifyEmailConfirmation(retVal.args.user);
+    if (retVal.status)
+        await notifier.notifyEmailConfirmation(retVal.args.user);
+
     genUtil.sendJsonResponse(res, retVal.status ? 200:400, retVal.message, null);
 
 });
 
 // request password reset
-router.get('/password_reset', (req, res, next)=>{
-    let email = req.body.email;
-    let retVal = userHelper.resendPasswordResetToken(email);
+router.get('/password_reset', async (req, res, next)=>{
+    let email = req.query.email;
+    let retVal = await userHelper.resendPasswordResetToken(email);
     genUtil.sendJsonResponse(res, retVal.status ? 200:400, retVal.message, null);
-
 });
+
 
 // reset password
 router.post('/password_reset', async (req, res, next) => {
@@ -116,7 +118,10 @@ router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
 // get profile details
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await userHelper.findUserDetails(user, req.params.id);
+
+    let userId = req.params.id === 'details' ? user.id : req.params.id;
+
+    let retVal = await userHelper.findUserDetails(user, userId);
     if (retVal.status)
         genUtil.sendJsonResponse(res, 200, '', retVal.args.user);
     else

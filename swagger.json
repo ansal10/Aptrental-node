@@ -232,6 +232,190 @@
         }
       }
     },
+    "/user/logout":{
+      "post":{
+        "tags": ["Users"],
+        "description": "Logout user",
+        "parameters":[],
+        "produces": [
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verification sent",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+
+    "/user/verify_email":{
+      "get":{
+        "tags":["Users"],
+        "description": "Verify the email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          },
+          {
+            "name": "emailToken",
+            "in": "query",
+            "description": "Email Token sended via email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/details":{
+      "get":{
+        "tags":["Users"],
+        "description": "Get details of logged in user",
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "User details",
+            "schema":{
+              "$ref": "#definitions/DetailedUser"
+            }
+          },
+          "4xx":{
+            "description": "User not logged in",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/email_confirmation":{
+      "get":{
+        "tags":["Users"],
+        "description": "Request server to send email for Verification",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verification sent",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/password_reset":{
+      "get":{
+        "tags":["Users"],
+        "description": "Request for password reset Token to reset password",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post":{
+        "tags":["Users"],
+        "definitions": "Reset the password",
+        "parameters":[
+          {
+            "name":"user",
+            "in": "body",
+            "schema":{
+              "properties":{
+                "password":{
+                  "type":"string",
+                  "example": "pass1234",
+                  "description": "new password"
+                },
+                "passwordToken":{
+                  "type":"string",
+                  "example": "12349583",
+                  "description": "Password reset token sent to your mail"
+                }
+              }
+            }
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
 
     "/house":{
       "post":{
@@ -462,7 +646,7 @@
           "type": "string",
           "enum": ["1rk", "2rk", "1bhk", "2bhk", "3bhk", "4bhk", "5bhk", "5bhk+"]
         },
-        "availiblity":{
+        "availability":{
           "type": "string",
           "enum": ["yes", "no", "archive"]
         },
@@ -650,34 +834,6 @@
         }
       }
     },
-    "User": {
-      "required": [
-        "email",
-        "password",
-        "sex",
-        "name"
-      ],
-      "properties": {
-        "email": {
-          "type": "string",
-          "uniqueItems": true
-        },
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "sex":{
-          "type": "string",
-          "enum": ["male", "female", "other"]
-        }
-      }
-    },
-    "Users": {
-      "type": "array",
-      "$ref": "#/definitions/User"
-    },
     "SuccessResponse":{
       "type": "object",
       "properties":{
@@ -693,7 +849,10 @@
         "success":{
           "type": "object",
           "properties":{
-            "message": {"type": "string"}
+            "message": {
+              "type": "string",
+              "description": "Success message"
+            }
           }
         }
       }

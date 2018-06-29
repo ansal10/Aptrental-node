@@ -4,24 +4,18 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
 const assert = require('chai').assert;
-const should = chai.should();
 const truncate = require('../db/truncate');
-const userHelper = require('../../utilities/helpers/user_helper');
 const moment = require('moment');
-const models = require('../../db/models/index');
 const faker = require('faker');
 const houseFactory = require('../db/factories/house');
 const userFactory = require('../db/factories/user');
 const md5 = require('md5');
-const validator = require('validator');
 const sinon = require('sinon');
 const controllerMiddleware = require('../../utilities/controller_middlewares');
 let server = null;
-let request = null;
-
-
 
 chai.use(chaiHttp);
+
 
 describe('House', async () => {
 
@@ -72,6 +66,7 @@ describe('House', async () => {
             return next();
         });
         server = require('../../app');
+
     });
 
     afterEach(async () =>{
