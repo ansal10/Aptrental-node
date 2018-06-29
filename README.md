@@ -23,7 +23,7 @@ Install and run the API module
 ```
 $ cd project
 $ npm i
-$ NODE_ENV=production ./node_modules/.bin/sequelize db:migrate:all
+$ NODE_ENV=production ./node_modules/.bin/sequelize db:migrate
 $ NODE_ENV=production ./node_modules/.bin/sequelize db:seed:all
 $ NODE_ENV=production node ./bin/www
 ```
