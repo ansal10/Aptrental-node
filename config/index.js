@@ -14,5 +14,21 @@ module.exports = {
             pass: 'Pass@1234'
         }
     },
+    maintenance: ['monthly', 'deposit', 'brokerage', 'annually'],
+    MESSAGES:{
+        RESOURCE_NOT_FOUND: 'Resource not found with ID: %s',
+        RESOURCE_UPDATED_SUCCESSFULLY: 'Resource have been updated successfully',
+        UNAUTHORIZED_ACCESS: 'You are not authorized for this action',
+        INVALID_EMAIL: 'Your email is invalid',
+        EMAIL_VERIFICATION_FAILED: 'Your email verification failed, probably your link expired or email already verified.',
+        PASSWORD_RESET_FAILED: 'Your password token is expired or wrong, in case of expiration you can request a new one.',
+        SUCCESSFUL_EMAIL_VERIFICATION: 'Your email is successfully verified',
+        SUCCESSFULLY_RESEND_CONFIRMATION_MAIL: 'Confirmation mail is successfully send.',
+        SUCCESSFULLY_PASSWORD_TOKEN_SENT: 'Password token been sent successfully',
+        SUCCESSFULLY_PASSWORD_RESET: 'Password has been reset successfully',
+        SIGNUP_SUCCESSFUL_MESSAGE: 'Signup successful',
+        PASSWORD_MIN_LENGTH: 6,
+        INVALID_PASSWORD: 'Password should be at least 6 digits long.'
+    }
 
 };

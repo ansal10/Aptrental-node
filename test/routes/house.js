@@ -78,21 +78,20 @@ describe('House', async () => {
         controllerMiddleware.isAuthenticated.restore();
     });
 
-    describe('/ GET Houses', () => {
+    describe('/search POST Search Houses', () => {
 
         it('it should return all available property user successful', async () => {
             await houseFactory();
             await houseFactory();
-            let res = await chai.request(server).get('/api/v1/house');
+            let res = await chai.request(server).post('/api/v1/house/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 2);
         });
         it('it should return no property', async () => {
-            let res = await chai.request(server).get('/api/v1/house');
+            let res = await chai.request(server).post('/api/v1/house/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 0);
         });
-
     });
 
     describe('/ POST House', () => {

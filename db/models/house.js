@@ -61,13 +61,13 @@ module.exports = (DataType, Sequelize) => {
             validate:{
                 isValidJson: (val ,next) =>{
                     if(val && !(typeof val === 'object'))
-                        next('Maintenance needs nested fields of '+ ['monthly', 'deposit', 'brokerage', 'annually']);
+                        next('Maintenance needs nested fields of '+ config.maintenance);
                     for( let k in val){
-                        if(['monthly', 'deposit', 'brokerage', 'annually'].includes(k)){
+                        if(config.maintenance.includes(k)){
                             if((!Number(val[k]) || Number(val[k]) < 0))
                                 next('Maintenance: '+k+' should be greater than 0')
                         }else{
-                            next('Only '+['monthly', 'deposit', 'brokerage', 'annually']+'  are required in maintenance');
+                            next('Only '+config.maintenance+'  are required in maintenance');
                         }
                     }
                     next();

@@ -10,7 +10,8 @@ const router = express.Router();
 
 router.post('/search', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
-    let houses = await houseHelper.listAllHouse(user, req.body || {}, req.query.page || 0);
+    let page = req.query.page || 0;
+    let houses = await houseHelper.searchHouse(user, req.body || {}, req.query.page || 0);
     genUtil.sendJsonResponse(res, 200, '', houses);
 });
 
