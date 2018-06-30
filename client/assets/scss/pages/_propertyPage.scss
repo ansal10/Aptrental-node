@@ -1,0 +1,27 @@
+.bottom-line-separator {
+  border-bottom: 2px solid $gray;
+  padding-bottom : 3rem;
+  padding-top: 3rem;
+}
+
+.amnIcons {
+  background-image: url(/assets/graphics/mapAmn5.1.png);
+  background-repeat: no-repeat;
+}
+
+
+.feature-wrapper {
+
+  .icon-container {
+
+    .feature-icon {
+      margin: 10px;
+      float: left;
+    }
+
+    .feature-name {
+      margin: 10px;
+      word-spacing: 0px;
+    }
+  }
+}

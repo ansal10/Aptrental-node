@@ -33,14 +33,15 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-app.use('/', indexRouter);
 app.use('/api/v1/user', usersRouter);
 app.use('/api/v1/house', houseRouter);
 app.use('/api/v1/uploads', uploadsRouter);
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
