@@ -11,6 +11,7 @@ const config = require('../../../config/index');
 const uuid4 = require('uuid/v4');
 const fs = require('fs');
 const validator = require('validator');
+const multer = require('multer');
 const mimes = {
     html: 'text/html',
     txt: 'text/plain',
@@ -22,7 +23,7 @@ const mimes = {
     svg: 'image/svg+xml',
     js: 'application/javascript'
 };
-
+const upload = multer({dest: 'uploads'})
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ if (!fs.existsSync(config.baseUploadDir)) {
 }
 
 
-router.post('/image', middlewares.isAuthenticated, async (req, res, next) => {
+router.post('/images', async (req, res, next) => {
     let files = Object.keys(req.files);
     for (let i = 0; i < files.length; i++) {
         let kycFile = req.files[files[i]];
@@ -48,22 +49,6 @@ router.post('/image', middlewares.isAuthenticated, async (req, res, next) => {
             }
         });
     }
-});
-
-router.get('/image*', (req, res, next) => {
-    let fileName = validator.ltrim(req.params[0], "/");
-    let extension  = fileName.split(".")[fileName.split(".").length-1];
-    let type = mimes[extension] || 'text/plain';
-    let s = fs.createReadStream(validator.ltrim(req.originalUrl.split("?")[0], "/"));
-    s.on('open', function () {
-        res.set('Content-Type', type);
-        s.pipe(res);
-    });
-    s.on('error', function () {
-        res.set('Content-Type', 'text/plain');
-        res.status(404).end('Not found');
-    });
-
 });
 
 module.exports = router;
