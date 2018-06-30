@@ -40,7 +40,7 @@ router.post('/login', async (req, res, next) => {
 
     let retVal = await userValidator.validateLoginDetails(email, password);
     if(retVal.status === false)
-        genUtil.sendJsonResponse(res, 401, retVal.message, null);
+        genUtil.sendJsonResponse(res, 400, retVal.message, null);
     else{
         let session = req.session;
         session.user = retVal.args.user;
