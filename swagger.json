@@ -19,6 +19,10 @@
     {
       "name": "House",
       "description": "API for the house in the system"
+    },
+    {
+      "name": "Uploads",
+      "description": "Upload images to server"
     }
   ],
   "schemes": [
@@ -58,13 +62,12 @@
               "$ref": "#/definitions/SuccessUserResponse"
             }
           },
-          "40x" :{
+          "40x": {
             "description": "When user creation is failed",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-
         }
       }
     },
@@ -80,8 +83,8 @@
             "in": "body",
             "description": "User that we want to login",
             "schema": {
-              "properties":{
-                "email":{
+              "properties": {
+                "email": {
                   "type": "string",
                   "example": "manovagyanik1@gmail.com"
                 },
@@ -103,18 +106,20 @@
               "$ref": "#/definitions/SuccessUserResponse"
             }
           },
-          "40x" :{
+          "40x": {
             "description": "Logged in failed",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/user":{
-      "get":{
-        "tags": ["Users"],
+    "/user": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "List of users",
         "parameters": [
           {
@@ -131,9 +136,11 @@
             "description": "List of user with page size of 50",
             "schema": {
               "type": "object",
-              "properties":{
-                "message":{ "type": "string"},
-                "data":{
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "data": {
                   "type": "array",
                   "items": {
                     "$ref": "#/definitions/DetailedUser"
@@ -142,9 +149,9 @@
               }
             }
           },
-          "4xx" :{
+          "4xx": {
             "description": "Fetching failed",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
@@ -170,12 +177,14 @@
           "200": {
             "description": "User is found",
             "schema": {
-              "properties":{
-                "success":{
+              "properties": {
+                "success": {
                   "type": "object",
-                  "properties":{
-                    "message":{ "type": "string"},
-                    "data":{
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
                       "$ref": "#/definitions/DetailedUser"
                     }
                   }
@@ -185,7 +194,7 @@
           },
           "4xx": {
             "description": "User is not found",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
@@ -210,12 +219,14 @@
           "200": {
             "description": "User is Updates",
             "schema": {
-              "properties":{
-                "success":{
+              "properties": {
+                "success": {
                   "type": "object",
-                  "properties":{
-                    "message":{ "type": "string"},
-                    "data":{
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
                       "$ref": "#/definitions/DetailedUser"
                     }
                   }
@@ -225,41 +236,44 @@
           },
           "4xx": {
             "description": "error",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/user/logout":{
-      "post":{
-        "tags": ["Users"],
+    "/user/logout": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "Logout user",
-        "parameters":[],
+        "parameters": [],
         "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "Email verification sent",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/SuccessUserResponse"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "Verification Failed",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       }
     },
-
-    "/user/verify_email":{
-      "get":{
-        "tags":["Users"],
+    "/user/verify_email": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "Verify the email",
         "parameters": [
           {
@@ -273,51 +287,55 @@
             "description": "Email Token sended via email"
           }
         ],
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "Email verified",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/SuccessUserResponse"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "Verification Failed",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/user/details":{
-      "get":{
-        "tags":["Users"],
+    "/user/details": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "Get details of logged in user",
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "User details",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/DetailedUser"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "User not logged in",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/user/email_confirmation":{
-      "get":{
-        "tags":["Users"],
+    "/user/email_confirmation": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "Request server to send email for Verification",
         "parameters": [
           {
@@ -326,28 +344,30 @@
             "description": "Email"
           }
         ],
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "Email verification sent",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/SuccessUserResponse"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "Verification Failed",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/user/password_reset":{
-      "get":{
-        "tags":["Users"],
+    "/user/password_reset": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "Request for password reset Token to reset password",
         "parameters": [
           {
@@ -356,40 +376,42 @@
             "description": "Email"
           }
         ],
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "Email verified",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/SuccessUserResponse"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "Verification Failed",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       },
-      "post":{
-        "tags":["Users"],
+      "post": {
+        "tags": [
+          "Users"
+        ],
         "definitions": "Reset the password",
-        "parameters":[
+        "parameters": [
           {
-            "name":"user",
+            "name": "user",
             "in": "body",
-            "schema":{
-              "properties":{
-                "password":{
-                  "type":"string",
+            "schema": {
+              "properties": {
+                "password": {
+                  "type": "string",
                   "example": "pass1234",
                   "description": "new password"
                 },
-                "passwordToken":{
-                  "type":"string",
+                "passwordToken": {
+                  "type": "string",
                   "example": "12349583",
                   "description": "Password reset token sent to your mail"
                 }
@@ -397,61 +419,62 @@
             }
           }
         ],
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "200":{
+        "responses": {
+          "200": {
             "description": "Email verified",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/SuccessUserResponse"
             }
           },
-          "4xx":{
+          "4xx": {
             "description": "Verification Failed",
-            "schema":{
+            "schema": {
               "$ref": "#definitions/ErrorResponse"
             }
           }
         }
       }
     },
-
-    "/house":{
-      "post":{
-        "tags":["House"],
+    "/house": {
+      "post": {
+        "tags": [
+          "House"
+        ],
         "description": "Create a new House with provided details",
-        "parameters":[
+        "parameters": [
           {
             "name": "house",
             "in": "body",
             "description": "House that we want to create",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/House"
             }
           }
         ],
-        "produces":[
+        "produces": [
           "application/json"
         ],
-        "responses":{
-          "201":{
+        "responses": {
+          "201": {
             "description": "New house is created",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/SuccessUserResponse"
             }
           },
-          "4xx" :{
+          "4xx": {
             "description": "When house creation is failed",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
       }
     },
-    "/house/{houseId}":{
-      "parameters":[
+    "/house/{houseId}": {
+      "parameters": [
         {
           "name": "houseId",
           "in": "path",
@@ -460,19 +483,23 @@
           "type": "string"
         }
       ],
-      "get":{
-        "tags":[ "House"],
+      "get": {
+        "tags": [
+          "House"
+        ],
         "summary": "Get house details of the house with ID",
-        "responses":{
-          "200":{
-            "description":"House is found",
-            "schema":{
-              "properties":{
-                "success":{
+        "responses": {
+          "200": {
+            "description": "House is found",
+            "schema": {
+              "properties": {
+                "success": {
                   "type": "object",
-                  "properties":{
-                    "message":{ "type": "string"},
-                    "data":{
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
                       "$ref": "#/definitions/House"
                     }
                   }
@@ -482,53 +509,128 @@
           },
           "4xx": {
             "description": "House is not found",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
       },
-      "put":{
+      "put": {
         "summary": "Update house with given ID",
-        "tags": ["House"],
-        "parameters":[
+        "tags": [
+          "House"
+        ],
+        "parameters": [
           {
             "name": "house",
             "in": "body",
             "description": "House with updates values",
-            "schema":{
+            "schema": {
               "$ref": "#/definitions/House"
             }
           }
         ]
       }
     },
-    "/house/search":{
+    "/house/search": {
       "post": {
-        "tags": ["House"]
-      },
-      "description": "Search house based on parameters",
-      "parameters":[
-        {
-          "name": "house",
-          "in": "body",
-          "description": "Search parameters",
-          "schema":{
-            "$ref": "#definitions/House Search"
+        "tags": [
+          "House"
+        ],
+        "description": "Search house based on parameters",
+        "parameters": [
+          {
+            "name": "house",
+            "in": "body",
+            "description": "Search parameters",
+            "schema": {
+              "$ref": "#definitions/House Search"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number , defaults to ZERO"
           }
-        },
-        {
-          "name": "page",
-          "in": "query",
-          "description": "Page number , defaults to ZERO"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetched a list of houses matching search params",
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#definitions/House"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
         }
-      ]
+      }
+    },
+    "uploads/images": {
+      "description": "Upload a single image to server",
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "description": "Upload single image to server",
+        "parameters": {},
+        "responses": {
+          "200": {
+            "description": "Image is uploaded successfully",
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "success message"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "uploadUrl": "string",
+                        "description": "Url to fetch uploaded image",
+                        "example": "http://localhost:3000/uploads/images/abc.jpg"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "Upload error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
-    "DetailedUser":{
+    "DetailedUser": {
       "properties": {
-        "id":{
+        "id": {
           "type": "integer"
         },
         "email": {
@@ -538,49 +640,60 @@
         "name": {
           "type": "string"
         },
-        "sex":{
+        "sex": {
           "type": "string",
-          "enum": ["male", "female", "other"]
+          "enum": [
+            "male",
+            "female",
+            "other"
+          ]
         },
-        "role":{
+        "role": {
           "type": "string",
-          "enum": ["admin", "realtor", "consumer"]
+          "enum": [
+            "admin",
+            "realtor",
+            "consumer"
+          ]
         },
-        "status":{
+        "status": {
           "type": "string",
-          "enum": ["active", "inactive"]
+          "enum": [
+            "active",
+            "inactive"
+          ]
         },
-        "createdAt":{
-          "type":"string",
+        "createdAt": {
+          "type": "string",
           "example": "ISO Format date"
         },
-        "updatedAt":{
-          "type":"string",
+        "updatedAt": {
+          "type": "string",
           "example": "ISO Format date"
         }
       }
     },
-    "House":{
-      "properties":{
-        "title":{
+    "House": {
+      "properties": {
+        "title": {
           "type": "string",
           "example": "3BHK at posh locality of gurgaon sector 46",
           "description": "Title with length of range (10, 50)"
         },
-        "description":{
+        "description": {
           "type": "string",
           "example": "3BHK at posh locality of gurgaon sector 46 with fully furnished and green surroundings with no interference from landlord",
           "description": "Title with length of range (50, 1000)"
         },
-        "rent":{
+        "rent": {
           "type": "double",
           "example": 1000.0,
           "description": "Rent in Dollars in range (100, 999000)"
         },
-        "maintenance":{
+        "maintenance": {
           "type": "object",
-          "properties":{
-            "monthly":{
+          "properties": {
+            "monthly": {
               "type": "double",
               "example": 10,
               "description": "Monthly maintenance charges"
@@ -590,96 +703,118 @@
               "example": 10,
               "description": "Deposit charges"
             },
-            "brokerage":{
+            "brokerage": {
               "type": "double",
               "example": 10,
               "description": "brokerage charges"
             },
-            "annually":{
+            "annually": {
               "type": "double",
               "example": 10,
               "description": "annually maintenance charges"
             }
           }
         },
-        "builtArea":{
+        "builtArea": {
           "type": "double",
           "description": "Built area of the house minimum 250 sqft",
           "example": 300
         },
-        "carpetArea":{
+        "carpetArea": {
           "type": "double",
           "description": "Total area of the house minimum 250 sqft and greater or equal than builtArea",
           "example": 300
         },
-        "city":{
+        "city": {
           "type": "string",
           "description": "Valid city name of lenght in range (2,30)",
           "example": "gurgaon"
         },
-        "locality":{
+        "locality": {
           "type": "string",
           "description": "Valid locality name of lenght in range (2,30)",
           "example": "gurgaon sector 8"
         },
-        "country":{
+        "country": {
           "type": "string",
           "description": "Valid country name of lenght in range (2,30)",
           "example": "india"
         },
-        "address":{
+        "address": {
           "type": "string",
           "description": "Valid address name of lenght in range (10,150)",
           "example": "gurgaon"
         },
-        "latitude":{
+        "latitude": {
           "type": "double",
           "description": "Valid latitude",
           "example": -19.09
         },
-        "longitude":{
+        "longitude": {
           "type": "double",
           "description": "Valid longitude",
           "example": -19.09
         },
-        "type":{
+        "type": {
           "type": "string",
-          "enum": ["1rk", "2rk", "1bhk", "2bhk", "3bhk", "4bhk", "5bhk", "5bhk+"]
+          "enum": [
+            "1rk",
+            "2rk",
+            "1bhk",
+            "2bhk",
+            "3bhk",
+            "4bhk",
+            "5bhk",
+            "5bhk+"
+          ]
         },
-        "availability":{
+        "availability": {
           "type": "string",
-          "enum": ["yes", "no", "archive"]
+          "enum": [
+            "yes",
+            "no",
+            "archive"
+          ]
         },
         "availableFor": {
           "type": "string",
-          "enum": ["all", "family", "couples", "bachelors"]
+          "enum": [
+            "all",
+            "family",
+            "couples",
+            "bachelors"
+          ]
         },
-        "availableFrom":{
+        "availableFrom": {
           "type": "string",
           "example": "2012-07-14T01:00:00+01:00",
           "description": "Valid ISO date"
         },
-        "floor":{
+        "floor": {
           "type": "integer",
           "example": 1,
           "description": "Valid floor within range (0, 150)"
         },
         "powerBackup": {
           "type": "string",
-          "enum": ["full", "partial", "no"]
+          "enum": [
+            "full",
+            "partial",
+            "no"
+          ]
         },
-        "amenities":{
+        "amenities": {
           "description": "List of amenity are bathroom,bedroom,study room,ac installed,curtains,chimney,exhaust,fans,lights,tv,wardrobe,bed,dinning table,fridge,sofa,stove,washing machine",
           "type": "array",
-          "items":{
+          "items": {
             "type": "object",
-            "properties":{
+            "properties": {
               "amenity": {
-                "type" :"string",
+                "type": "string",
                 "example": "bathroom",
-                "description" : "Valid name of amenity"
+                "description": "Valid name of amenity"
               },
-              "quantity":{
+              "quantity": {
                 "type": "double",
                 "example": 1,
                 "description": "Valid quantity of said amenity greater than 0"
@@ -687,168 +822,217 @@
             }
           }
         },
-        "features":{
+        "features": {
           "type": "array",
           "description": "List of features",
-          "example": ["24x7 security"]
+          "example": [
+            "24x7 security"
+          ]
         },
-        "tags":{
+        "tags": {
           "type": "array",
           "description": "List of tags, easy for searching",
-          "example": ["seaview"]
+          "example": [
+            "seaview"
+          ]
         },
-        "images":{
+        "images": {
           "type": "array",
           "description": "List of image urls",
-          "example": ["https://picsum.photos/500/500", "https://picsum.photos/500/500"]
+          "example": [
+            "https://picsum.photos/500/500",
+            "https://picsum.photos/500/500"
+          ]
         },
-        "furnishingStatus":{
+        "furnishingStatus": {
           "type": "string",
-          "enum": ["furnished", "unfurnished", "semifurnished"]
+          "enum": [
+            "furnished",
+            "unfurnished",
+            "semifurnished"
+          ]
         },
-        "createdAt":{
+        "createdAt": {
           "type": "string",
           "description": "Valid ISO date , Not required for creating"
         },
         "updatedAt": {
-          "type":"string",
+          "type": "string",
           "description": "Valid ISO date, Not required for creating"
         }
       }
     },
-    "House Search":{
-      "properties":{
+    "House Search": {
+      "properties": {
         "searchString": {
           "type": "string",
           "example": "gurgaon",
           "description": "Search string that can be part of city, locality, street"
         },
-        "rent":{
+        "rent": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "double"
           },
-          "example": [1,10000],
+          "example": [
+            1,
+            10000
+          ],
           "description": "Search for rent between the range"
         },
-        "builtArea":{
+        "builtArea": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "double"
           },
-          "example": [200.0, 1000.0],
+          "example": [
+            200.0,
+            1000.0
+          ],
           "description": "Search for house with built area in above range"
         },
-        "carpetArea":{
+        "carpetArea": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "double"
           },
-          "example": [200.0, 1000.0],
+          "example": [
+            200.0,
+            1000.0
+          ],
           "description": "Search for house with carpet area in above range"
         },
-        "city":{
+        "city": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["delhi", "gurgaon"],
+          "example": [
+            "delhi",
+            "gurgaon"
+          ],
           "description": "Search house in above cities only"
         },
-        "locality":{
+        "locality": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["dlf1", "dlf2"],
+          "example": [
+            "dlf1",
+            "dlf2"
+          ],
           "description": "Search house in above locality only"
         },
-        "country":{
+        "country": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["india", "usa"],
+          "example": [
+            "india",
+            "usa"
+          ],
           "description": "Search house in above countries only"
         },
-        "latitude":{
+        "latitude": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "double"
           },
-          "example": [-19.0, 10.0],
+          "example": [
+            -19.0,
+            10.0
+          ],
           "description": "Search for house with latitudes in above range"
         },
-        "longitude":{
+        "longitude": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "double"
           },
-          "example": [-19.0, 10.0],
+          "example": [
+            -19.0,
+            10.0
+          ],
           "description": "Search for house with longitude in above range"
         },
-        "type":{
+        "type": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["1rk", "1bhk"],
+          "example": [
+            "1rk",
+            "1bhk"
+          ],
           "description": "Search house in above types only"
         },
-        "availability":{
+        "availability": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["yes", "no"],
+          "example": [
+            "yes",
+            "no"
+          ],
           "description": "Search house in above availability only , default yes"
         },
-        "availableFor":{
+        "availableFor": {
           "type": "array",
-          "items":{
+          "items": {
             "type": "string"
           },
-          "example": ["all", "bachelors", "couple"],
+          "example": [
+            "all",
+            "bachelors",
+            "couple"
+          ],
           "description": "Search house in above available tenants only , default all"
         },
-        "availableFrom":{
+        "availableFrom": {
           "type": "string",
           "example": "2008-09-15T15:53:00",
           "description": "Valid ISO date"
         },
-        "powerBackup":{
-          "type":"array",
-          "items":{
+        "powerBackup": {
+          "type": "array",
+          "items": {
             "type": "string"
           },
-          "example":["full", "partial"],
+          "example": [
+            "full",
+            "partial"
+          ],
           "description": "Search for with only above mentioned power backup type"
         },
-        "furnishingStatus":{
-          "type":"array",
-          "items":{
+        "furnishingStatus": {
+          "type": "array",
+          "items": {
             "type": "string"
           },
-          "example":["furnished"],
+          "example": [
+            "furnished"
+          ],
           "description": "Search for with only above mentioned power backup type"
         }
       }
     },
-    "SuccessResponse":{
+    "SuccessResponse": {
       "type": "object",
-      "properties":{
-        "success":{
+      "properties": {
+        "success": {
           "type": "string"
         }
       }
     },
-
-    "SuccessUserResponse":{
+    "SuccessUserResponse": {
       "type": "object",
-      "properties":{
-        "success":{
+      "properties": {
+        "success": {
           "type": "object",
-          "properties":{
+          "properties": {
             "message": {
               "type": "string",
               "description": "Success message"
@@ -857,13 +1041,15 @@
         }
       }
     },
-    "ErrorResponse":{
+    "ErrorResponse": {
       "type": "object",
-      "properties":{
-        "error":{
+      "properties": {
+        "error": {
           "type": "object",
-          "properties":{
-            "message": {"type": "string"}
+          "properties": {
+            "message": {
+              "type": "string"
+            }
           }
         }
       }
