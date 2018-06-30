@@ -1,4 +1,3 @@
-'use strict';
 const faker = require('faker');
 const md5 = require('md5');
 const _ = require('underscore');

@@ -11,6 +11,15 @@ Database setup
   - assign password to user ```rental```
   - start postgres on default port ```5432```
 
+Setup Database
+
+```$xslt
+$ create database rental;
+$ create user rental;
+$ ALTER USER rental WITH PASSWORD 'rental';
+$ grant all privileges on database rental to rental;
+
+```
 Install the Node
 ```sh
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
@@ -29,6 +38,9 @@ $ NODE_ENV=production node ./bin/www
 ```
 
 
-
+API Documentation:
+```angular2html
+/api-docs/
+```
 
 

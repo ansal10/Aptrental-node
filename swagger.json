@@ -15,6 +15,10 @@
     {
       "name": "Users",
       "description": "API for users in the system"
+    },
+    {
+      "name": "House",
+      "description": "API for the house in the system"
     }
   ],
   "schemes": [
@@ -56,9 +60,9 @@
           },
           "40x" :{
             "description": "When user creation is failed",
-              "schema":{
-                "$ref": "#/definitions/ErrorResponse"
-              }
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
 
         }
@@ -105,7 +109,45 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-
+        }
+      }
+    },
+    "/user":{
+      "get":{
+        "tags": ["Users"],
+        "description": "List of users",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page number, Default to Zero"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user with page size of 50",
+            "schema": {
+              "type": "object",
+              "properties":{
+                "message":{ "type": "string"},
+                "data":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/DetailedUser"
+                  }
+                }
+              }
+            }
+          },
+          "4xx" :{
+            "description": "Fetching failed",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
         }
       }
     },
@@ -189,6 +231,298 @@
           }
         }
       }
+    },
+    "/user/logout":{
+      "post":{
+        "tags": ["Users"],
+        "description": "Logout user",
+        "parameters":[],
+        "produces": [
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verification sent",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+
+    "/user/verify_email":{
+      "get":{
+        "tags":["Users"],
+        "description": "Verify the email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          },
+          {
+            "name": "emailToken",
+            "in": "query",
+            "description": "Email Token sended via email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/details":{
+      "get":{
+        "tags":["Users"],
+        "description": "Get details of logged in user",
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "User details",
+            "schema":{
+              "$ref": "#definitions/DetailedUser"
+            }
+          },
+          "4xx":{
+            "description": "User not logged in",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/email_confirmation":{
+      "get":{
+        "tags":["Users"],
+        "description": "Request server to send email for Verification",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verification sent",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/password_reset":{
+      "get":{
+        "tags":["Users"],
+        "description": "Request for password reset Token to reset password",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email"
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post":{
+        "tags":["Users"],
+        "definitions": "Reset the password",
+        "parameters":[
+          {
+            "name":"user",
+            "in": "body",
+            "schema":{
+              "properties":{
+                "password":{
+                  "type":"string",
+                  "example": "pass1234",
+                  "description": "new password"
+                },
+                "passwordToken":{
+                  "type":"string",
+                  "example": "12349583",
+                  "description": "Password reset token sent to your mail"
+                }
+              }
+            }
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description": "Email verified",
+            "schema":{
+              "$ref": "#definitions/SuccessUserResponse"
+            }
+          },
+          "4xx":{
+            "description": "Verification Failed",
+            "schema":{
+              "$ref": "#definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+
+    "/house":{
+      "post":{
+        "tags":["House"],
+        "description": "Create a new House with provided details",
+        "parameters":[
+          {
+            "name": "house",
+            "in": "body",
+            "description": "House that we want to create",
+            "schema":{
+              "$ref": "#/definitions/House"
+            }
+          }
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "responses":{
+          "201":{
+            "description": "New house is created",
+            "schema":{
+              "$ref": "#/definitions/SuccessUserResponse"
+            }
+          },
+          "4xx" :{
+            "description": "When house creation is failed",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/house/{houseId}":{
+      "parameters":[
+        {
+          "name": "houseId",
+          "in": "path",
+          "required": true,
+          "description": "ID of house that we want to find",
+          "type": "string"
+        }
+      ],
+      "get":{
+        "tags":[ "House"],
+        "summary": "Get house details of the house with ID",
+        "responses":{
+          "200":{
+            "description":"House is found",
+            "schema":{
+              "properties":{
+                "success":{
+                  "type": "object",
+                  "properties":{
+                    "message":{ "type": "string"},
+                    "data":{
+                      "$ref": "#/definitions/House"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "House is not found",
+            "schema":{
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put":{
+        "summary": "Update house with given ID",
+        "tags": ["House"],
+        "parameters":[
+          {
+            "name": "house",
+            "in": "body",
+            "description": "House with updates values",
+            "schema":{
+              "$ref": "#/definitions/House"
+            }
+          }
+        ]
+      }
+    },
+    "/house/search":{
+      "post": {
+        "tags": ["House"]
+      },
+      "description": "Search house based on parameters",
+      "parameters":[
+        {
+          "name": "house",
+          "in": "body",
+          "description": "Search parameters",
+          "schema":{
+            "$ref": "#definitions/House Search"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number , defaults to ZERO"
+        }
+      ]
     }
   },
   "definitions": {
@@ -226,33 +560,279 @@
         }
       }
     },
-    "User": {
-      "required": [
-        "email",
-        "password",
-        "sex",
-        "name"
-      ],
-      "properties": {
-        "email": {
+    "House":{
+      "properties":{
+        "title":{
           "type": "string",
-          "uniqueItems": true
+          "example": "3BHK at posh locality of gurgaon sector 46",
+          "description": "Title with length of range (10, 50)"
         },
-        "name": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "sex":{
+        "description":{
           "type": "string",
-          "enum": ["male", "female", "other"]
+          "example": "3BHK at posh locality of gurgaon sector 46 with fully furnished and green surroundings with no interference from landlord",
+          "description": "Title with length of range (50, 1000)"
+        },
+        "rent":{
+          "type": "double",
+          "example": 1000.0,
+          "description": "Rent in Dollars in range (100, 999000)"
+        },
+        "maintenance":{
+          "type": "object",
+          "properties":{
+            "monthly":{
+              "type": "double",
+              "example": 10,
+              "description": "Monthly maintenance charges"
+            },
+            "deposit": {
+              "type": "double",
+              "example": 10,
+              "description": "Deposit charges"
+            },
+            "brokerage":{
+              "type": "double",
+              "example": 10,
+              "description": "brokerage charges"
+            },
+            "annually":{
+              "type": "double",
+              "example": 10,
+              "description": "annually maintenance charges"
+            }
+          }
+        },
+        "builtArea":{
+          "type": "double",
+          "description": "Built area of the house minimum 250 sqft",
+          "example": 300
+        },
+        "carpetArea":{
+          "type": "double",
+          "description": "Total area of the house minimum 250 sqft and greater or equal than builtArea",
+          "example": 300
+        },
+        "city":{
+          "type": "string",
+          "description": "Valid city name of lenght in range (2,30)",
+          "example": "gurgaon"
+        },
+        "locality":{
+          "type": "string",
+          "description": "Valid locality name of lenght in range (2,30)",
+          "example": "gurgaon sector 8"
+        },
+        "country":{
+          "type": "string",
+          "description": "Valid country name of lenght in range (2,30)",
+          "example": "india"
+        },
+        "address":{
+          "type": "string",
+          "description": "Valid address name of lenght in range (10,150)",
+          "example": "gurgaon"
+        },
+        "latitude":{
+          "type": "double",
+          "description": "Valid latitude",
+          "example": -19.09
+        },
+        "longitude":{
+          "type": "double",
+          "description": "Valid longitude",
+          "example": -19.09
+        },
+        "type":{
+          "type": "string",
+          "enum": ["1rk", "2rk", "1bhk", "2bhk", "3bhk", "4bhk", "5bhk", "5bhk+"]
+        },
+        "availability":{
+          "type": "string",
+          "enum": ["yes", "no", "archive"]
+        },
+        "availableFor": {
+          "type": "string",
+          "enum": ["all", "family", "couples", "bachelors"]
+        },
+        "availableFrom":{
+          "type": "string",
+          "example": "2012-07-14T01:00:00+01:00",
+          "description": "Valid ISO date"
+        },
+        "floor":{
+          "type": "integer",
+          "example": 1,
+          "description": "Valid floor within range (0, 150)"
+        },
+        "powerBackup": {
+          "type": "string",
+          "enum": ["full", "partial", "no"]
+        },
+        "amenities":{
+          "description": "List of amenity are bathroom,bedroom,study room,ac installed,curtains,chimney,exhaust,fans,lights,tv,wardrobe,bed,dinning table,fridge,sofa,stove,washing machine",
+          "type": "array",
+          "items":{
+            "type": "object",
+            "properties":{
+              "amenity": {
+                "type" :"string",
+                "example": "bathroom",
+                "description" : "Valid name of amenity"
+              },
+              "quantity":{
+                "type": "double",
+                "example": 1,
+                "description": "Valid quantity of said amenity greater than 0"
+              }
+            }
+          }
+        },
+        "features":{
+          "type": "array",
+          "description": "List of features",
+          "example": ["24x7 security"]
+        },
+        "tags":{
+          "type": "array",
+          "description": "List of tags, easy for searching",
+          "example": ["seaview"]
+        },
+        "images":{
+          "type": "array",
+          "description": "List of image urls",
+          "example": ["https://picsum.photos/500/500", "https://picsum.photos/500/500"]
+        },
+        "furnishingStatus":{
+          "type": "string",
+          "enum": ["furnished", "unfurnished", "semifurnished"]
+        },
+        "createdAt":{
+          "type": "string",
+          "description": "Valid ISO date , Not required for creating"
+        },
+        "updatedAt": {
+          "type":"string",
+          "description": "Valid ISO date, Not required for creating"
         }
       }
     },
-    "Users": {
-      "type": "array",
-      "$ref": "#/definitions/User"
+    "House Search":{
+      "properties":{
+        "searchString": {
+          "type": "string",
+          "example": "gurgaon",
+          "description": "Search string that can be part of city, locality, street"
+        },
+        "rent":{
+          "type": "array",
+          "items":{
+            "type": "double"
+          },
+          "example": [1,10000],
+          "description": "Search for rent between the range"
+        },
+        "builtArea":{
+          "type": "array",
+          "items":{
+            "type": "double"
+          },
+          "example": [200.0, 1000.0],
+          "description": "Search for house with built area in above range"
+        },
+        "carpetArea":{
+          "type": "array",
+          "items":{
+            "type": "double"
+          },
+          "example": [200.0, 1000.0],
+          "description": "Search for house with carpet area in above range"
+        },
+        "city":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["delhi", "gurgaon"],
+          "description": "Search house in above cities only"
+        },
+        "locality":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["dlf1", "dlf2"],
+          "description": "Search house in above locality only"
+        },
+        "country":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["india", "usa"],
+          "description": "Search house in above countries only"
+        },
+        "latitude":{
+          "type": "array",
+          "items":{
+            "type": "double"
+          },
+          "example": [-19.0, 10.0],
+          "description": "Search for house with latitudes in above range"
+        },
+        "longitude":{
+          "type": "array",
+          "items":{
+            "type": "double"
+          },
+          "example": [-19.0, 10.0],
+          "description": "Search for house with longitude in above range"
+        },
+        "type":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["1rk", "1bhk"],
+          "description": "Search house in above types only"
+        },
+        "availability":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["yes", "no"],
+          "description": "Search house in above availability only , default yes"
+        },
+        "availableFor":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "example": ["all", "bachelors", "couple"],
+          "description": "Search house in above available tenants only , default all"
+        },
+        "availableFrom":{
+          "type": "string",
+          "example": "2008-09-15T15:53:00",
+          "description": "Valid ISO date"
+        },
+        "powerBackup":{
+          "type":"array",
+          "items":{
+            "type": "string"
+          },
+          "example":["full", "partial"],
+          "description": "Search for with only above mentioned power backup type"
+        },
+        "furnishingStatus":{
+          "type":"array",
+          "items":{
+            "type": "string"
+          },
+          "example":["furnished"],
+          "description": "Search for with only above mentioned power backup type"
+        }
+      }
     },
     "SuccessResponse":{
       "type": "object",
@@ -269,7 +849,10 @@
         "success":{
           "type": "object",
           "properties":{
-            "message": {"type": "string"}
+            "message": {
+              "type": "string",
+              "description": "Success message"
+            }
           }
         }
       }

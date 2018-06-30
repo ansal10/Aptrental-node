@@ -17,7 +17,7 @@ const validateNewHouseParams = async (houseParams) => {
 
     if(houseParams.maintenance){
         for (let key, val in houseParams.maintenance){
-            if(['monthly', 'deposit', 'brokerage', 'annually'].includes(key)) {
+            if(config.maintenance.includes(key)) {
                 if (Number(val) < 0)
                     errorMessage = key + "should be 0 or greater"
             }else{

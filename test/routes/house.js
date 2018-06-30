@@ -4,24 +4,18 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
 const assert = require('chai').assert;
-const should = chai.should();
 const truncate = require('../db/truncate');
-const userHelper = require('../../utilities/helpers/user_helper');
 const moment = require('moment');
-const models = require('../../db/models/index');
 const faker = require('faker');
 const houseFactory = require('../db/factories/house');
 const userFactory = require('../db/factories/user');
 const md5 = require('md5');
-const validator = require('validator');
 const sinon = require('sinon');
 const controllerMiddleware = require('../../utilities/controller_middlewares');
 let server = null;
-let request = null;
-
-
 
 chai.use(chaiHttp);
+
 
 describe('House', async () => {
 
@@ -72,27 +66,27 @@ describe('House', async () => {
             return next();
         });
         server = require('../../app');
+
     });
 
     afterEach(async () =>{
         controllerMiddleware.isAuthenticated.restore();
     });
 
-    describe('/ GET Houses', () => {
+    describe('/search POST Search Houses', () => {
 
         it('it should return all available property user successful', async () => {
             await houseFactory();
             await houseFactory();
-            let res = await chai.request(server).get('/api/v1/house');
+            let res = await chai.request(server).post('/api/v1/house/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 2);
         });
         it('it should return no property', async () => {
-            let res = await chai.request(server).get('/api/v1/house');
+            let res = await chai.request(server).post('/api/v1/house/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 0);
         });
-
     });
 
     describe('/ POST House', () => {

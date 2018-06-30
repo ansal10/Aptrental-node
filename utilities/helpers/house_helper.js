@@ -8,10 +8,20 @@ const permission = require('../permisson_utility');
 const pageLimit = 50;
 const _ = require('underscore');
 const util = require('util');
+const config = require('../../config/index');
+
+const LIST_ALL_HOUSE_ATTRIBUTES = ['id', 'title', 'country', 'city', 'locality', 'rent', 'builtArea', 'latitude',
+    'longitude', 'type', 'availability', 'images', 'UserId', 'availableFrom', 'tags',
+    'updatedAt'];
+const LIST_HOUSE_DETAILS_ATTRIBUTES = LIST_ALL_HOUSE_ATTRIBUTES.concat(['description', 'maintenance',
+'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'amenities', 'features', 'furnishingStatus', 'createdAt']);
+
+const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUTES, ['id', 'createdAt', 'updatedAt', 'UserId']);
+
 const Op = models.Sequelize.Op;
 Array.prototype.isArray = true;
 
-const listAllHouse = async (user, searchParams) => {
+const listAllHouse = async (user, searchParams, page) => {
     let params = {};
     let pageNumber = Number(searchParams.page || 0);
 
@@ -26,9 +36,7 @@ const listAllHouse = async (user, searchParams) => {
     let houses = await models.House.findAll({
         limit: pageLimit,
         offset: pageLimit * pageNumber,
-        attributes: ['title', 'country', 'city', 'locality', 'rent', 'builtArea', 'latitude',
-            'longitude', 'type', 'availability', 'images', 'UserId', 'availableFrom', 'tags',
-            'updatedAt'],
+        attributes: LIST_ALL_HOUSE_ATTRIBUTES,
         where: params
     });
 
@@ -43,7 +51,7 @@ const listAllHouse = async (user, searchParams) => {
 };
 
 const houseDetails = async (user, houseId) => {
-    let house = await models.House.findOne({where: {id: houseId}});
+    let house = await models.House.findOne({where: {id: houseId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES });
     if (house) {
         house = house.dataValues;
         house.edit = permission.canUpdateProperty(user, house);
@@ -55,7 +63,7 @@ const houseDetails = async (user, houseId) => {
     } else {
         return {
             status: false,
-            message: util.format('Could not find any property with ID: %s', houseId),
+            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, houseId),
             args: {}
         }
     }
@@ -66,12 +74,13 @@ const updateHouse = async (user, houseParams) => {
     if (house && permission.canUpdateProperty(user, house)) {
 
         try {
+            houseParams = _.pick(houseParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
             Object.assign({}, house, houseParams);
             await house.validate();
             await house.save();
             return {
                 status: true,
-                message: 'House have been updated successfully',
+                message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY,
                 args: {
                     house: house
                 }
@@ -87,7 +96,7 @@ const updateHouse = async (user, houseParams) => {
     } else {
         return {
             status: false,
-            message: 'You cannot perform this action',
+            message: config.MESSAGES.UNAUTHORIZED_ACCESS,
             args: {}
         }
     }
@@ -95,6 +104,7 @@ const updateHouse = async (user, houseParams) => {
 
 const createHouseInDatabase = async (user, houseParams) => {
     if (permission.canCreateProperty(user)) {
+        houseParams = _.pick(houseParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
         houseParams = Object.assign({}, houseParams, {UserId: user.id});
         try {
             let house = await models.House.create(houseParams);
@@ -114,13 +124,15 @@ const createHouseInDatabase = async (user, houseParams) => {
     } else {
         return {
             status: false,
-            message: 'You are not authorized',
-            args: {}
+            message: config.MESSAGES.UNAUTHORIZED_ACCESS,
+            args: {
+
+            }
         }
     }
 };
 
-const searchHouse = async (user, searchParams) => {
+const searchHouse = async (user, searchParams, page) => {
     // searchable params
 
     let isValidArray = function (v) {
@@ -135,7 +147,6 @@ const searchHouse = async (user, searchParams) => {
             query = Object.assign({}, query, {
                 title: {[Op.iLike]: s},
                 city: {[Op.iLike]: s},
-                description: {[Op.iLike]: s},
                 locality: {[Op.iLike]: s},
                 address: {[Op.iLike]: s},
                 country: {[Op.iLike]: s},
@@ -249,7 +260,7 @@ const searchHouse = async (user, searchParams) => {
             });
         }
 
-        return await listAllHouse(user, query);
+        return await listAllHouse(user, query, page);
     }catch (e) {
         return {
             status: false,

@@ -8,7 +8,8 @@ const permission = require('../permisson_utility');
 const _ = require('underscore');
 const ADMIN_UPDATE_ALLOWED_FIELDS = ['role', 'status', 'sex', 'name', 'email'];
 const SELF_UPDATE_ALLOWED_FIELDS = ['name', 'sex', 'email'];
-const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt']
+const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt'];
+const config = require('../../config/index');
 
 
 const TIME = {
@@ -16,19 +17,7 @@ const TIME = {
     PASSWORD_TOKEN_EXPIRATION: 15 * 60  // seconds
 
 };
-const STRS = {
-    INVALID_EMAIL: 'Your email is invalid',
-    EMAIL_VERIFICATION_FAILED: 'Your email verification failed, probably your link expired or email already verified.',
-    PASSWORD_RESET_FAILED: 'Your password token is expired or wrong, in case of expiration you can request a new one.',
-    SUCCESSFUL_EMAIL_VERIFICATION: 'Your email is successfully verified',
-    SUCCESSFULLY_RESEND_CONFIRMATION_MAIL: 'Confirmation mail is successfully send.',
-    SUCCESSFULLY_PASSWORD_TOKEN_SENT: 'Password token been sent successfully',
-    SUCCESSFULLY_PASSWORD_RESET: 'Password has been reset successfully',
-    SIGNUP_SUCCESSFUL_MESSAGE: 'Signup successful',
-    PASSWORD_MIN_LENGTH: 6,
-    INVALID_PASSWORD: 'Password should be at least 6 digits long.'
 
-};
 
 
 const createUserInDatabase = async function (userParams) {
@@ -55,7 +44,7 @@ const createUserInDatabase = async function (userParams) {
 
         return {
             status: true,
-            message: STRS.SIGNUP_SUCCESSFUL_MESSAGE,
+            message: config.MESSAGES.SIGNUP_SUCCESSFUL_MESSAGE,
             args: {
                 user: user
             }
@@ -72,7 +61,7 @@ const createUserInDatabase = async function (userParams) {
 const verifyEmail = async function (email, email_token) {
     let user = await models.User.findOne({where: {email: validator.trim(email, '').toLowerCase()}});
     if (!user)
-        return {status: false, message: STRS.EMAIL_VERIFICATION_FAILED};
+        return {status: false, message: config.MESSAGES.EMAIL_VERIFICATION_FAILED};
 
     if (user.emailAttributes.token === email_token && moment().toISOString() < user.emailAttributes.expired) {
 
@@ -84,16 +73,16 @@ const verifyEmail = async function (email, email_token) {
 
         return {
             status: true,
-            message: STRS.SUCCESSFUL_EMAIL_VERIFICATION
+            message: config.MESSAGES.SUCCESSFUL_EMAIL_VERIFICATION
         };
     }
-    return {status: false, message: STRS.EMAIL_VERIFICATION_FAILED}
+    return {status: false, message: config.MESSAGES.EMAIL_VERIFICATION_FAILED}
 };
 
 const resendEmailConfirmation = async function (email) {
     let user = await models.User.findOne({where: {email: validator.trim(email, '').toLowerCase()}});
     if (!user)
-        return {status: false, message: STRS.INVALID_EMAIL};
+        return {status: false, message: config.MESSAGES.INVALID_EMAIL};
     user.emailAttributes = {
         token: uuidv4(),
         created: moment().toISOString(),
@@ -107,16 +96,16 @@ const resendEmailConfirmation = async function (email) {
         args: {
             user: user
         },
-        message: STRS.SUCCESSFULLY_RESEND_CONFIRMATION_MAIL
+        message: config.MESSAGES.SUCCESSFULLY_RESEND_CONFIRMATION_MAIL
     }
 };
 
 const resetPassword = async function (email, password_token, password) {
     let user = await models.User.findOne({where: {email: validator.trim(email, '').toLowerCase()}});
     if (!user)
-        return {status: false, message: STRS.INVALID_EMAIL};
-    if (validator.trim(password, '').length < STRS.PASSWORD_MIN_LENGTH)
-        return {status: false, message: STRS.INVALID_PASSWORD};
+        return {status: false, message: config.MESSAGES.INVALID_EMAIL};
+    if (validator.trim(password, '').length < config.MESSAGES.PASSWORD_MIN_LENGTH)
+        return {status: false, message: config.MESSAGES.INVALID_PASSWORD};
 
     if (user.passwordAttributes.token === password_token && moment().toISOString() < user.passwordAttributes.expired) {
         let uuid = uuidv4();
@@ -128,19 +117,19 @@ const resetPassword = async function (email, password_token, password) {
         await user.save();
         return {
             status: true,
-            message: STRS.SUCCESSFULLY_PASSWORD_RESET,
+            message: config.MESSAGES.SUCCESSFULLY_PASSWORD_RESET,
             args: {
                 user: user
             }
         }
     }
-    return {status: false, message: STRS.PASSWORD_RESET_FAILED}
+    return {status: false, message: config.MESSAGES.PASSWORD_RESET_FAILED}
 };
 
 const resendPasswordResetToken = async function (email) {
     let user = await models.User.findOne({where: {email: validator.trim(email, '').toLowerCase()}});
     if (!user)
-        return {status: false, message: STRS.INVALID_EMAIL};
+        return {status: false, message: config.MESSAGES.INVALID_EMAIL};
 
     user.passwordAttributes = {
         token: (Math.floor(Math.random() * 10000000) + 1000000) + '',
@@ -153,7 +142,7 @@ const resendPasswordResetToken = async function (email) {
         args: {
             user: user
         },
-        message: STRS.SUCCESSFULLY_PASSWORD_TOKEN_SENT
+        message: config.MESSAGES.SUCCESSFULLY_PASSWORD_TOKEN_SENT
     }
 
 };
@@ -170,7 +159,7 @@ const listAllUsers = async (pageNumber, pageLimit) => {
 const updateUserDetails = async (updater, userArgs, userId) => {
     let user = await models.User.findOne({where: {id: userId}});
     if (!user)
-        return {status: false, message: 'Could not find details of user to be edited'};
+        return {status: false, message: config.MESSAGES.RESOURCE_NOT_FOUND};
     if (permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
@@ -184,7 +173,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
             await user.save();
             return {
                 status: true,
-                message: 'User updated successfully'
+                message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY
             }
         } catch (e) {
             return {
@@ -193,7 +182,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
             }
         }
     } else {
-        return {status: false, message: 'Unauthorized Access'}
+        return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
     }
 };
 
@@ -203,11 +192,11 @@ const findUserDetails = async (requester, userid) => {
         attributes: USER_DETAILS_FIELDS
     });
     if (!u)
-        return {status: false, message: 'User not found with given ID'};
+        return {status: false, message: config.MESSAGES.RESOURCE_NOT_FOUND};
     if (permission.canSeeUserDetails(requester, u)) {
         return {status: true, message: '', args: {user: u}};
     } else {
-        return {status: false, message: 'Unauthorized Access'}
+        return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
     }
 }
 
