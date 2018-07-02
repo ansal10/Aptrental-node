@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
 import PropertyCard from "../components/propertyCard";
 import Filter from "../components/filter";
+import MultipleMapContainer from "../components/mapMultiple";
+import MapContainer from "../components/map";
 
 class Properties extends Component {
 
@@ -27,10 +29,26 @@ class Properties extends Component {
         }
     }
 
+    renderPropertiesOnMap() {
+        if(this.props.properties) {
+            const coordinates = this.props.properties.map((property, i) => {
+               const {latitude, longitude, id} = property;
+               return {latitude, longitude, id};
+               // return {latitude: 40.741895, longitude: -73.989308};
+            });
+
+
+            return (
+                <MultipleMapContainer title="Property search" coordinates={coordinates} />
+            )
+
+        }
+    }
+
     head(){
         return (
             <Helmet bodyAttributes={{class: "postsPage"}}>
-                <title>{`Posts - React Starter Kit`}</title>
+                <title>{`Properties Page`}</title>
             </Helmet>
         );
     }
@@ -52,7 +70,7 @@ class Properties extends Component {
                                 <Col xs={12} md={8}>
                                     {
                                         (properties.length > 0) ?
-                                        this.renderProperties():
+                                        this.renderPropertiesOnMap():
                                            <div className="no-result">
                                             <h2> Oops!!! No Results</h2>
                                             <h2> Try to widen your search</h2>
@@ -60,7 +78,6 @@ class Properties extends Component {
                                     }
                                 </Col>
                             </Row>
-
                         </Grid>
                     </div>
                     </ReactCSSTransitionGroup>

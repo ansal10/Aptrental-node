@@ -172,5 +172,7 @@ fabric.properties
 build/
 public/
 
+package-lock.json
+
 
 # End of https://www.gitignore.io/api/node,macos,webstorm

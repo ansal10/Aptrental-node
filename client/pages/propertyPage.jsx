@@ -130,7 +130,7 @@ class Property extends Component {
             return (
                 <div>
                     <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{`React Starter Kit`}</title>
+                        <title>{'Property Page'}</title>
                     </Helmet>
                     <InternalTextBanner Heading="" wrapperClass="post" />
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
@@ -152,7 +152,7 @@ class Property extends Component {
             return (
                 <div>
                     <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{`404 not found - React Starter Kit`}</title>
+                        <title>{'404 not found'}</title>
                     </Helmet>
                     <InternalTextBanner Heading="404 not found" wrapperClass="post" />
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>

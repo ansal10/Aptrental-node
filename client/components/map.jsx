@@ -11,6 +11,10 @@ export class MapContainer extends Component {
             <Map google={this.props.google}
                  style={{width: '100%', height: '100%', position: 'relative'}}
                  containerStyle={{width: '100%', height: '30%', position: 'relative'}}
+                 initialCenter={{
+                     lat: lat,
+                     lng: lng
+                 }}
                  center={{
                      lat: lat,
                      lng: lng
@@ -20,6 +24,7 @@ export class MapContainer extends Component {
                 <Marker
                     title={title}
                     name={title}
+                    mapCenter={{lat, lng}}
                     position={{lat, lng}} />
             </Map>
         );
