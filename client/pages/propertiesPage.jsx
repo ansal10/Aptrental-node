@@ -37,7 +37,7 @@ class Properties extends Component {
 
     render() {
 
-        const {properties} = this.props;
+        const {properties, fetchPropertiesAction} = this.props;
         if(this.props.properties){
             return(
                 <div className="properties-page">
@@ -47,7 +47,7 @@ class Properties extends Component {
                         <Grid className="properties">
                             <Row>
                                 <Col xs={12} md={4}>
-                                    <Filter/>
+                                    <Filter applyFilter={fetchPropertiesAction}/>
                                 </Col>
                                 <Col xs={12} md={8}>
                                     {this.renderProperties()}

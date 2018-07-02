@@ -89,7 +89,7 @@ class Header extends Component {
 
                                 {
                                     user ? <li className="last">
-                                        <NavLink activeClassName="active" to="/" onClick={this.logout.bind(this)}>Logout</NavLink> </li> : <li className="last">
+                                        <NavLink activeClassName="active" to="/" onClick={this.logout.bind(this)}>Logout</NavLink> </li>: <li className="last">
                                         <NavLink activeClassName="active" to="/register">Login/Register</NavLink> </li>
                                 }
                             </ul>

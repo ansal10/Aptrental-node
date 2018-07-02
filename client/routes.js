@@ -10,6 +10,7 @@ import Post from './pages/postPage';
 import Property from './pages/propertyPage';
 import AddProperty from './pages/addPropertyPage';
 import Properties from './pages/propertiesPage';
+import UserProfile from './pages/userProfile';
 import TermsAndConditions from './pages/policies/termsAndConditions';
 import Privacy from './pages/policies/privacy';
 import CookiesPolicy from './pages/policies/cookiesPolicy';
@@ -80,6 +81,16 @@ export default [
         routes: [
             {
                 ...RegisterPage
+            }
+        ]
+    },
+    {
+        path: '/user',
+        ...App,
+        routes: [
+            {
+                path: '/user/profile',
+                ...UserProfile
             }
         ]
     },

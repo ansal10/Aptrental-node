@@ -1,4 +1,21 @@
 
+export const validate_filters = values => {
+
+    const errors = {}
+
+    const requiredFields = [
+    ]
+
+    requiredFields.forEach(field => {
+        if (!values[field]) {
+            errors[field] = 'Required'
+        }
+    })
+    return errors;
+
+};
+
+
 export const validate_addProperty = values => {
 
     const errors = {}
@@ -79,7 +96,9 @@ export const validate_registerForm = values => {
     const requiredFields = [
         'name',
         'email',
-        'password'
+        'password',
+        'sex',
+        'type',
     ]
 
     requiredFields.forEach(field => {

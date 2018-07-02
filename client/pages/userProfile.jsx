@@ -12,10 +12,11 @@ import InternalTextBanner from './../components/banners/internalTextBanner';
 import {appName} from '../constants';
 
 import axios from 'axios';
-import {SIGN_UP_ENDPOINT_POST} from "../endpoints";
+import {UPDATE_USER_ENDPOINT_PUT} from "../endpoints";
 import {renderDropdownList} from "../common/forms/input-types/index";
+import {Gen} from "../helpers/gen";
 
-class RegisterPage extends Component {
+class UserProfile extends Component {
 
     constructor(props) {
         super(props);
@@ -37,9 +38,10 @@ class RegisterPage extends Component {
     submit(data){
         this.toggle();
         console.log(data);
-        const {name, email, password} = data;
+        const {name, email, sex, type} = data;
+        const {id} = this.props.user;
 
-        axios.post(SIGN_UP_ENDPOINT_POST, {name, email, password, sex: "male"})
+        axios.put(UPDATE_USER_ENDPOINT_PUT + '/' + id, {name, email, sex})
             .then((success) => {
                 console.log(success.data.success.message);
                 this.toggle();
@@ -60,7 +62,7 @@ class RegisterPage extends Component {
   head(){
     return (
         <Helmet bodyAttributes={{class: "contactPage"}}>
-          <title>{`Register - ${appName}`}</title>
+          <title>{`User Profile - ${appName}`}</title>
         </Helmet>
     );
   }
@@ -72,21 +74,14 @@ class RegisterPage extends Component {
 
           <section className="contactPage_wrap">
           {this.head()}
-            <InternalTextBanner Heading="Register" wrapperClass="contact" />
+            <InternalTextBanner Heading="User Profile" wrapperClass="contact" />
             <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
             <div className="main anim-appear">
                   <div className="grid">
                       <div className="column column_12_12">
                         <div className="content_block">
 
-                            {
-                                !this.state.showForm ? <div className="confirm_email_block">
-                                    <div className="confirm_email_check">
-                                        Sign up successful, Check your email and verify
-                                    </div>
-                                    <Link className="proceed-to-link" to="/login">Proceed to login</Link>
-
-                                </div> : <form onSubmit={handleSubmit(this.submit.bind(this))}>
+                             <form className="user-profile-container" onSubmit={handleSubmit(this.submit.bind(this))}>
 
                                     <div className="form_wrap">
 
@@ -105,14 +100,6 @@ class RegisterPage extends Component {
                                                 name="email"
                                                 component={renderTextField}
                                                 label="Email:"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="password"
-                                                component={renderTextField}
-                                                label="Password:"
                                             />
                                         </div>
 
@@ -144,22 +131,20 @@ class RegisterPage extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                             >
-                                                Send
+                                                Update Profile
                                             </LaddaButton>
                                         </div>
 
-                                        <Link to="/login">Already have account? Login </Link>
-
+                                        {Gen.isUserRealorOrAdmin(this.props.user) ?
+                                            <Link className="listed-by-me-link" to="/property?userId=3"> Property listed by me </Link> : ''
+                                        }
                                     </div>
 
-                                </form>
-
-                            }
-
-                        </div>
+                            </form>
                       </div>
                   </div>
               </div>
+            </div>
               </ReactCSSTransitionGroup>
 
           </section>
@@ -169,19 +154,20 @@ class RegisterPage extends Component {
   }
 
 
-  RegisterPage = reduxForm({
-      form: 'contactForm',
+UserProfile = reduxForm({
+      form: 'userProfileForm',
       validate,
       enableReinitialize: true,
-  })(RegisterPage);
+  })(UserProfile);
 
 
 function mapStateToProps(state){
     return {
-        user: state.user
+        user: state.user,
+        initialValues: state.user
     };
 };
 
 export default {
-  component: connect(mapStateToProps)(RegisterPage)
+  component: connect(mapStateToProps)(UserProfile)
 };

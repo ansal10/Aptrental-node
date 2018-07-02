@@ -9,6 +9,7 @@ export const CREATE_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/ho
 export const UPDATE_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/house';
 export const SIGN_UP_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/signup';
 export const LOG_IN_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/login';
+export const UPDATE_USER_ENDPOINT_PUT = config.axiosInstance_baseURL+'/api/v1/user/login';
 export const GET_USER_DETAILS = config.axiosInstance_baseURL+'/api/v1/user/details';
 export const UPLOAD_IMAGE_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/uploads/images';
 export const LOGOUT_USER = config.axiosInstance_baseURL+'/api/v1/user/logout';

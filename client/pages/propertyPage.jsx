@@ -44,11 +44,9 @@ class Property extends Component {
                                     <Grid>
                                         <Row className="title-row">
                                             <TitleInfo name={title} location={locality} price={`$ ${Gen.round(rent)}`} area={`${Gen.round(builtArea)} sq ft`}/>
-
                                             {
                                                 propertyData.edit ? <Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>: ''
                                             }
-                                            <Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>
                                         </Row>
                                         <Row className="bottom-line-separator">
                                             <Col xs={12} md={6}>

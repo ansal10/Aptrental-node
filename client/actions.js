@@ -46,9 +46,9 @@ export const fetchPropertyAction = (productID) => async (dispatch, getState, api
 
 };
 
-export const fetchPropertiesAction = () => async (dispatch, getState, api) => {
+export const fetchPropertiesAction = (data) => async (dispatch, getState, api) => {
 
-    await api.post(GET_PROPERTIES_ENDPOINT, {searchString: ""}).then(response => {
+    await api.post(GET_PROPERTIES_ENDPOINT, data).then(response => {
         dispatch({
             type: 'FETCH_PROPERTIES',
             payload: response.data.success.data
