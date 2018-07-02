@@ -17,7 +17,8 @@ module.exports = {
     maintenance: ['monthly', 'deposit', 'brokerage', 'annually'],
     MESSAGES:{
         RESOURCE_NOT_FOUND: 'Resource not found with ID: %s',
-        RESOURCE_UPDATED_SUCCESSFULLY: 'Resource have been updated successfully',
+        RESOURCE_UPDATED_SUCCESSFULLY: 'Resource has been updated successfully',
+        RESOURCE_CREATED_SUCCESSFULLY: 'Resource has been created successfully',
         UNAUTHORIZED_ACCESS: 'You are not authorized for this action',
         INVALID_EMAIL: 'Your email is invalid',
         EMAIL_VERIFICATION_FAILED: 'Your email verification failed, probably your link expired or email already verified.',

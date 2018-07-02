@@ -30,7 +30,7 @@ router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
 router.post('/', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
     let retVal = await houseHelper.createHouseInDatabase(user, req.body);
-    genUtil.sendJsonResponse(res, retVal.status ? 201: 400, retVal.message, retVal.args.user)
+    genUtil.sendJsonResponse(res, retVal.status ? 201: 400, retVal.message, retVal.args.house)
 });
 
 module.exports = router;

@@ -8,6 +8,27 @@ export class Gen {
         return Math.round(num);
     }
 
+    static isUserRealorOrAdmin(user) {
+        return user && user.role && (user.role === 'realtor' || user.role === 'admin');
+    }
+
+    static baseName(str) {
+        var base = new String(str).substring(str.lastIndexOf('/') + 1);
+        if(base.lastIndexOf(".") != -1)
+            base = base.substring(0, base.lastIndexOf("."));
+        return base;
+    }
+
+    static mergeArray(a1, a2) {
+        const newArray = Gen.objectCopy(a1);
+        a2.map(item => {
+            if(newArray.indexOf(item)<0) {
+                newArray.push(item);
+            }
+        })
+        return newArray;
+    }
+
     static getAvailableString(d1) {
         // d2 current date
         // d1 apartment date

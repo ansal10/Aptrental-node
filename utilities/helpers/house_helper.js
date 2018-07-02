@@ -110,6 +110,7 @@ const createHouseInDatabase = async (user, houseParams) => {
             let house = await models.House.create(houseParams);
             return {
                 status: true,
+                message: config.MESSAGES.RESOURCE_CREATED_SUCCESSFULLY,
                 args: {
                     house: house
                 }

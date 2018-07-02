@@ -11,6 +11,9 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 Moment.locale('en')
 momentLocalizer()
 
+
+
+
 // Textfield
 export const renderTextField = ({label, input, helperText, meta: {asyncValidating, touched, error}, ...custom}) => (
     <div className={classNames({'async_validating': asyncValidating, 'form_item': true, 'invalid': touched && error, 'dirty': touched})}>

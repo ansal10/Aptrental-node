@@ -33,7 +33,7 @@ module.exports = (DataType, Sequelize) => {
             validate:{
                 len:{
                     args: [50, 1000],
-                    msg: 'Title should be in range 50 to 1000 words'
+                    msg: 'Description should be in range 50 to 1000 words'
                 }
             }
         },
@@ -319,7 +319,7 @@ module.exports = (DataType, Sequelize) => {
                     if(!val || val.length <= 0)
                         next('At least one image is required');
                     for(let i = 0 ; i < val.length; i++){
-                        if(!validator.isURL(val[i]))
+                        if(!(validator.isURL(val[i]) || validator.isURL(val[i].replace('localhost:3000', 'localhost.com'))))
                             next('Images does not contain valid urls')
                     }
                     next();

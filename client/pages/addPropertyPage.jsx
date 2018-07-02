@@ -11,8 +11,12 @@ import InternalTextBanner from './../components/banners/internalTextBanner';
 
 import axios from 'axios';
 import {renderDateTimePicker, renderDropdownList} from "../common/forms/input-types/index";
-import {CREATE_PROPERTY_ENDPOINT} from "../endpoints";
+import {CREATE_PROPERTY_ENDPOINT, UPDATE_PROPERTY_ENDPOINT} from "../endpoints";
 import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
+import UploadImage from "../components/uploadImage";
+import {Gen} from "../helpers/gen";
+import {fetchPropertyAction} from "../actions";
+import {connect} from "react-redux";
 
 class AddPropertyPage extends Component {
 
@@ -21,14 +25,50 @@ class AddPropertyPage extends Component {
 
         this.state = {
             loading: false,
+            showForm: true,
+            images: [],
+            initialized: false,
         };
+    }
+
+    getPageType() {
+        const id = this.props.match.params.id || null;
+        return id ? "Edit" : "Create";
+    }
+
+    componentDidMount() {
+        const id = this.props.match.params.id || null;
+        if(id && !this.props.propertyData) {
+            this.props.fetchPropertyAction(id);
+        }
+    }
+
+    componentDidUpdate() {
+        if(this.props.propertyData && !this.state.initialized){
+            // this.props.initialize(this.props.propertyData);
+            const newState = Gen.objectCopy(this.state);
+            newState.initialized = true;
+            this.setState(newState);
+        }
     }
 
     toggle() {
         this.setState({
             loading: !this.state.loading,
             progress: 0.5,
+            showForm: this.state.showForm,
+            initialized: this.state.initialized,
         });
+    }
+
+    addImage(uploadUrl) {
+        const newState = Gen.objectCopy(this.state);
+        newState.images.push(uploadUrl);
+        this.setState(newState);
+    }
+
+    removeImage() {
+        // no action
     }
 
 
@@ -36,15 +76,21 @@ class AddPropertyPage extends Component {
         this.toggle();
         console.log(data);
 
+        const images = Gen.mergeArray(data.images, this.state.images);
+
       const {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus} = data;
 
-      axios.post(CREATE_PROPERTY_ENDPOINT, {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus})
+        const id = this.props.match.params.id || null;
+        const endpoint = this.getPageType() === "Edit" ? UPDATE_PROPERTY_ENDPOINT : CREATE_PROPERTY_ENDPOINT;
+
+      axios.post(CREATE_PROPERTY_ENDPOINT, {id, images, title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus})
       .then((success) => {
           console.log(success.data.success.message);
           this.toggle();
           notify.show(success.data.success.message, 'success');
           this.setState({
               loading: false,
+              showForm: false,
           })
       })
       .catch((error) => {
@@ -64,7 +110,9 @@ class AddPropertyPage extends Component {
   }
 
     render() {
-      const { handleSubmit } = this.props;
+
+      const { handleSubmit, propertyData } = this.props;
+      const pageType = this.getPageType();
 
       return (
           
@@ -75,230 +123,240 @@ class AddPropertyPage extends Component {
                   <div className="grid">
                       <div className="column column_12_12">
                         <div className="content_block">
+                            {
+                                !this.state.showForm ? <div className="confirm_email_block">
+                                    <div className="confirm_email_check">
+                                        Resource created successfully
+                                    </div>
+                                    <Link className="proceed-to-link" to="/">Proceed to properties page</Link>
 
-                          <form className="add-property-container" onSubmit={handleSubmit(this.submit.bind(this))}>
+                                </div>: <form className="add-property-container" onSubmit={handleSubmit(this.submit.bind(this))}>
 
-                            <div className="form_wrap">
+                                    <div className="form_wrap">
 
-                              <div className="form_row">
-                                <Field
-                                  name="title"
-                                  component={renderTextField}
-                                  label="Title:"
-                                />
-                              </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="title"
+                                                component={renderTextField}
+                                                label="Title:"
+                                            />
+                                        </div>
 
-                              <div className="form_row">
-                                <Field
-                                  name="country"
-                                  component={renderTextField}
-                                  label="country:"
-                                />
-                              </div>
+                                        {pageType === 'Edit' && propertyData && propertyData.images ? <UploadImage images={propertyData ? propertyData.images : []} addImage={this.addImage.bind(this)} removeImage={this.removeImage.bind(this)}/> : ''
+                                        }
 
-                              <div className="form_row">
-                                <Field
-                                  name="city"
-                                  component={renderTextField}
-                                  label="city:"
-                                />
-                              </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="country"
+                                                component={renderTextField}
+                                                label="country:"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="locality"
-                                        component={renderTextField}
-                                        label="locality:"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="city"
+                                                component={renderTextField}
+                                                label="city:"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="rent"
-                                        component={renderTextField}
-                                        label="rent:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="locality"
+                                                component={renderTextField}
+                                                label="locality:"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="builtArea"
-                                        component={renderTextField}
-                                        label="builtArea:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="rent"
+                                                component={renderTextField}
+                                                label="rent:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="carpetArea"
-                                        component={renderTextField}
-                                        label="carpetArea:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="builtArea"
+                                                component={renderTextField}
+                                                label="builtArea:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="latitude"
-                                        component={renderTextField}
-                                        label="latitude:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="carpetArea"
+                                                component={renderTextField}
+                                                label="carpetArea:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="longitude"
-                                        component={renderTextField}
-                                        label="longitude:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="latitude"
+                                                component={renderTextField}
+                                                label="latitude:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="type"
-                                        component={renderDropdownList}
-                                        label="type:"
-                                        data={[ '1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="longitude"
+                                                component={renderTextField}
+                                                label="longitude:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="availability"
-                                        component={renderDropdownList}
-                                        label="availability:"
-                                        data={[ 'yes', 'no', 'archive' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="type"
+                                                component={renderDropdownList}
+                                                label="type:"
+                                                data={[ '1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+' ]}/>
+                                        </div>
 
-
-                                <div className="form_row">
-                                    <Field
-                                        name="availableFrom"
-                                        component={renderDateTimePicker}
-                                        showTime={false}
-                                        label="availableFrom:"
-                                    />
-                                </div>
-
-                                <div className="form_row">
-                                    <Field
-                                        name="description"
-                                        component={renderTextarea}
-                                        label="description:"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="availability"
+                                                component={renderDropdownList}
+                                                label="availability:"
+                                                data={[ 'yes', 'no', 'archive' ]}/>
+                                        </div>
 
 
-                                <div className="form_row">
-                                    <Field
-                                        name="availableFor"
-                                        component={renderDropdownList}
-                                        label="availableFor:"
-                                        data={[ 'all', 'family', 'couples', 'bachelors' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="availableFrom"
+                                                component={renderDateTimePicker}
+                                                showTime={false}
+                                                label="availableFrom:"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="floor"
-                                        component={renderTextField}
-                                        label="floor:"
-                                        type="number"
-                                    />
-                                </div>
-
-                                <div className="form_row">
-                                    <Field
-                                        name="address"
-                                        component={renderTextarea}
-                                        label="address:"
-                                    />
-                                </div>
-
-                                <div className="form_row">
-                                    <Field
-                                        name="powerBackup"
-                                        component={renderDropdownList}
-                                        label="powerBackup:"
-                                        data={[ 'full', 'partial', 'no' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="description"
+                                                component={renderTextarea}
+                                                label="description:"
+                                            />
+                                        </div>
 
 
-                                <div className="form_row">
-                                    <Field
-                                        name="maintenance.monthly"
-                                        component={renderTextField}
-                                        label="maintenance monthly:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="availableFor"
+                                                component={renderDropdownList}
+                                                label="availableFor:"
+                                                data={[ 'all', 'family', 'couples', 'bachelors' ]}/>
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="maintenance.deposit"
-                                        component={renderTextField}
-                                        label="maintenance deposit:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="floor"
+                                                component={renderTextField}
+                                                label="floor:"
+                                                type="number"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="maintenance.brokerage"
-                                        component={renderTextField}
-                                        label="maintenance brokerage:"
-                                        type="number"
-                                    />
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="address"
+                                                component={renderTextarea}
+                                                label="address:"
+                                            />
+                                        </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="maintenance.annually"
-                                        component={renderTextField}
-                                        label="maintenance annually:"
-                                        type="number"
-                                    />
-                                </div>
-
-                                <div className="form_row">
-                                    <Field
-                                        name="features"
-                                        component={renderMultiselect}
-                                        label="features:"
-                                        data={[ 'bathroom','bedroom','study room','ac installed','curtains','chimney','exhaust','fans','lights','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="powerBackup"
+                                                component={renderDropdownList}
+                                                label="powerBackup:"
+                                                data={[ 'full', 'partial', 'no' ]}/>
+                                        </div>
 
 
-                                <div className="form_row">
-                                    <Field
-                                        name="furnishingStatus"
-                                        component={renderDropdownList}
-                                        label="furnishingStatus:"
-                                        data={[ 'furnished', 'unfurnished', 'semifurnished' ]}/>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="maintenance.monthly"
+                                                component={renderTextField}
+                                                label="maintenance monthly:"
+                                                type="number"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="maintenance.deposit"
+                                                component={renderTextField}
+                                                label="maintenance deposit:"
+                                                type="number"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="maintenance.brokerage"
+                                                component={renderTextField}
+                                                label="maintenance brokerage:"
+                                                type="number"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="maintenance.annually"
+                                                component={renderTextField}
+                                                label="maintenance annually:"
+                                                type="number"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="features"
+                                                component={renderMultiselect}
+                                                label="features:"
+                                                data={[ 'bathroom','bedroom','study room','ac installed','curtains','chimney','exhaust','fans','lights','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
+                                        </div>
 
 
-                                <div className="form_buttons">
-                                    <LaddaButton
-                                        type="submit"
-                                        className="btn btn-add first"
-                                        loading={this.state.loading}
-                                        data-color="#eee"
-                                        data-size={XL}
-                                        data-style={SLIDE_UP}
-                                        data-spinner-size={30}
-                                        data-spinner-color="#ddd"
-                                        data-spinner-lines={12}
-                                    >
-                                        Create/Update property
-                                    </LaddaButton>
-                                </div>
+                                        <div className="form_row">
+                                            <Field
+                                                name="furnishingStatus"
+                                                component={renderDropdownList}
+                                                label="furnishingStatus:"
+                                                data={[ 'furnished', 'unfurnished', 'semifurnished' ]}/>
+                                        </div>
 
-                            </div>
 
-                          </form>
+                                        <div className="form_buttons">
+                                            <LaddaButton
+                                                type="submit"
+                                                className="btn btn-add first"
+                                                loading={this.state.loading}
+                                                data-color="#eee"
+                                                data-size={XL}
+                                                data-style={SLIDE_UP}
+                                                data-spinner-size={30}
+                                                data-spinner-color="#ddd"
+                                                data-spinner-lines={12}
+                                            >
+                                                {pageType} property
+                                            </LaddaButton>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            }
 
                         </div>
                       </div>
@@ -313,12 +371,19 @@ class AddPropertyPage extends Component {
   }
 
 
+function mapStateToProps(state){
+    return {
+        propertyData: state.property,
+        initialValues: state.property
+    };
+};
+
 AddPropertyPage = reduxForm({
-      form: 'contactForm',
+      form: 'propertyForm',
       validate,
       enableReinitialize: true,
-  })(AddPropertyPage);
+})(AddPropertyPage);
 
 export default {
-  component: AddPropertyPage
+    component: connect(mapStateToProps, { fetchPropertyAction })(AddPropertyPage)
 };

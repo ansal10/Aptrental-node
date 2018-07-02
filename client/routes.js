@@ -34,6 +34,10 @@ export default [
         ...App,
         routes: [
             {
+                path: '/property/add',
+                ...AddProperty
+            },
+            {
                 path: '/property/edit/:id',
                 ...AddProperty
             },

@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import webConfig from './../../webConfig';
 import classNames from 'classnames';
 import {clearUserDetails, fetchUserDetails} from "../actions";
+import {Gen} from "../helpers/gen";
 
 class Header extends Component {
 
@@ -67,6 +68,15 @@ class Header extends Component {
                     <div className={classNames({'nav_wrap': true, 'mobile_active': this.state.mobileToggle })}>
                         <nav>
                             <ul>
+
+                                {
+                                    Gen.isUserRealorOrAdmin(user) ?
+                                        <li className="first">
+                                            <NavLink activeClassName="active" to="/property/add">List Property</NavLink>
+                                        </li> : ''
+                                }
+
+
                                 <li className="first">
                                     <NavLink activeClassName="active" to="/properties">Home</NavLink>
                                 </li>
