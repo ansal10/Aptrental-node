@@ -2,27 +2,56 @@ import React, {Component} from 'react';
 import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import {Link, NavLink} from 'react-router-dom';
+import {notify} from 'react-notify-toast';
 import { Field, reduxForm } from 'redux-form';
 import { validate_addProperty as validate }  from './../common/forms/validation';
-import { renderTextField, renderTextarea } from './../common/forms/input-types';
+import { renderTextField, renderMultiselect, renderTextarea } from './../common/forms/input-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from './../components/banners/internalTextBanner';
 
 import axios from 'axios';
 import {renderDateTimePicker, renderDropdownList} from "../common/forms/input-types/index";
+import {CREATE_PROPERTY_ENDPOINT} from "../endpoints";
+import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
 
 class AddPropertyPage extends Component {
 
-  submit(data){
-    console.log(data);
-    
-    axios.post('/sendmail', data)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loading: false,
+        };
+    }
+
+    toggle() {
+        this.setState({
+            loading: !this.state.loading,
+            progress: 0.5,
+        });
+    }
+
+
+    submit(data){
+        this.toggle();
+        console.log(data);
+
+      const {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus} = data;
+
+      axios.post(CREATE_PROPERTY_ENDPOINT, {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus})
+      .then((success) => {
+          console.log(success.data.success.message);
+          this.toggle();
+          notify.show(success.data.success.message, 'success');
+          this.setState({
+              loading: false,
+          })
+      })
+      .catch((error) => {
+          console.log(error.response.data.error.message);
+          notify.show(error.response.data.error.message, 'error');
+          this.toggle();
+      });
 
   }
 
@@ -41,7 +70,6 @@ class AddPropertyPage extends Component {
           
           <section className="contactPage_wrap">
           {this.head()}
-            <InternalTextBanner Heading="Contact" wrapperClass="contact" />
             <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
             <div className="main anim-appear">
                   <div className="grid">
@@ -197,18 +225,10 @@ class AddPropertyPage extends Component {
                                         data={[ 'full', 'partial', 'no' ]}/>
                                 </div>
 
-                                <div className="form_row">
-                                    <Field
-                                        name="amenities"
-                                        component={renderDropdownList}
-                                        label="amenities:"
-                                        data={[ 'bathroom','bedroom','study room','ac installed','curtains','chimney','exhaust','fans','lights','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
-                                </div>
-
 
                                 <div className="form_row">
                                     <Field
-                                        name="maintenance.monthy"
+                                        name="maintenance.monthly"
                                         component={renderTextField}
                                         label="maintenance monthly:"
                                         type="number"
@@ -245,10 +265,11 @@ class AddPropertyPage extends Component {
                                 <div className="form_row">
                                     <Field
                                         name="features"
-                                        component={renderTextField}
+                                        component={renderMultiselect}
                                         label="features:"
-                                    />
+                                        data={[ 'bathroom','bedroom','study room','ac installed','curtains','chimney','exhaust','fans','lights','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
                                 </div>
+
 
                                 <div className="form_row">
                                     <Field
@@ -260,10 +281,20 @@ class AddPropertyPage extends Component {
 
 
                                 <div className="form_buttons">
-                                <button className="btn-add btn first" type="submit">
-                                  Create/Update property
-                                </button>
-                              </div>
+                                    <LaddaButton
+                                        type="submit"
+                                        className="btn btn-add first"
+                                        loading={this.state.loading}
+                                        data-color="#eee"
+                                        data-size={XL}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-size={30}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
+                                    >
+                                        Create/Update property
+                                    </LaddaButton>
+                                </div>
 
                             </div>
 

@@ -8,9 +8,13 @@ import Notifications from 'react-notify-toast';
 class App extends Component {
 
     render() {
+        const options = {
+            zIndex: 99999,
+            top: '30px'
+        }
         return (
             <div className="default_layout">
-                <Notifications/>
+                <Notifications options={options} />
                 <Header />
                 {renderRoutes(this.props.route.routes)}
                 <Footer/>

@@ -34,25 +34,25 @@ class RegisterPage extends Component {
     }
 
     submit(data){
-    this.toggle();
-    console.log(data);
-    const {name, email, password} = data;
+        this.toggle();
+        console.log(data);
+        const {name, email, password} = data;
 
-    axios.post(SIGN_UP_ENDPOINT_POST, {name, email, password, sex: "male"})
-        .then((success) => {
-            console.log(success.data.success.message);
-            this.toggle();
-            notify.show(success.data.success.message, 'success');
-            this.setState({
-                loading: false,
-                showForm: false
+        axios.post(SIGN_UP_ENDPOINT_POST, {name, email, password, sex: "male"})
+            .then((success) => {
+                console.log(success.data.success.message);
+                this.toggle();
+                notify.show(success.data.success.message, 'success');
+                this.setState({
+                    loading: false,
+                    showForm: false
+                })
             })
-        })
-        .catch((error) => {
-            console.log(error.response.data.error.message);
-            notify.show(error.response.data.error.message, 'error');
-            this.toggle();
-        });
+            .catch((error) => {
+                console.log(error.response.data.error.message);
+                notify.show(error.response.data.error.message, 'error');
+                this.toggle();
+            });
 
   }
 

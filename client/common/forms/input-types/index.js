@@ -86,14 +86,28 @@ export const renderDropdownList = ({ input, label, data, valueField, textField, 
     </div>
 );
 
-export const renderMultiselect = ({ input, data, valueField, textField }) =>
-    <Multiselect {...input}
-                 onBlur={() => input.onBlur()}
-                 value={input.value || []} // requires value to be an array
-                 data={data}
-                 valueField={valueField}
-                 textField={textField}
-    />;
+export const renderMultiselect = ({ input, label, data, valueField, textField, helperText, meta: {asyncValidating, touched, error}, ...custom}) => (
+    <div className={classNames({'async_validating': asyncValidating, 'form_item': true, 'invalid': touched && error, 'dirty': touched})}>
+        <div className="form_label">
+            <label>{label}</label>
+        </div>
+        <Multiselect {...input}
+                     onBlur={() => input.onBlur()}
+                     value={input.value || []} // requires value to be an array
+                     data={data}
+                     valueField={valueField}
+                     textField={textField}
+        />
+        <div className="invalid_msg">
+            {error}
+        </div>
+
+        <div className={classNames({'helperText': true, 'active': helperText})}>
+            <span>{helperText}</span>
+        </div>
+    </div>
+
+);
 
 export const renderSelectList = ({ input, data }) =>
     <SelectList {...input}

@@ -9,7 +9,7 @@ const isAuthenticated = async ( req, res, next ) => {
     }
     
     let u = await models.User.findOne( { "where": {
-        "email": "manovagyanik.1@gmail.com"
+        "email": "manovagyanik1@gmail.com"
     } } );
 
     req.session.user = u;

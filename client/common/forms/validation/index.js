@@ -21,9 +21,7 @@ export const validate_addProperty = values => {
         'floor',
         'address',
         'powerBackup',
-        'amenities',
         'maintenance',
-        'availableFor',
         'features',
         'furnishingStatus',
     ]
@@ -33,6 +31,9 @@ export const validate_addProperty = values => {
             errors[field] = 'Required'
         }
     })
+
+    if(values.address && (values.address.length < 10 || values.address.length > 100))
+        errors.address = "address must be between 10 and 100 length";
 
     return errors;
 

@@ -1,4 +1,7 @@
-import {landingPageAPI, GET_PROPERTY_ENDPOINT, GET_PROPERTIES_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS} from './endpoints';
+import {
+    landingPageAPI, GET_PROPERTY_ENDPOINT, GET_PROPERTIES_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS,
+    LOGOUT_USER
+} from './endpoints';
 import {actions} from './constants';
 
 
@@ -14,6 +17,20 @@ export const fetchUserDetails = () => async (dispatch, getState, api) => {
     })
 
 };
+
+export const clearUserDetails = () => async (dispatch, getState, api) => {
+
+    await api.post(LOGOUT_USER, {}).then(response => {
+        dispatch({
+            type: actions.CLEAR_USER_DATA,
+            payload: response.data
+        })
+    }).catch((err) => {
+        console.log('error', err);
+    })
+
+};
+
 
 
 export const fetchPropertyAction = (productID) => async (dispatch, getState, api) => {

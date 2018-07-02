@@ -4,7 +4,7 @@ import {Link, NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import webConfig from './../../webConfig';
 import classNames from 'classnames';
-import {fetchUserDetails} from "../actions";
+import {clearUserDetails, fetchUserDetails} from "../actions";
 
 class Header extends Component {
 
@@ -15,6 +15,11 @@ class Header extends Component {
             mobileToggle: false
         }
         this.listenScrollEvent = this.listenScrollEvent.bind(this);
+    }
+
+    logout(e) {
+        e.preventDefault();
+        this.props.clearUserDetails();
     }
 
     listenScrollEvent(event) {
@@ -74,7 +79,7 @@ class Header extends Component {
 
                                 {
                                     user ? <li className="last">
-                                        <NavLink activeClassName="active" to="/logout">Logout</NavLink> </li> : <li className="last">
+                                        <NavLink activeClassName="active" to="/" onClick={this.logout.bind(this)}>Logout</NavLink> </li> : <li className="last">
                                         <NavLink activeClassName="active" to="/register">Login/Register</NavLink> </li>
                                 }
                             </ul>
@@ -96,4 +101,4 @@ function mapStateToProps(state){
 };
 
 
-export default connect(mapStateToProps, { fetchUserDetails })(Header);
+export default connect(mapStateToProps, { fetchUserDetails, clearUserDetails })(Header);
