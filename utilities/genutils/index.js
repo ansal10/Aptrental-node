@@ -1,5 +1,5 @@
 
-const sendJsonResponse =  (res, statusCode, message, data) => {
+const sendJsonResponse =  (res, statusCode, message, data, nextUrl, prevUrl) => {
 
     let d = {};
     let key = null;
@@ -8,6 +8,10 @@ const sendJsonResponse =  (res, statusCode, message, data) => {
         message: message,
         data: data
     };
+    if (nextUrl)
+        d.nextUrl = nextUrl;
+    if (prevUrl)
+        d.prevUrl = prevUrl;
 
     res.status(statusCode).json(d);
 };

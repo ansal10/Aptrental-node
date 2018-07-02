@@ -6,10 +6,11 @@ const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 const permission = require('../permisson_utility');
 const _ = require('underscore');
-const ADMIN_UPDATE_ALLOWED_FIELDS = ['role', 'status', 'sex', 'name', 'email'];
-const SELF_UPDATE_ALLOWED_FIELDS = ['name', 'sex', 'email'];
+const ADMIN_UPDATE_ALLOWED_FIELDS = ['role', 'status', 'sex', 'name'];
+const SELF_UPDATE_ALLOWED_FIELDS = ['name', 'sex'];
 const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt'];
 const config = require('../../config/index');
+const Op = models.Sequelize.Op;
 
 
 const TIME = {
@@ -17,7 +18,6 @@ const TIME = {
     PASSWORD_TOKEN_EXPIRATION: 15 * 60  // seconds
 
 };
-
 
 
 const createUserInDatabase = async function (userParams) {
@@ -169,7 +169,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
 
             Object.assign(user, user, updateVals);
-            await user.validate();
+            await user.validate({skip:['email']});
             await user.save();
             return {
                 status: true,
@@ -177,7 +177,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
             }
         } catch (e) {
             return {
-                status: true,
+                status: false,
                 message: e.errors[0].message
             }
         }
@@ -198,7 +198,34 @@ const findUserDetails = async (requester, userid) => {
     } else {
         return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
     }
-}
+};
+
+const searchUsers = async (requester, searchParams) => {
+    if (permission.canSeeAllUsers(requester)) {
+        let query = {};
+        let page = searchParams.page || 0;
+        USER_DETAILS_FIELDS.forEach((field) => {
+            if (searchParams[field]) {
+                let x = {};
+                x[field] = {
+                    [Op.in]: searchParams[field].trim().toLowerCase().split(",")
+                };
+                query = Object.assign({}, query, x);
+            }
+        });
+
+        let users = await models.User.findAll({
+            limit: config.pageLimit,
+            offset: config.pageLimit * page,
+            attributes: USER_DETAILS_FIELDS,
+            where: query
+        });
+
+        return {status: true, message: '', args: {users: users}};
+    } else {
+        return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
+    }
+};
 
 module.exports.createUserInDatabase = createUserInDatabase;
 module.exports.verifyEmail = verifyEmail;
@@ -208,4 +235,4 @@ module.exports.resendPasswordResetToken = resendPasswordResetToken;
 module.exports.listAllUsers = listAllUsers;
 module.exports.updateUserDetails = updateUserDetails;
 module.exports.findUserDetails = findUserDetails;
-
+module.exports.searchUsers = searchUsers;

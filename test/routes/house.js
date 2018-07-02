@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
 const assert = require('chai').assert;
+const should = chai.should();
 const truncate = require('../db/truncate');
 const moment = require('moment');
 const faker = require('faker');
@@ -42,11 +43,6 @@ describe('House', async () => {
         availableFrom: moment().toISOString(),
         floor: 2,
         powerBackup: 'full',
-        amenities: [
-            {amenity:'ac installed', quantity:Math.floor(Math.random()*10)},
-            {amenity:'bedroom', quantity:Math.floor(Math.random()*10)},
-            {amenity:'bathroom', quantity: Math.floor(Math.random()*10)},
-        ],
         features: ['Cover car parking', 'Centrally air conditioned', '24 hours security'],
         tags: [faker.random.arrayElement(), faker.random.arrayElement(), faker.random.arrayElement()],
         images: [faker.image.imageUrl(), faker.image.imageUrl(), faker.image.imageUrl()],
@@ -78,14 +74,26 @@ describe('House', async () => {
         it('it should return all available property user successful', async () => {
             await houseFactory();
             await houseFactory();
-            let res = await chai.request(server).post('/api/v1/house/search');
+            let res = await chai.request(server)
+                .post('/api/v1/house/search')
+                .send({});
             res.should.have.status(200);
             assert(res.body.success.data.length === 2);
         });
         it('it should return no property', async () => {
-            let res = await chai.request(server).post('/api/v1/house/search');
+            let res = await chai.request(server)
+                .post('/api/v1/house/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 0);
+        });
+        it('should search based on custom params', async () => {
+            let res = await chai.request(server)
+                .post('/api/v1/house/search')
+                .send({
+                    rent:[1,10000],
+                    floor: [1, 10]
+                });
+            res.should.have.status(200);
         });
     });
 
