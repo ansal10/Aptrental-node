@@ -23,7 +23,6 @@ const mimes = {
     svg: 'image/svg+xml',
     js: 'application/javascript'
 };
-const upload = multer({dest: 'uploads'})
 
 const router = express.Router();
 

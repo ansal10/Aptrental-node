@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/search', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
     let page = req.query.page || 0;
-    let houses = await houseHelper.searchHouse(user, req.body || {}, req.query.page || 0);
+    let houses = await houseHelper.searchHouse(user, req.body || {}, page || 0);
     genUtil.sendJsonResponse(res, 200, '', houses);
 });
 

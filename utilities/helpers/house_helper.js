@@ -5,7 +5,6 @@ const md5 = require('md5');
 const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 const permission = require('../permisson_utility');
-const pageLimit = 50;
 const _ = require('underscore');
 const util = require('util');
 const config = require('../../config/index');
@@ -34,13 +33,15 @@ const listAllHouse = async (user, searchParams, page) => {
 
 
     let houses = await models.House.findAll({
-        limit: pageLimit,
-        offset: pageLimit * pageNumber,
+        limit: config.pageLimit,
+        offset: config.pageLimit * pageNumber,
         attributes: LIST_ALL_HOUSE_ATTRIBUTES,
         where: params
     });
 
     houses = _.map(houses, (h) => {
+        if (h.images && h.images.length > 0)
+            h.images = [ h.images[0] ];
         return h.dataValues;
     });
 

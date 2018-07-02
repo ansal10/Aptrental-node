@@ -29,6 +29,7 @@ module.exports = {
         SIGNUP_SUCCESSFUL_MESSAGE: 'Signup successful',
         PASSWORD_MIN_LENGTH: 6,
         INVALID_PASSWORD: 'Password should be at least 6 digits long.'
-    }
+    },
+    pageLimit: 50
 
 };
