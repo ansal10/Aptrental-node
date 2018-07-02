@@ -167,26 +167,28 @@ const updateUserDetails = async (updater, userArgs, userId) => {
                 updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
                 Object.assign(user, user, updateVals);
                 let changedFields = user.changed();
-                changedFields.forEach((field)=>{
+                for (let i = 0 ; i < changedFields.length ; i++) {
+                    let field = changedFields[i];
                     if (!SELF_UPDATE_ALLOWED_FIELDS.includes(field)) 
                     return {
-                        status: true,
+                        status: false,
                         message: 'You are not allowed to update required fields'
                     }
-                });
+                };
             }
             else {
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
                 Object.assign(user, user, updateVals);
                 let changedFields = user.changed();
-                changedFields.forEach( (field) =>{
+                for (let i = 0 ; i < changedFields.length ; i++) {
+                    let field = changedFields[i];
                     if (!ADMIN_UPDATE_ALLOWED_FIELDS.includes(field)){
                         return {
-                            status: true,
+                            status: false,
                             message: 'You are not allowed to update required fields'
                         }
                     }                     
-                });
+                };
             }
             
             await user.validate({skip:['email']});
