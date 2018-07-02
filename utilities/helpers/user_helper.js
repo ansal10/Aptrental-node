@@ -163,12 +163,32 @@ const updateUserDetails = async (updater, userArgs, userId) => {
     if (permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
-            if (updater.id === userId)  // updating self
+            if (updater.id == userId && updater.role != 'admin') { // updating self
                 updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
-            else
+                Object.assign(user, user, updateVals);
+                let changedFields = user.changed();
+                changedFields.forEach((field)=>{
+                    if (!SELF_UPDATE_ALLOWED_FIELDS.includes(field)) 
+                    return {
+                        status: true,
+                        message: 'You are not allowed to update required fields'
+                    }
+                });
+            }
+            else {
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
-
-            Object.assign(user, user, updateVals);
+                Object.assign(user, user, updateVals);
+                let changedFields = user.changed();
+                changedFields.forEach( (field) =>{
+                    if (!ADMIN_UPDATE_ALLOWED_FIELDS.includes(field)){
+                        return {
+                            status: true,
+                            message: 'You are not allowed to update required fields'
+                        }
+                    }                     
+                });
+            }
+            
             await user.validate({skip:['email']});
             await user.save();
             return {

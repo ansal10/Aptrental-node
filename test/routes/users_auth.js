@@ -53,8 +53,8 @@ describe('Users', async () => {
         it('should update user details', async () => {
             let u =  await userFactory();
             let res = await chai.request(server)
-                .put('/api/v1/user/'+u.id)
-                .send({sex:'male'});
+                .put('/api/v1/user/'+user.id)
+                .send({sex:'others'});
             res.should.have.status(200);
         });
     })
