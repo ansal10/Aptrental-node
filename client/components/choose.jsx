@@ -10,7 +10,7 @@ class Choose extends Component {
 
     render(){
         return(
-            <div className="choose-container">
+            <div className={`${this.props.wrapperClassName} choose-container`}>
                 <h1 className="choose-header">
                     {this.props.title}
                 </h1>
@@ -32,6 +32,7 @@ class Choose extends Component {
 Choose.propTypes = {
     title: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
+    wrapperClassName: PropTypes.string,
 }
 
 export default Choose;

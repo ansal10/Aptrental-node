@@ -40,15 +40,20 @@ class Properties extends Component {
         const {properties} = this.props;
         if(this.props.properties){
             return(
-                <div>
+                <div className="properties-page">
                     {this.head()}
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
                         <Grid className="properties">
                             <Row>
-                                <Filter/>
+                                <Col xs={12} md={4}>
+                                    <Filter/>
+                                </Col>
+                                <Col xs={12} md={8}>
+                                    {this.renderProperties()}
+                                </Col>
                             </Row>
-                            {this.renderProperties()}
+
                         </Grid>
                     </div>
                     </ReactCSSTransitionGroup>

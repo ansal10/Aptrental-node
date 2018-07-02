@@ -76,7 +76,9 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin([
-            { from: 'client/assets/graphics', to: 'assets/graphics' }
+            { from: 'client/assets/graphics', to: 'assets/graphics' },
+            { from: 'client/assets/css', to: 'assets/css' }
+
         ])
     ],
 

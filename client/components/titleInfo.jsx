@@ -14,16 +14,16 @@ class TitleInfo extends Component {
         const {name, location, price, area} = this.props;
         return(
             <Col xs={12} className="title-container" >
-                <div className="dark-text">
+                <div className="title dark-text">
                     {name}
                 </div>
-                <div className="light-text">
+                <div className="location light-text">
                     {location}
                 </div>
-                <div className="dark-text float-left margin-right-10">
+                <div className="price dark-text float-left margin-right-10">
                     {price}
                 </div>
-                <div className="light-text">
+                <div className="area light-text">
                     {area}
                 </div>
             </Col>

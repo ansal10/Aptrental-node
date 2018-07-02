@@ -1,4 +1,43 @@
 
+export const validate_addProperty = values => {
+
+    const errors = {}
+
+    const requiredFields = [
+        'title',
+        'country',
+        'city',
+        'locality',
+        'rent',
+        'builtArea',
+        'carpetArea',
+        'latitude',
+        'longitude',
+        'type',
+        'availability',
+        'availableFrom',
+        'description',
+        'availableFor',
+        'floor',
+        'address',
+        'powerBackup',
+        'amenities',
+        'maintenance',
+        'availableFor',
+        'features',
+        'furnishingStatus',
+    ]
+
+    requiredFields.forEach(field => {
+        if (!values[field]) {
+            errors[field] = 'Required'
+        }
+    })
+
+    return errors;
+
+}
+
 export const validate_contactForm = values => {
     
     const errors = {}

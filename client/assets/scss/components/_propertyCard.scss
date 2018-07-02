@@ -1,8 +1,11 @@
 .property-card-container {
 
-  margin-top: 10px;
+  &:hover {
+    cursor: pointer;
+  }
+
   margin-bottom: 10px;
-  padding: 5px 0px;
+  padding: 5px 10px;
   background: $white;
 
   .property-image-container {

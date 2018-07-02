@@ -1,5 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
+import DropdownList from 'react-widgets/lib/DropdownList'
+import SelectList from 'react-widgets/lib/SelectList'
+import Multiselect from 'react-widgets/lib/Multiselect'
+
+import Moment from 'moment'
+import momentLocalizer from 'react-widgets-moment';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+
+Moment.locale('en')
+momentLocalizer()
 
 // Textfield
 export const renderTextField = ({label, input, helperText, meta: {asyncValidating, touched, error}, ...custom}) => (
@@ -48,3 +58,65 @@ export const renderTextarea = ({label, input, helperText, meta: {asyncValidating
 
     </div>
 );
+
+
+export const renderDropdownList = ({ input, label, data, valueField, textField, helperText, meta: {asyncValidating, touched, error}, ...custom}) => (
+    <div className={classNames({'async_validating': asyncValidating, 'form_item': true, 'invalid': touched && error, 'dirty': touched})}>
+        <div className="form_label">
+            <label>{label}</label>
+        </div>
+
+        <div className="form_textarea">
+            <DropdownList {...input}
+                          data={data}
+                          valueField={valueField}
+                          textField={textField}
+                          onChange={input.onChange} />
+            <span className="bottom_border"></span>
+        </div>
+
+        <div className="invalid_msg">
+            {error}
+        </div>
+
+        <div className={classNames({'helperText': true, 'active': helperText})}>
+            <span>{helperText}</span>
+        </div>
+
+    </div>
+);
+
+export const renderMultiselect = ({ input, data, valueField, textField }) =>
+    <Multiselect {...input}
+                 onBlur={() => input.onBlur()}
+                 value={input.value || []} // requires value to be an array
+                 data={data}
+                 valueField={valueField}
+                 textField={textField}
+    />;
+
+export const renderSelectList = ({ input, data }) =>
+    <SelectList {...input}
+                onBlur={() => input.onBlur()}
+                data={data} />;
+
+export const renderDateTimePicker = ({ input: { onChange, value }, showTime, label, data, valueField, textField, helperText, meta: {asyncValidating, touched, error}, ...custom }) =>(
+    <div className={classNames({'async_validating': asyncValidating, 'form_item': true, 'invalid': touched && error, 'dirty': touched})}>
+        <div className="form_label">
+            <label>{label}</label>
+        </div>
+            <DateTimePicker
+        onChange={onChange}
+        format="DD MMM YYYY"
+        time={showTime}
+        value={!value ? null : new Date(value)}
+        />
+        <div className="invalid_msg">
+            {error}
+        </div>
+
+        <div className={classNames({'helperText': true, 'active': helperText})}>
+            <span>{helperText}</span>
+        </div>
+    </div>
+)

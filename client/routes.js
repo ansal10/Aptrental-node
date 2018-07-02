@@ -8,6 +8,7 @@ import About from './pages/aboutPage';
 import Posts from './pages/postsPage';
 import Post from './pages/postPage';
 import Property from './pages/propertyPage';
+import AddProperty from './pages/addPropertyPage';
 import Properties from './pages/propertiesPage';
 import TermsAndConditions from './pages/policies/termsAndConditions';
 import Privacy from './pages/policies/privacy';
@@ -32,6 +33,10 @@ export default [
         path: '/property',
         ...App,
         routes: [
+            {
+                path: '/property/edit/:id',
+                ...AddProperty
+            },
             {
                 path: '/property/:id',
                 ...Property

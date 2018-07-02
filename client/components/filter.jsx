@@ -21,8 +21,8 @@ class Filter extends Component {
 
     render(){
         return(
-            <div className="filter-container">
-                <Choose title="CONFIGURATIONS" options={["1 RK", "1 BHK", "2 BHK", "3 BHK", "3+ BHK"]}/>
+            <div className="filter-container" >
+                <Choose wrapperClassName="first" title="CONFIGURATIONS" options={["1 RK", "1 BHK", "2 BHK", "3 BHK", "3+ BHK"]}/>
 
                 <Choose title="Furnishing" options={["Fully furnished", "Semi furnished", "Unfurnished"]}/>
                 <Choose title="Listed By" options={["Agent", "Broker"]}/>

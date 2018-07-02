@@ -21,11 +21,16 @@
 
   .choose-container {
 
-    margin: 10px 20px;
+    padding: 10px 20px;
+    &.first {
+      margin-top: 0px;
+    }
     .choose-header {
       color: $black;
       font-size: 1.4rem;
       font-weight: 600;
+      margin-top: 0px;
+      padding-bottom: 20px;
     }
 
     .options-wrapper {
@@ -50,13 +55,12 @@
   }
   .filter-button {
     max-width: 300px;
-    margin: auto;
-
+    margin: 30px auto 0 auto;
+    border-radius: 0px;
   }
 }
 
 @media all and (min-width: 960px) {
-
 }
 
 @media all and (max-width: 959px) and (min-width: 600px) {
@@ -66,9 +70,8 @@
 @media all and (max-width: 599px) and (min-width: 320px) {
 
   .filter-container {
-    position: absolute;
-    z-index: 1000;
-    top: 0;
-    left: 0;
+    height: 100%;
+    z-index: 10000;
+    position: fixed;
   }
 }

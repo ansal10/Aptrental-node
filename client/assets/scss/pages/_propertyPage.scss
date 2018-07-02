@@ -1,3 +1,13 @@
+.property-page {
+  margin-top: 10.0rem;
+  background: $white;
+  overflow: auto;
+
+  .right-align {
+    float: right;
+  }
+}
+
 .bottom-line-separator {
   border-bottom: 2px solid $gray;
   padding-bottom : 3rem;

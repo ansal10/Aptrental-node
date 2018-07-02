@@ -11,6 +11,7 @@ import ImageSlider from "../components/imageSlider";
 import MapContainer from "../components/map";
 import TitleInfo from "../components/titleInfo";
 import {Gen} from "../helpers/gen";
+import {Link} from "react-router-dom";
 
 class Property extends Component {
 
@@ -27,10 +28,10 @@ class Property extends Component {
         const {propertyData} = this.props;
 
         if(this.props.propertyData){
-            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, type, availableFrom, furnishingStatus, description} = this.props.propertyData;
+            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, type, availableFrom, furnishingStatus, description, powerBackup, floor} = this.props.propertyData;
 
             return(
-                <div>
+                <div className="property-page">
                     <Helmet bodyAttributes={{class: "postPage"}}>
                         <title>{`${this.props.propertyData.title} - React Starter Kit`}</title>
                     </Helmet>
@@ -43,6 +44,7 @@ class Property extends Component {
                                     <Grid>
                                         <Row className="title-row">
                                             <TitleInfo name={title} location={locality} price={`$ ${Gen.round(rent)}`} area={`${Gen.round(builtArea)} sq ft`}/>
+                                            <Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>
                                         </Row>
                                         <Row className="bottom-line-separator">
                                             <Col xs={12} md={6}>
@@ -64,7 +66,7 @@ class Property extends Component {
                                                         <InfoBlock heading="area" info={`${Gen.round(builtArea)} sq ft`}/>
                                                     </Col>
                                                     <Col xs={6}>
-                                                        <InfoBlock heading="address" info={locality}/>
+                                                        <InfoBlock heading="address" info={address}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -72,15 +74,15 @@ class Property extends Component {
                                                         <InfoBlock heading="furnishing" info={furnishingStatus}/>
                                                     </Col>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="available for" info={type}/>
+                                                        <InfoBlock heading="Power backup" info={powerBackup}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="available from" info={city}/>
+                                                        <InfoBlock heading="available from" info={Gen.getAvailableString(availableFrom)}/>
                                                     </Col>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="posted by and on" info={type}/>
+                                                        <InfoBlock heading="Floor" info={floor}/>
                                                     </Col>
                                                 </Row>
                                             </Col>
