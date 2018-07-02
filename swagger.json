@@ -126,6 +126,26 @@
             "name": "page",
             "in": "query",
             "description": "page number, Default to Zero"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "single email or list of emails separated by comma and no space"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "single role or list of roles separated by comma and no space"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "single status or list of status separated by comma an no space"
+          },
+          {
+            "name": "sex",
+            "in": "query",
+            "description": "single sex or list of sex separated by comma an no space"
           }
         ],
         "produces": [

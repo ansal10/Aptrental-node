@@ -165,7 +165,7 @@ module.exports = {
                 "maintenance": JSON.stringify({
                     "brokerage": Math.random() * 100,
                     "monthly": Math.random() * 100,
-                    "annual": Math.random() * 100,
+                    "annually": Math.random() * 100,
                 }),
                 "builtArea": Math.random() * (1000 - 100 + 1) + 100,
                 "carpetArea": Math.random() * (1500 - 1000 + 1) + 1000,
