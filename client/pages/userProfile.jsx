@@ -15,6 +15,7 @@ import axios from 'axios';
 import {UPDATE_USER_ENDPOINT_PUT} from "../endpoints";
 import {renderDropdownList} from "../common/forms/input-types/index";
 import {Gen} from "../helpers/gen";
+import {clearUserDetails} from "../actions";
 
 class UserProfile extends Component {
 
@@ -33,6 +34,11 @@ class UserProfile extends Component {
             progress: 0.5,
             showForm: this.state.showForm,
         });
+    }
+
+    logout(e) {
+        e.preventDefault();
+        this.props.clearUserDetails();
     }
 
     submit(data){
@@ -68,7 +74,7 @@ class UserProfile extends Component {
   }
 
     render() {
-      const { handleSubmit } = this.props
+      const { handleSubmit } = this.props;
 
       return (
 
@@ -113,11 +119,22 @@ class UserProfile extends Component {
 
                                         <div className="form_row">
                                             <Field
-                                                name="type"
+                                                name="role"
                                                 component={renderDropdownList}
                                                 label="User Type:"
-                                                data={[ 'normal user', 'realtor' ]}/>
+                                                data={[ 'admin', 'realtor', 'consumer' ]}/>
                                         </div>
+
+                                        {
+                                            Gen.isUserAdmin() ?  <div className="form_row">
+                                                <Field
+                                                    name="status"
+                                                    component={renderDropdownList}
+                                                    label="Status:"
+                                                    data={[ 'active', 'inactive' ]}/>
+                                            </div>: ''
+                                        }
+
 
                                         <div className="form_buttons">
                                             <LaddaButton
@@ -135,9 +152,7 @@ class UserProfile extends Component {
                                             </LaddaButton>
                                         </div>
 
-                                        {Gen.isUserRealorOrAdmin(this.props.user) ?
-                                            <Link className="listed-by-me-link" to="/property?userId=3"> Property listed by me </Link> : ''
-                                        }
+                                        <Link className="logout-link" to="/" onClick={this.logout.bind(this)}>Logout</Link>
                                     </div>
 
                             </form>
@@ -169,5 +184,5 @@ function mapStateToProps(state){
 };
 
 export default {
-  component: connect(mapStateToProps)(UserProfile)
+  component: connect(mapStateToProps, {clearUserDetails})(UserProfile)
 };

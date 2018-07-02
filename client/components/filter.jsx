@@ -84,7 +84,7 @@ class Filter extends Component {
                         label="powerBackup:"
                         data={[ 'full', 'partial', 'no' ]}/>
                 </div>
-                
+
                 <div className="form_row">
                     <Field
                         name="availableFor"

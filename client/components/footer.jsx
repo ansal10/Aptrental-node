@@ -10,7 +10,7 @@ const Footer = () => {
                 <div className="clearFloat">
                     <div className="left">
                         <div className="copyright">
-                            &copy; 2018 React Starter Kit. All Rights Reserved.
+                            &copy; 2018 HousoRento. All Rights Reserved.
                         </div>
                     </div>
                     <div className="right">

@@ -50,7 +50,14 @@ class Properties extends Component {
                                     <Filter applyFilter={fetchPropertiesAction}/>
                                 </Col>
                                 <Col xs={12} md={8}>
-                                    {this.renderProperties()}
+                                    {
+                                        (properties.length > 0) ?
+                                        this.renderProperties():
+                                           <div className="no-result">
+                                            <h2> Oops!!! No Results</h2>
+                                            <h2> Try to widen your search</h2>
+                                           </div>
+                                    }
                                 </Col>
                             </Row>
 
@@ -59,56 +66,29 @@ class Properties extends Component {
                     </ReactCSSTransitionGroup>
                 </div>
             );
-        }
-
-        if(this.props.properties == null){
+        } else {
             return (
                 <div>
                     {this.head()}
                     <InternalTextBanner Heading="" wrapperClass="posts" />
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
-                    <div className="main anim-appear">
-                        <div className="grid">
-                            <div className="column column_8_12">
-                                <div className="posts">
-                                    
+                        <div className="main anim-appear">
+                            <div className="grid">
+                                <div className="column column_8_12">
+                                    <div className="posts">
+
+                                    </div>
+                                </div>
+                                <div className="column column_4_12">
+
                                 </div>
                             </div>
-                            <div className="column column_4_12">
-                                
-                            </div>
                         </div>
-                    </div>
                     </ReactCSSTransitionGroup>
-                </div>
-            );
+                </div>);
         }
-
-        if(this.props.properties == false){
-            return (
-                <div>
-                    {this.head()}
-                    <InternalTextBanner Heading="404 Not found" wrapperClass="posts" />
-                    <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
-                    <div className="main anim-appear">
-                        <div className="grid">
-                            <div className="column column_8_12">
-                                <div className="posts">
-                                    
-                                </div>
-                            </div>
-                            <div className="column column_4_12">
-                                
-                            </div>
-                        </div>
-                    </div>
-                    </ReactCSSTransitionGroup>
-                </div>
-            );
-        }
-
-    }
   }
+}
 
 function mapStateToProps(state){
     return {
