@@ -3,7 +3,7 @@ const validator = require('validator');
 const models = require('../../db/models/index');
 const md5 = require('md5');
 const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt'];
-
+const _ = require('underscore');
 
 const STRS = {
     INVALID_EMAIL: 'Your email is invalid',
@@ -48,8 +48,7 @@ const validateAndSanitizeSignupDetails = async function (email, name, password, 
 
 const validateLoginDetails = async function (email, password) {
     let user = await models.User.findOne({
-        where: {email: validator.trim(email, '').toLowerCase()},
-        attributes: USER_DETAILS_FIELDS
+        where: {email: validator.trim(email, '').toLowerCase()}
     });
     if(!user)
         return {status:false, message: STRS.INVALID_EMAIL};
@@ -66,7 +65,7 @@ const validateLoginDetails = async function (email, password) {
         status: true,
         message: STRS.LOGGED_IN_SUCCESSFUL,
         args:{
-            user:user
+            user: _.pick(user.dataValues, USER_DETAILS_FIELDS)
         }
     };
 };

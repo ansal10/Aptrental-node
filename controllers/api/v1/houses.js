@@ -6,13 +6,20 @@ const genUtil = require('../../../utilities/genutils/index');
 const middlewares = require('../../../utilities/controller_middlewares');
 const permissions = require('../../../utilities/permisson_utility');
 const pageLimit = 50;
+const urlcodeJson = require('urlcode-json');
+
 const router = express.Router();
+
 
 router.post('/search', middlewares.isAuthenticated, async (req, res, next)=>{
     let user = req.session.user;
     let page = req.query.page || 0;
+
     let houses = await houseHelper.searchHouse(user, req.body || {}, page || 0);
-    genUtil.sendJsonResponse(res, 200, '', houses);
+    let prevUrl = page>0 ? req.originalUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:page-1}), true) : null;
+    let nextUrl = houses.length > 0 ? req.originalUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:page+1}), true) : null;
+
+    genUtil.sendJsonResponse(res, 200, '', houses, nextUrl, prevUrl);
 });
 
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {

@@ -8,8 +8,8 @@ module.exports = {
         dialect: 'postgres'
     },
     test: {
-        username: 'aptrental_dev',
-        password: 'aptrental_dev',
+        username: 'ansal',
+        password: null,
         database: 'aptrental_test',
         host: '127.0.0.1',
         dialect: 'postgres'
