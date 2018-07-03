@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 const truncate = require('../truncate');
@@ -65,6 +66,26 @@ describe('User model', () => {
         }catch (e) {
             console.log(e.errors[0].message);
         }
-
     });
+
+    it('should order users based on id desc', async () => {
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        let users = await models.User.findAll({where:{}, order:[ ['id', 'DESC'] ]});
+        expect(users[0].id > users[users.length -1].id)
+    });
+
+    it('should order users based on id asc', async () => {
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        await userFactory();
+        let users = await models.User.findAll({where:{} });
+        expect(users[0].id  < users[users.length -1].id)
+    });
+
 });
