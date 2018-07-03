@@ -13,7 +13,7 @@ const LIST_ALL_HOUSE_ATTRIBUTES = ['id', 'title', 'country', 'city', 'locality',
     'longitude', 'type', 'availability', 'images', 'UserId', 'availableFrom', 'tags',
     'updatedAt'];
 const LIST_HOUSE_DETAILS_ATTRIBUTES = LIST_ALL_HOUSE_ATTRIBUTES.concat(['description', 'maintenance',
-'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'features', 'furnishingStatus', 'createdAt']);
+    'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'features', 'furnishingStatus', 'createdAt']);
 
 const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUTES, ['id', 'createdAt', 'updatedAt', 'UserId']);
 
@@ -41,7 +41,7 @@ const listAllHouse = async (user, params, page) => {
 
     houses = _.map(houses, (h) => {
         if (h.images && h.images.length > 0)
-            h.images = [ h.images[0] ];
+            h.images = [h.images[0]];
         return h.dataValues;
     });
 
@@ -52,7 +52,7 @@ const listAllHouse = async (user, params, page) => {
 };
 
 const houseDetails = async (user, houseId) => {
-    let house = await models.House.findOne({where: {id: houseId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES });
+    let house = await models.House.findOne({where: {id: houseId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES});
     if (house) {
         house = house.dataValues;
         house.edit = permission.canUpdateProperty(user, house);
@@ -70,13 +70,13 @@ const houseDetails = async (user, houseId) => {
     }
 };
 
-const updateHouse = async (user, houseParams) => {
-    let house = await models.House.findOne({where: {id: houseParams.id}});
+const updateHouse = async (user, houseParams, houseId) => {
+    let house = await models.House.findOne({where: {id: houseId}});
     if (house && permission.canUpdateProperty(user, house)) {
 
         try {
             houseParams = _.pick(houseParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
-            Object.assign({}, house, houseParams);
+            Object.assign(house, house, houseParams);
             await house.validate();
             await house.save();
             return {
@@ -127,9 +127,7 @@ const createHouseInDatabase = async (user, houseParams) => {
         return {
             status: false,
             message: config.MESSAGES.UNAUTHORIZED_ACCESS,
-            args: {
-
-            }
+            args: {}
         }
     }
 };
@@ -147,11 +145,11 @@ const searchHouse = async (user, searchParams, page) => {
         if (searchParams.searchString && searchParams.searchString.trim().length > 0) {
             let s = '%' + searchParams.searchString.trim() + '%';
             query = Object.assign({}, query, {
-                [Op.or]:[
-                    { title: {[Op.iLike]: s} },
-                    { city: {[Op.iLike]: s} },
-                    { locality: {[Op.iLike]: s} },
-                    { country: {[Op.iLike]: s} }
+                [Op.or]: [
+                    {title: {[Op.iLike]: s}},
+                    {city: {[Op.iLike]: s}},
+                    {locality: {[Op.iLike]: s}},
+                    {country: {[Op.iLike]: s}}
                 ]
             })
         }
@@ -262,40 +260,40 @@ const searchHouse = async (user, searchParams, page) => {
                 }
             });
         }
-        if (isValidArray(searchParams.UserId)){
+        if (isValidArray(searchParams.UserId)) {
             query = Object.assign({}, query, {
-                UserId:{
+                UserId: {
                     [Op.in]: searchParams.UserId
                 }
             })
         }
 
         return await listAllHouse(user, query, page);
-    }catch (e) {
+    } catch (e) {
         return {
             status: false,
             message: 'Incompatible data passed',
-            args:{}
+            args: {}
         }
     }
 };
 
 const deleteHouse = async (user, houseId) => {
     let house = await models.House.findOne({where: {id: houseId}});
-    if (house){
-        if ( permission.canUpdateProperty(user, house) ){
+    if (house) {
+        if (permission.canUpdateProperty(user, house)) {
             await house.destroy();
-            return{
+            return {
                 status: true,
                 message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY
             }
-        }else{
-            return{
+        } else {
+            return {
                 status: false,
                 message: config.MESSAGES.UNAUTHORIZED_ACCESS
             }
         }
-    } else{
+    } else {
         return {
             status: false,
             message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, houseId)

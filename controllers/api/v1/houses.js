@@ -30,7 +30,7 @@ router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
 
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await houseHelper.updateHouse(user, req.params);
+    let retVal = await houseHelper.updateHouse(user, req.body, req.params.id);
     genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, null);
 });
 

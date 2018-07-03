@@ -549,7 +549,33 @@
               "$ref": "#/definitions/House"
             }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "House is Updated",
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/definitions/House"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "House is not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
       },
       "delete":{
         "summary": "Delete house with given ID",
