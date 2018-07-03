@@ -172,6 +172,8 @@ fabric.properties
 build/
 public/
 
+db/config.js
+
 package-lock.json
 
 

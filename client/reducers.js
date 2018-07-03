@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form'
 import {actions} from './constants';
+import {Gen} from "./helpers/gen";
 
 
 const userReducer = function(state = null, action){
@@ -57,7 +58,20 @@ const propertiesReducer = function(state = {
 }, action){
     switch(action.type){
         case 'FETCH_PROPERTIES':
-            return {...state, arr: action.payload|| false};
+            const merge = action.merge;
+            let newProperties = action.payload.success.data;
+            if(merge) {
+                newProperties = Gen.mergeArray(state.arr, newProperties);
+            }
+
+            const data = {
+                arr: newProperties,
+                nextUrl: action.payload.nextUrl
+            };
+            return {...state, ...data || null};
+
+        case 'CLEAR_NEXT_URL':
+            return {... state, nextUrl: null};
         default:
             return state;
     }

@@ -29,8 +29,15 @@ export class Gen {
             if(newArray.indexOf(item)<0) {
                 newArray.push(item);
             }
-        })
+        });
         return newArray;
+    }
+
+    static getFormattedDate(date) {
+        const year = date.split("-")[0];
+        const month = Gen.getMonthFromNumber(date.split("-")[1]);
+
+        return month + " " + year;
     }
 
     static getAvailableString(d1) {

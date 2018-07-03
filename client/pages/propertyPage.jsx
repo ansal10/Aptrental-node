@@ -28,7 +28,7 @@ class Property extends Component {
         const {propertyData} = this.props;
 
         if(this.props.propertyData){
-            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, type, availableFrom, furnishingStatus, description, powerBackup, floor} = this.props.propertyData;
+            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, carpetArea, type, availableFrom, features, furnishingStatus, description, powerBackup, floor, createdAt, updatedAt, maintenance} = this.props.propertyData;
 
             return(
                 <div className="property-page">
@@ -65,10 +65,10 @@ class Property extends Component {
                                                 </Row>
                                                 <Row>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="area" info={`${Gen.round(builtArea)} sq ft`}/>
+                                                        <InfoBlock heading="built area" info={`${Gen.round(builtArea)} sq ft`}/>
                                                     </Col>
                                                     <Col xs={6}>
-                                                        <InfoBlock heading="address" info={address}/>
+                                                        <InfoBlock heading="carpet area" info={`${Gen.round(carpetArea)} sq ft`}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -87,6 +87,54 @@ class Property extends Component {
                                                         <InfoBlock heading="Floor" info={floor}/>
                                                     </Col>
                                                 </Row>
+
+                                                <Row>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="availability" info={availability}/>
+                                                    </Col>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="City" info={city}/>
+                                                    </Col>
+                                                </Row>
+
+
+                                                <Row>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="created at" info={Gen.getFormattedDate(createdAt)}/>
+                                                    </Col>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="updated at" info={Gen.getFormattedDate(updatedAt)}/>
+                                                    </Col>
+                                                </Row>
+
+                                                <Row>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="maintenance monthly" info={maintenance.monthly ? `$ ${Gen.round(maintenance.monthly)}` : '-'}/>
+
+                                                    </Col>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="maintenance deposit" info={maintenance.deposit ? `$ ${Gen.round(maintenance.deposit)}` : '-'}/>
+                                                    </Col>
+                                                </Row>
+
+
+                                                <Row>
+                                                    <Col xs={6} >
+                                                         <InfoBlock heading="maintenance brokerage" info={maintenance.brokerage ? `$ ${Gen.round(maintenance.brokerage)}` : '-'}/>
+                                                    </Col>
+                                                    <Col xs={6} >
+                                                        <InfoBlock heading="maintenance annually" info={maintenance.annually ? `$ ${Gen.round(maintenance.annually)}` : '-'}/>
+                                                    </Col>
+                                                </Row>
+
+
+
+                                                <Row>
+                                                    <Col xs={12}>
+                                                        <InfoBlock heading="address" info={address}/>
+                                                    </Col>
+                                                </Row>
+
                                             </Col>
 
                                         </Row>
@@ -97,19 +145,16 @@ class Property extends Component {
                                             </Col>
                                         </Row>
 
+
                                         <h1 className="small-header">
                                             Features
                                         </h1>
                                         <Row className="feature-wrapper bottom-line-separator">
-                                            <Feature name="Water Purifier" />
-                                            <Feature name="Lift" />
-                                            <Feature name="Water storage" />
-                                            <Feature name="Visitor Parking" />
-                                            <Feature name="Park" />
-                                            <Feature name="Gym" />
-                                            <Feature name="Security Personnel" />
-                                            <Feature name="Waste disposal" />
-                                            <Feature name="Rain water harvesting" />
+                                            {
+                                                features.map((feature, i) =>
+                                                    <Feature name={feature} key={i} />
+                                                )
+                                            }
                                         </Row>
 
                                         <Row>

@@ -32,7 +32,6 @@ export const clearUserDetails = () => async (dispatch, getState, api) => {
 };
 
 
-
 export const fetchPropertyAction = (productID) => async (dispatch, getState, api) => {
 
     await api.get(GET_PROPERTY_ENDPOINT+'/'+productID).then(response => {
@@ -48,10 +47,18 @@ export const fetchPropertyAction = (productID) => async (dispatch, getState, api
 
 export const fetchPropertiesAction = (data) => async (dispatch, getState, api) => {
 
-    await api.post(GET_PROPERTIES_ENDPOINT, data).then(response => {
+    const state = getState();
+    const nextUrl = state.properties.nextUrl || null;
+
+    const endpoint = nextUrl ? nextUrl : GET_PROPERTIES_ENDPOINT;
+
+    const merge = nextUrl ? true : false;
+
+    await api.post(endpoint, data).then(response => {
         dispatch({
             type: 'FETCH_PROPERTIES',
-            payload: response.data.success.data
+            payload: response.data,
+            merge: merge
         })
     }).catch((err) => {
         console.log('error', err.data.error.data);
@@ -62,6 +69,12 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
 export const clearPropertyData = () => (dispatch) => {
     dispatch({
         type: 'CLEAR_PROPERTY_DATA'
+    })
+};
+
+export const clearNextUrl = () => (dispatch) => {
+    dispatch({
+        type: 'CLEAR_NEXT_URL'
     })
 };
 

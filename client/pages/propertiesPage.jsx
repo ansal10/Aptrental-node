@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from '../components/banners/internalTextBanner';
-import {fetchPropertiesAction} from '../actions';
+import {clearNextUrl, fetchPropertiesAction} from '../actions';
 import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
 import PropertyCard from "../components/propertyCard";
@@ -13,37 +13,79 @@ import MapContainer from "../components/map";
 
 class Properties extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showFilterOnMobile: false,
+            filters: {}
+        };
+    }
+
+
     componentDidMount(){
         this.props.fetchPropertiesAction();
     }
 
-    renderProperties(){
-        if(this.props.properties != false){
-        return this.props.properties.map((property, index) => {
-            return (
-                <div key={index} className="property">
-                    <PropertyCard property={property}/>
+    loadMoreClicked() {
+        console.log("load more clicked")
+        this.props.fetchPropertiesAction(this.state.filters);
+    }
+
+    renderProperties() {
+        if (this.props.properties != false) {
+            const propertiesData = this.props.properties.map((property, index) => {
+                return (
+                    <div key={index} className="property">
+                        <PropertyCard property={property}/>
+                    </div>
+                );
+            });
+
+            return (<div>
+                {propertiesData}
+                    <div className={`${this.props.nextUrl ? '' : 'hidden'} load-more-container`}>
+                        <div className="load-more" onClick={this.loadMoreClicked.bind(this)}> Load more</div>
+                    </div>
                 </div>
             );
-        })
         }
     }
 
+    shouldShowMap() {
+        return this.props.location.pathname.includes("/properties/map");
+    }
+
     renderPropertiesOnMap() {
-        if(this.props.properties) {
+        if (this.props.properties) {
             const coordinates = this.props.properties.map((property, i) => {
-               const {latitude, longitude, id} = property;
-               return {latitude, longitude, id};
-               // return {latitude: 40.741895, longitude: -73.989308};
+                const {latitude, longitude, id} = property;
+                return {latitude, longitude, id};
+                // return {latitude: 40.741895, longitude: -73.989308};
             });
 
 
             return (
-                <MultipleMapContainer title="Property search" coordinates={coordinates} />
+                <MultipleMapContainer title="Property search" coordinates={coordinates}/>
             )
 
         }
     }
+
+    showFilter() {
+        this.setState({
+            showFilterOnMobile: true,
+            filters: this.state.filters
+        })
+    }
+
+    hideFilter() {
+        this.setState({
+            showFilterOnMobile: false,
+            filters: this.state.filters
+        })
+    }
+
 
     head(){
         return (
@@ -53,9 +95,25 @@ class Properties extends Component {
         );
     }
 
+    fetchPropertyAndHideFilterOnMobile(data) {
+        this.props.clearNextUrl();
+        this.hideFilter();
+        this.props.fetchPropertiesAction(data);
+        this.setState({
+            showFilterOnMobile: this.state.showFilterOnMobile,
+            filters: data
+        })
+    }
+
+    displayNavLink(isMap) {
+        return isMap ? <Link className="right-align" to="/properties">See properties list</Link> : <Link className="right-align" to="/properties/map">See properties on map</Link>
+    }
+
     render() {
 
-        const {properties, fetchPropertiesAction} = this.props;
+        const isMap = this.shouldShowMap();
+
+        const {properties} = this.props;
         if(this.props.properties){
             return(
                 <div className="properties-page">
@@ -63,14 +121,24 @@ class Properties extends Component {
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
                         <Grid className="properties">
+
                             <Row>
-                                <Col xs={12} md={4}>
-                                    <Filter applyFilter={fetchPropertiesAction}/>
+                                {this.displayNavLink(isMap)}
+                            </Row>
+
+                            <div className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'} show-filter-button`} onClick={this.showFilter.bind(this)}>
+                                filter
+                            </div>
+
+                            <Row>
+                                <Col className={`${!this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={4}>
+                                    <Filter user={this.props.user} applyFilter={this.fetchPropertyAndHideFilterOnMobile.bind(this)}/>
                                 </Col>
-                                <Col xs={12} md={8}>
+                                <Col className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={8}>
                                     {
-                                        (properties.length > 0) ?
-                                        this.renderPropertiesOnMap():
+                                        (properties.length > 0) ? (
+                                            isMap ? this.renderPropertiesOnMap() : this.renderProperties())
+                                         :
                                            <div className="no-result">
                                             <h2> Oops!!! No Results</h2>
                                             <h2> Try to widen your search</h2>
@@ -109,7 +177,9 @@ class Properties extends Component {
 
 function mapStateToProps(state){
     return {
-        properties: state.properties.arr
+        properties: state.properties.arr,
+        nextUrl: state.properties.nextUrl,
+        user: state.user,
     };
 };
 
@@ -119,6 +189,6 @@ function loadData(store){
 
 export default {
     loadData,
-    component: connect(mapStateToProps, { fetchPropertiesAction })(Properties)
+    component: connect(mapStateToProps, { fetchPropertiesAction, clearNextUrl })(Properties)
 };
 

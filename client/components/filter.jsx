@@ -48,6 +48,11 @@ class Filter extends Component {
 
     submit(data) {
         console.log(data);
+        if(data.userId) {
+            data.userId = [this.props.user.id];
+        } else {
+            data.userId = [];
+        }
         data.rent = [this.state.rent.min, this.state.rent.max];
         data.builtArea = [this.state.builtArea.min, this.state.builtArea.max];
         data.carpetArea = [this.state.carpetArea.min, this.state.carpetArea.max];
@@ -59,7 +64,8 @@ class Filter extends Component {
 
         const {handleSubmit} = this.props;
         return(
-            <form className="filter-container" onSubmit={handleSubmit(this.submit.bind(this))} >
+            <div className="form-wrapper">
+                <form className="filter-container" onSubmit={handleSubmit(this.submit.bind(this))} >
 
                 <div className="form_row">
                     <Field
@@ -155,6 +161,15 @@ class Filter extends Component {
                     </div>
                 </div>
 
+                <div className="form_row form_checkbox_row">
+                    <Field
+                        name="userId"
+                        component={renderTextField}
+                        label="Listed by me only:"
+                        type="checkbox"
+                    />
+                </div>
+
                 <div className="filter-button form_buttons">
                     <LaddaButton
                         type="submit"
@@ -171,12 +186,14 @@ class Filter extends Component {
                 </div>
 
             </form>
+            </div>
         )
     };
 }
 
 Filter.proptypes = {
     applyFilter: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
 }
 
 Filter = reduxForm({

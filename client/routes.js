@@ -53,6 +53,11 @@ export default [
         ...App,
         routes: [
             {
+                path: '/properties/map',
+                ...Properties
+            },
+            {
+                path: '/properties',
                 ...Properties
             }
         ]
