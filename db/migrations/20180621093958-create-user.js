@@ -15,8 +15,8 @@ module.exports = {
             },
             email: {
                 type: Sequelize.STRING,
-                allowNull:false,
-                unique:true,
+                allowNull: false,
+                unique: true,
 
             },
 
@@ -24,7 +24,7 @@ module.exports = {
                 type: Sequelize.JSONB,
                 defaultValue: {}
             },
-            passwordAttributes:{           // token, created, expired, updated, hash, salt
+            passwordAttributes: {           // token, created, expired, updated, hash, salt
                 type: Sequelize.JSONB,
                 defaultValue: {}
             },
@@ -32,7 +32,7 @@ module.exports = {
                 type: Sequelize.ENUM('admin', 'realtor', 'consumer'),
                 defaultValue: 'consumer'
             },
-            status:{
+            status: {
                 type: Sequelize.ENUM('active', 'inactive'),
                 defaultValue: 'active'
             },
@@ -47,10 +47,18 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.DATE
             }
+        }).then( async () =>{
+            await queryInterface.addIndex('Users', ['role'], {name: 'Users_role_index'});
+            await queryInterface.addIndex('Users', ['status'], {name: 'Users_status_index'});
+            await queryInterface.addIndex('Users', ['sex'], {name: 'Users_sex_index'});
         });
     },
 
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('Users');
+        return queryInterface.dropTable('Users').then( async ()=>{
+            await queryInterface.removeIndex('Users', 'Users_role_index');
+            await queryInterface.removeIndex('Users', 'Users_status_index');
+            await queryInterface.removeIndex('Users', 'Users_sex_index');
+        });
     }
 };

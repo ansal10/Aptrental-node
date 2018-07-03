@@ -13,6 +13,7 @@ const userFactory = require('../db/factories/user');
 const md5 = require('md5');
 const sinon = require('sinon');
 const controllerMiddleware = require('../../utilities/controller_middlewares');
+const models = require('../../db/models/index');
 let server = null;
 
 chai.use(chaiHttp);
@@ -132,6 +133,46 @@ describe('House', async () => {
             expect(res.body.error.message.includes('Invalid value in Images'));
         });
     });
+
+    describe('/:id DELETE', async () => {
+        it('should delete the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .delete('/api/v1/house/'+h.id);
+            res.should.have.status(200);
+            expect( (await models.House.findOne({where:{id: h.id}})) == null)
+        });
+
+        it('should not delete the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .delete('/api/v1/house/'+(h.id +1));
+            res.should.have.status(400);
+            expect( (await models.House.findOne({where:{id: h.id}})) != null)
+        });
+    });
+
+    describe('/:id PUT', async () => {
+        it('should update the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .put('/api/v1/house/'+h.id)
+                .send({rent:1001});
+            res.should.have.status(200);
+            let h2 = await models.House.findOne({where:{id: h.id}})
+            expect(h2.rent === 1001)
+
+        });
+
+        it('should not delete the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .put('/api/v1/house/'+(h.id +1));
+            res.should.have.status(400);
+            expect( (await models.House.findOne({where:{id: h.id}})).rent === h.rent)
+        });
+    });
+
 
 
 

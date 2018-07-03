@@ -11,13 +11,13 @@ const urlcodeJson = require('urlcode-json');
 const router = express.Router();
 
 
-router.post('/search', middlewares.isAuthenticated, async (req, res, next)=>{
+router.post('/search', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let page = req.query.page || 0;
 
     let houses = await houseHelper.searchHouse(user, req.body || {}, page || 0);
-    let prevUrl = page>0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)-1}), true) : null;
-    let nextUrl = houses.length > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)+1}), true) : null;
+    let prevUrl = page > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) - 1}), true) : null;
+    let nextUrl = houses.length > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) + 1}), true) : null;
 
     genUtil.sendJsonResponse(res, 200, '', houses, nextUrl, prevUrl);
 });
@@ -25,19 +25,25 @@ router.post('/search', middlewares.isAuthenticated, async (req, res, next)=>{
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let retVal = await houseHelper.houseDetails(user, req.params.id);
-    genUtil.sendJsonResponse(res, retVal.status ? 200: 400, retVal.message, retVal.args.house);
+    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, retVal.args.house);
 });
 
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let retVal = await houseHelper.updateHouse(user, req.params);
-    genUtil.sendJsonResponse(res, retVal.status ? 200: 400, retVal.message, null);
+    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, null);
 });
 
-router.post('/', middlewares.isAuthenticated, async (req, res, next)=>{
+router.delete('/:id', middlewares.isAuthenticated, async (req, res, next) => {
+    let user = req.session.user;
+    let retVal = await houseHelper.deleteHouse(user, req.params.id);
+    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, null)
+});
+
+router.post('/', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let retVal = await houseHelper.createHouseInDatabase(user, req.body);
-    genUtil.sendJsonResponse(res, retVal.status ? 201: 400, retVal.message, retVal.args.house)
+    genUtil.sendJsonResponse(res, retVal.status ? 201 : 400, retVal.message, retVal.args.house)
 });
 
 module.exports = router;

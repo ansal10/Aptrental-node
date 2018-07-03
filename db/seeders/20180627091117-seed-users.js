@@ -3,9 +3,9 @@ const md5 = require('md5');
 const _ = require('underscore');
 const moment = require('moment');
 module.exports = {
-    up: (queryInterface, Sequelize) => {
+    up: async (queryInterface, Sequelize) => {
 
-        let users = [
+        let Users = [
             {
                 name: 'Shubham Agrawal Admin',
                 email: 'manovagyanik1@gmail.com',
@@ -57,7 +57,7 @@ module.exports = {
         ];
 
         for (let i = 0; i < 100; i++) {
-            users.push({
+            Users.push({
                 name: faker.name.findName(),
                 email: faker.internet.email(),
                 emailAttributes: JSON.stringify({
@@ -74,7 +74,11 @@ module.exports = {
                 updatedAt: moment().toISOString()
             })
         }
-        return queryInterface.bulkInsert('Users', users, {});
+        try {
+            return await queryInterface.bulkInsert('Users', Users, {});
+        }catch (e) {
+            console.error(e);
+        }
     },
 
     down: (queryInterface, Sequelize) => {

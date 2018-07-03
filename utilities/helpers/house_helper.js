@@ -262,6 +262,13 @@ const searchHouse = async (user, searchParams, page) => {
                 }
             });
         }
+        if (isValidArray(searchParams.UserId)){
+            query = Object.assign({}, query, {
+                UserId:{
+                    [Op.in]: searchParams.UserId
+                }
+            })
+        }
 
         return await listAllHouse(user, query, page);
     }catch (e) {
@@ -271,13 +278,34 @@ const searchHouse = async (user, searchParams, page) => {
             args:{}
         }
     }
-
-
 };
 
+const deleteHouse = async (user, houseId) => {
+    let house = await models.House.findOne({where: {id: houseId}});
+    if (house){
+        if ( permission.canUpdateProperty(user, house) ){
+            await house.destroy();
+            return{
+                status: true,
+                message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY
+            }
+        }else{
+            return{
+                status: false,
+                message: config.MESSAGES.UNAUTHORIZED_ACCESS
+            }
+        }
+    } else{
+        return {
+            status: false,
+            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, houseId)
+        }
+    }
+};
 
 module.exports.listAllHouse = listAllHouse;
 module.exports.houseDetails = houseDetails;
 module.exports.updateHouse = updateHouse;
 module.exports.createHouseInDatabase = createHouseInDatabase;
 module.exports.searchHouse = searchHouse;
+module.exports.deleteHouse = deleteHouse;
