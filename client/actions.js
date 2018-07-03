@@ -51,10 +51,14 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
     const nextUrl = state.properties.nextUrl || null;
 
     const endpoint = nextUrl ? nextUrl : GET_PROPERTIES_ENDPOINT;
+
+    const merge = nextUrl ? true : false;
+
     await api.post(endpoint, data).then(response => {
         dispatch({
             type: 'FETCH_PROPERTIES',
-            payload: response.data
+            payload: response.data,
+            merge: merge
         })
     }).catch((err) => {
         console.log('error', err.data.error.data);
