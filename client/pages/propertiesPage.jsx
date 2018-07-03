@@ -132,7 +132,7 @@ class Properties extends Component {
 
                             <Row>
                                 <Col className={`${!this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={4}>
-                                    <Filter applyFilter={this.fetchPropertyAndHideFilterOnMobile.bind(this)}/>
+                                    <Filter user={this.props.user} applyFilter={this.fetchPropertyAndHideFilterOnMobile.bind(this)}/>
                                 </Col>
                                 <Col className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={8}>
                                     {
@@ -178,7 +178,8 @@ class Properties extends Component {
 function mapStateToProps(state){
     return {
         properties: state.properties.arr,
-        nextUrl: state.properties.nextUrl
+        nextUrl: state.properties.nextUrl,
+        user: state.user,
     };
 };
 
