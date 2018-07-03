@@ -13,7 +13,7 @@ const LIST_ALL_HOUSE_ATTRIBUTES = ['id', 'title', 'country', 'city', 'locality',
     'longitude', 'type', 'availability', 'images', 'UserId', 'availableFrom', 'tags',
     'updatedAt'];
 const LIST_HOUSE_DETAILS_ATTRIBUTES = LIST_ALL_HOUSE_ATTRIBUTES.concat(['description', 'maintenance',
-'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'amenities', 'features', 'furnishingStatus', 'createdAt']);
+'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'features', 'furnishingStatus', 'createdAt']);
 
 const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUTES, ['id', 'createdAt', 'updatedAt', 'UserId']);
 

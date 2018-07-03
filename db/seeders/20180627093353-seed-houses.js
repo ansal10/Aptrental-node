@@ -5,23 +5,6 @@ const util = require('util');
 const moment = require('moment');
 const faker = require('faker');
 
-const randomAmenities = () => {
-    let amenties = [{bathroom: 5}, {bedroom: 3}, {'study room': 3}, {'ac installed': 1}, {curtains: 1}, {chimney: 2},
-        {exhaust: 1}, {fans: 8}, {lights: 12}, {tv: 1}, {wardrobe: 3}, {bed: 4}, {'dinning table': 1},
-        {fridge: 1}, {sofa: 3}, {stove: 2}, {'washing machine': 1}];
-    let am = [];
-    let length = Math.floor(Math.random() * 5) + 5;
-    for (let i = 0; i < length; i++) {
-        let o = _.sample(amenties);
-        let x = {};
-        x.amenity =  Object.keys(o)[0];
-        x.quantity = Object.values(o)[0];
-        am.push(x);
-    }
-    return am;
-};
-
-
 const randomImages = () => {
     let images = [];
     let length = Math.floor(Math.random() * 5) + 5;
@@ -181,7 +164,6 @@ module.exports = {
                 "availableFrom": moment().add(Math.random()*1000, 'hours').toISOString(),
                 "floor": Math.floor(Math.random() * 10),
                 "powerBackup": _.sample(['full', 'partial', 'no']),
-                "amenities": JSON.stringify(randomAmenities()),
                 "images": JSON.stringify(randomImages()),
                 "features": JSON.stringify(randomFeatures()),
                 "furnishingStatus": _.sample(['furnished', 'unfurnished', 'semifurnished']),
