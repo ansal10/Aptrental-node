@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from '../components/banners/internalTextBanner';
-import {fetchPropertiesAction} from '../actions';
+import {clearNextUrl, fetchPropertiesAction} from '../actions';
 import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
 import PropertyCard from "../components/propertyCard";
@@ -17,13 +17,19 @@ class Properties extends Component {
         super(props);
 
         this.state = {
-            showFilterOnMobile: false
+            showFilterOnMobile: false,
+            filters: {}
         };
     }
 
 
     componentDidMount(){
         this.props.fetchPropertiesAction();
+    }
+
+    loadMoreClicked() {
+        console.log("load more clicked")
+        this.props.fetchPropertiesAction(this.state.filters);
     }
 
     renderProperties() {
@@ -39,7 +45,7 @@ class Properties extends Component {
             return (<div>
                 {propertiesData}
                     <div className={`${this.props.nextUrl ? '' : 'hidden'} load-more-container`}>
-                        <div className="load-more"> Load more</div>
+                        <div className="load-more" onClick={this.loadMoreClicked.bind(this)}> Load more</div>
                     </div>
                 </div>
             );
@@ -68,13 +74,15 @@ class Properties extends Component {
 
     showFilter() {
         this.setState({
-            showFilterOnMobile: true
+            showFilterOnMobile: true,
+            filters: this.state.filters
         })
     }
 
     hideFilter() {
         this.setState({
-            showFilterOnMobile: false
+            showFilterOnMobile: false,
+            filters: this.state.filters
         })
     }
 
@@ -88,8 +96,13 @@ class Properties extends Component {
     }
 
     fetchPropertyAndHideFilterOnMobile(data) {
-        this.props.fetchPropertiesAction(data);
+        this.props.clearNextUrl();
         this.hideFilter();
+        this.props.fetchPropertiesAction(data);
+        this.setState({
+            showFilterOnMobile: this.state.showFilterOnMobile,
+            filters: data
+        })
     }
 
     displayNavLink(isMap) {
@@ -175,6 +188,6 @@ function loadData(store){
 
 export default {
     loadData,
-    component: connect(mapStateToProps, { fetchPropertiesAction })(Properties)
+    component: connect(mapStateToProps, { fetchPropertiesAction, clearNextUrl })(Properties)
 };
 

@@ -62,6 +62,9 @@ const propertiesReducer = function(state = {
                 nextUrl: action.payload.nextUrl
             };
             return {...state, ...data || null};
+
+        case 'CLEAR_NEXT_URL':
+            return {... state, nextUrl: null};
         default:
             return state;
     }
