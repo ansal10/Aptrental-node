@@ -550,6 +550,33 @@
             }
           }
         ]
+      },
+      "delete":{
+        "summary": "Delete house with given ID",
+        "tags": ["House"],
+        "responses": {
+          "200": {
+            "description": "House is deleted",
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "House is not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     },
     "/house/search": {
@@ -1036,6 +1063,13 @@
             "furnished"
           ],
           "description": "Search for with only above mentioned power backup type"
+        },
+        "UserId":{
+          "type": "array",
+          "items":{
+            "type": "string"
+          },
+          "description": "Search for houses with these users only"
         }
       }
     },
