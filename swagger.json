@@ -850,25 +850,6 @@
             "no"
           ]
         },
-        "amenities": {
-          "description": "List of amenity are bathroom,bedroom,study room,ac installed,curtains,chimney,exhaust,fans,lights,tv,wardrobe,bed,dinning table,fridge,sofa,stove,washing machine",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "amenity": {
-                "type": "string",
-                "example": "bathroom",
-                "description": "Valid name of amenity"
-              },
-              "quantity": {
-                "type": "double",
-                "example": 1,
-                "description": "Valid quantity of said amenity greater than 0"
-              }
-            }
-          }
-        },
         "features": {
           "type": "array",
           "description": "List of features",

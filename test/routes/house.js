@@ -113,13 +113,6 @@ describe('House', async () => {
             expect(res.body.error.message.includes('Images'));
         });
 
-        it('should report error on invaid amenity', async () => {
-            let params = Object.assign({}, defaultHouseParams, {amenities: [{amenity: 'Invalid', quantity: 2}]});
-            let res = await chai.request(server).post('/api/v1/house').send(params);
-            res.should.have.status(400);
-            expect(res.body.error.message.includes('Amenity'));
-        });
-
         it('should report error on invaid features', async () => {
             let params = Object.assign({}, defaultHouseParams, {features: ['  ']});
             let res = await chai.request(server).post('/api/v1/house').send(params);

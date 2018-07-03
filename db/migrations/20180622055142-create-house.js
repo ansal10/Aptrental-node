@@ -90,11 +90,6 @@ module.exports = {
                 type: Sequelize.ENUM('full', 'partial', 'no'),
                 defaultValue: 'no'
             },
-            amenities: {  // type: value ()
-                type: Sequelize.JSONB,
-                defaultValue: []
-            },
-
             features: {
                 type: Sequelize.JSONB, // air conditioned
                 defaultValue: []

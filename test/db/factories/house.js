@@ -23,11 +23,6 @@ const data = async (props = {}) => {
         type: '2bhk',
         floor: 2,
         availability: 'yes',
-        amenities: [
-            {amenity:'bathroom', quantity:Math.floor(Math.random()*10) +1},
-            {amenity:'bedroom', quantity:Math.floor(Math.random()*10)+1},
-            {amenity:'ac installed', quantity: Math.floor(Math.random()*10)+1},
-        ],
         features: ['Cover car parking', 'Centrally air conditioned', '24 hours security'],
         builtArea: faker.random.number() + 250,
         carpetArea: faker.random.number() + 250,
