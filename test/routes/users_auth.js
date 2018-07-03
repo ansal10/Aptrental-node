@@ -54,7 +54,7 @@ describe('Users', async () => {
             let u =  await userFactory();
             let res = await chai.request(server)
                 .put('/api/v1/user/'+user.id)
-                .send({sex:'others'});
+                .send({sex:'other'});
             res.should.have.status(200);
         });
     })

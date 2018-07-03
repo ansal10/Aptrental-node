@@ -20,14 +20,14 @@ const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUT
 const Op = models.Sequelize.Op;
 Array.prototype.isArray = true;
 
-const listAllHouse = async (user, searchParams, page) => {
-    let params = {};
-    let pageNumber = Number(searchParams.page || 0);
+const listAllHouse = async (user, params, page) => {
+    // let params = {};
+    let pageNumber = Number(page || 0);
 
-    await Object.keys(models.House.attributes).forEach(async (attr) => {
-        if (searchParams[attr])
-            params[attr] = searchParams[attr];
-    });
+    // await Object.keys(models.House.attributes).forEach(async (attr) => {
+    //     if (searchParams[attr])
+    //         params[attr] = searchParams[attr];
+    // });
 
     if (!params.availability) params.availability = 'yes';
 
@@ -147,11 +147,12 @@ const searchHouse = async (user, searchParams, page) => {
         if (searchParams.searchString && searchParams.searchString.trim().length > 0) {
             let s = '%' + searchParams.searchString.trim() + '%';
             query = Object.assign({}, query, {
-                title: {[Op.iLike]: s},
-                city: {[Op.iLike]: s},
-                locality: {[Op.iLike]: s},
-                address: {[Op.iLike]: s},
-                country: {[Op.iLike]: s},
+                [Op.or]:[
+                    { title: {[Op.iLike]: s} },
+                    { city: {[Op.iLike]: s} },
+                    { locality: {[Op.iLike]: s} },
+                    { country: {[Op.iLike]: s} }
+                ]
             })
         }
 

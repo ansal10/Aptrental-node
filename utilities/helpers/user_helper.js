@@ -163,39 +163,17 @@ const updateUserDetails = async (updater, userArgs, userId) => {
     if (permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
-            if (updater.id == userId && updater.role != 'admin') { // updating self
+            if (updater.id == userId && updater.role != 'admin')  // updating self
                 updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
-                Object.assign(user, user, updateVals);
-                let changedFields = user.changed();
-                for (let i = 0 ; i < changedFields.length ; i++) {
-                    let field = changedFields[i];
-                    if (!SELF_UPDATE_ALLOWED_FIELDS.includes(field)) 
-                    return {
-                        status: false,
-                        message: 'You are not allowed to update required fields'
-                    }
-                };
-            }
-            else {
+            else
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
-                Object.assign(user, user, updateVals);
-                let changedFields = user.changed();
-                for (let i = 0 ; i < changedFields.length ; i++) {
-                    let field = changedFields[i];
-                    if (!ADMIN_UPDATE_ALLOWED_FIELDS.includes(field)){
-                        return {
-                            status: false,
-                            message: 'You are not allowed to update required fields'
-                        }
-                    }                     
-                };
-            }
-            
+
+            Object.assign(user, user, updateVals);
             await user.validate({skip:['email']});
             await user.save();
             return {
                 status: true,
-                message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY
+                message: 'Permissible Fields are updated'
             }
         } catch (e) {
             return {

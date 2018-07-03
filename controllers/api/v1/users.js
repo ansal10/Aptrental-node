@@ -8,6 +8,7 @@ const permissions = require('../../../utilities/permisson_utility');
 const pageLimit = 50;
 const models = require('../../../db/models/index');
 const notifier = require('../../../utilities/notifier/index');
+const urlcodeJson = require('urlcode-json');
 const router = express.Router();
 
 
@@ -94,9 +95,15 @@ router.post('/password_reset', async (req, res, next) => {
 
 /* GET users listing. */
 router.get('/', middlewares.isAuthenticated, async (req, res, next) => {
+    let page = req.query.page || 0;
     let retVal = await userHelper.searchUsers(req.session.user, req.query);
-    if (retVal.status)
-    genUtil.sendJsonResponse(res, 200, "Received list of users", retVal.args.users);
+
+    if (retVal.status) {
+        let prevUrl = page>0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)-1}), true) : null;
+        let nextUrl = retVal.args.users.length > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)+1}), true) : null;
+
+        genUtil.sendJsonResponse(res, 200, "Received list of users", retVal.args.users, nextUrl, prevUrl);
+    }
     else
         genUtil.sendJsonResponse(res, 400, retVal.message, null)
 });
