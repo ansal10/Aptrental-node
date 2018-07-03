@@ -9,7 +9,6 @@ import {Link} from 'react-router-dom';
 import PropertyCard from "../components/propertyCard";
 import Filter from "../components/filter";
 import MultipleMapContainer from "../components/mapMultiple";
-import MapContainer from "../components/map";
 
 class Properties extends Component {
 
@@ -24,6 +23,7 @@ class Properties extends Component {
 
 
     componentDidMount(){
+        this.props.clearNextUrl();
         this.props.fetchPropertiesAction();
     }
 

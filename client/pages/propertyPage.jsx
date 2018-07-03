@@ -9,9 +9,15 @@ import InternalTextBanner from '../components/banners/internalTextBanner';
 import {Grid, Row, Col, Image, Button} from 'react-bootstrap';
 import ImageSlider from "../components/imageSlider";
 import MapContainer from "../components/map";
+import axios from 'axios';
+
 import TitleInfo from "../components/titleInfo";
 import {Gen} from "../helpers/gen";
 import {Link} from "react-router-dom";
+import {DELETE_PROPERTY_ENDPOINT} from "../endpoints";
+import {notify} from "react-notify-toast";
+import { withRouter } from 'react-router-dom'
+
 
 class Property extends Component {
 
@@ -21,6 +27,19 @@ class Property extends Component {
     }
     componentWillUnmount(){
         this.props.clearPropertyData();
+    }
+
+    deleteProperty() {
+        axios.delete(DELETE_PROPERTY_ENDPOINT + "/" + this.props.match.params.id)
+            .then((success) => {
+                console.log(success.data.success.message);
+                notify.show(success.data.success.message, 'success');
+                this.props.history.push(`/properties`);
+            })
+            .catch((error) => {
+                console.log(error.response.data.error.message);
+                notify.show(error.response.data.error.message, 'error');
+            });
     }
 
     render() {
@@ -33,7 +52,7 @@ class Property extends Component {
             return(
                 <div className="property-page">
                     <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{`${this.props.propertyData.title} - React Starter Kit`}</title>
+                        <title>{`${this.props.propertyData.title}`}</title>
                     </Helmet>
                     {/*<InternalTextBanner Heading={this.props.propertyData.title} wrapperClass="post" />*/}
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
@@ -45,7 +64,13 @@ class Property extends Component {
                                         <Row className="title-row">
                                             <TitleInfo name={title} location={locality} price={`$ ${Gen.round(rent)}`} area={`${Gen.round(builtArea)} sq ft`}/>
                                             {
-                                                propertyData.edit ? <Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>: ''
+                                                propertyData.edit ? <div><Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>
+                                                    <div className="delete-property" onClick={this.deleteProperty.bind(this)}>
+                                                        Delete
+                                                    </div>
+                                                </div>
+                                                    : ''
+
                                             }
                                         </Row>
                                         <Row className="bottom-line-separator">
@@ -169,37 +194,12 @@ class Property extends Component {
                     </ReactCSSTransitionGroup>
                 </div>
             ); 
-        }
-
-        if(this.props.propertyData == null){
+        } else {
             return (
-                <div>
+                <div className="property-page">
                     <Helmet bodyAttributes={{class: "postPage"}}>
                         <title>{'Property Page'}</title>
                     </Helmet>
-                    <InternalTextBanner Heading="" wrapperClass="post" />
-                    <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
-                    <div className="main anim-appear">
-                        <div className="grid">
-                            <div className="column column_12_12">
-                                <div className="post">
-                                   
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </ReactCSSTransitionGroup>
-                </div>
-            );
-        }
-
-        if(this.props.propertyData == false){
-            return (
-                <div>
-                    <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{'404 not found'}</title>
-                    </Helmet>
-                    <InternalTextBanner Heading="404 not found" wrapperClass="post" />
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
                         <div className="grid">
@@ -230,6 +230,6 @@ function loadData(store, landingPageID){
 
 export default {
     loadData,
-    component: connect(mapStateToProps, { fetchPropertyAction, clearPropertyData })(Property)
+    component: withRouter(connect(mapStateToProps, { fetchPropertyAction, clearPropertyData })(Property))
 };
 

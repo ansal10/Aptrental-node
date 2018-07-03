@@ -73,24 +73,43 @@ class AddPropertyPage extends Component {
       const {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus} = data;
 
         const id = this.props.match.params.id || null;
-        const endpoint = this.getPageType() === "Edit" ? UPDATE_PROPERTY_ENDPOINT : CREATE_PROPERTY_ENDPOINT;
+        const endpoint = this.getPageType() === "Edit" ? UPDATE_PROPERTY_ENDPOINT + "/" + id : CREATE_PROPERTY_ENDPOINT;
 
-      axios.post(CREATE_PROPERTY_ENDPOINT, {id, images, title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus})
-      .then((success) => {
-          console.log(success.data.success.message);
-          this.toggle();
-          notify.show(success.data.success.message, 'success');
-          this.setState({
-              loading: false,
-              showForm: false,
-          })
-      })
-      .catch((error) => {
-          console.log(error.response.data.error.message);
-          notify.show(error.response.data.error.message, 'error');
-          this.toggle();
-      });
+        const postData = {id, images, title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus};
 
+        if(this.getPageType() === "Edit") {
+            axios.put(endpoint, postData)
+                .then((success) => {
+                    console.log(success.data.success.message);
+                    this.toggle();
+                    notify.show(success.data.success.message, 'success');
+                    this.setState({
+                        loading: false,
+                        showForm: false,
+                    })
+                })
+                .catch((error) => {
+                    console.log(error.response.data.error.message);
+                    notify.show(error.response.data.error.message, 'error');
+                    this.toggle();
+                });
+        } else {
+            axios.put(endpoint, postData)
+                .then((success) => {
+                    console.log(success.data.success.message);
+                    this.toggle();
+                    notify.show(success.data.success.message, 'success');
+                    this.setState({
+                        loading: false,
+                        showForm: false,
+                    })
+                })
+                .catch((error) => {
+                    console.log(error.response.data.error.message);
+                    notify.show(error.response.data.error.message, 'error');
+                    this.toggle();
+                });
+        }
   }
 
   head(){
@@ -118,7 +137,7 @@ class AddPropertyPage extends Component {
                             {
                                 !this.state.showForm ? <div className="confirm_email_block">
                                     <div className="confirm_email_check">
-                                        Resource created successfully
+                                        Resource created/updated successfully
                                     </div>
                                     <Link className="proceed-to-link" to="/">Proceed to properties page</Link>
 

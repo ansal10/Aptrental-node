@@ -1,35 +1,21 @@
 import React from 'react';
 import App from './app';
-import HomePage from './pages/homePage';
 import ContactPage from './pages/contactPage';
 import RegisterPage from './pages/registerPage';
 import LoginPage from './pages/loginPage';
 import About from './pages/aboutPage';
-import Posts from './pages/postsPage';
-import Post from './pages/postPage';
 import Property from './pages/propertyPage';
 import AddProperty from './pages/addPropertyPage';
 import Properties from './pages/propertiesPage';
+import Users from './pages/usersPage';
 import UserProfile from './pages/userProfile';
+import OtherUserProfile from './pages/otherUserProfile';
 import TermsAndConditions from './pages/policies/termsAndConditions';
 import Privacy from './pages/policies/privacy';
 import CookiesPolicy from './pages/policies/cookiesPolicy';
 import NotFoundPage from './pages/notFound404Page';
 
 export default [
-    {
-        path: '/blog',
-        ...App,
-        routes: [
-            {
-                path: '/blog/:id',
-                ...Post
-            },
-            {
-                ...Posts
-            }
-        ]
-    },
     {
         path: '/property',
         ...App,
@@ -96,6 +82,20 @@ export default [
             {
                 path: '/user/profile',
                 ...UserProfile
+            },
+            {
+                path: '/user/:id',
+                ...OtherUserProfile
+            }
+        ]
+    },
+    {
+        path: '/users',
+        ...App,
+        routes: [
+            {
+                path: '/users',
+                ...Users
             }
         ]
     },

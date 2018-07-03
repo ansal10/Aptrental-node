@@ -16,30 +16,18 @@ const userReducer = function(state = null, action){
     }
 }
 
-
-const postReducer = function(state = null, action){
+const otherUserReducer = function(state = null, action){
 
     switch(action.type){
-        case 'FETCH_POST':
-            return action.payload.data.Blog || false;
-        case 'CLEAR_POST_DATA':
+        case actions.FETCH_OTHER_USER_DATA:
+            return action.payload.success.data || null;
+        case actions.FETCH_OTHER_USER_DATA:
             return null;
         default:
             return state;
     }
 }
 
-
-const postsReducer = function(state = {
-    posts: null
-}, action){
-    switch(action.type){
-        case 'FETCH_POSTS':
-            return {...state, arr: action.payload.data.allBlogs || false};
-        default:
-            return state;
-    }
-}
 
 const propertyReducer = function(state = null, action){
 
@@ -75,13 +63,37 @@ const propertiesReducer = function(state = {
         default:
             return state;
     }
+};
+
+const usersReducer = function(state = {
+    properties: null
+}, action){
+    switch(action.type){
+        case 'FETCH_USERS':
+            const merge = action.merge;
+            let newUsers = action.payload.success.data;
+            if(merge) {
+                newUsers = Gen.mergeArray(state.arr, newUsers);
+            }
+
+            const data = {
+                arr: newUsers,
+                nextUrl: action.payload.nextUrl
+            };
+            return {...state, ...data || null};
+
+        case 'CLEAR_USERS_NEXT_URL':
+            return {... state, nextUrl: null};
+        default:
+            return state;
+    }
 }
 
 export default combineReducers({
     form: formReducer,
-    posts: postsReducer,
-    post: postReducer,
     property: propertyReducer,
     properties: propertiesReducer,
     user: userReducer,
+    otherUser: otherUserReducer,
+    users: usersReducer,
 });

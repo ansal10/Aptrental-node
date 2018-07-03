@@ -17,7 +17,7 @@ import {renderDropdownList} from "../common/forms/input-types/index";
 import {Gen} from "../helpers/gen";
 import {clearUserDetails, fetchOtherUserDetails} from "../actions";
 
-class UserProfile extends Component {
+class OtherUserProfile extends Component {
 
     constructor(props) {
         super(props);
@@ -26,6 +26,13 @@ class UserProfile extends Component {
             loading: false,
             showForm: true,
         };
+    }
+
+    componentWillMount() {
+        const id = this.props.match.params.id || null;
+        if(id) {
+            this.props.fetchOtherUserDetails(id);
+        }
     }
 
     toggle() {
@@ -61,13 +68,12 @@ class UserProfile extends Component {
                 notify.show(error.response.data.error.message, 'error');
                 this.toggle();
             });
-
   }
 
   head(){
     return (
         <Helmet bodyAttributes={{class: "contactPage"}}>
-          <title>{`User Profile - ${appName}`}</title>
+          <title>{`Other User Profile - ${appName}`}</title>
         </Helmet>
     );
   }
@@ -124,16 +130,13 @@ class UserProfile extends Component {
                                                 data={[ 'admin', 'realtor', 'consumer' ]}/>
                                         </div>
 
-                                        {
-                                            Gen.isUserAdmin() ?  <div className="form_row">
-                                                <Field
-                                                    name="status"
-                                                    component={renderDropdownList}
-                                                    label="Status:"
-                                                    data={[ 'active', 'inactive' ]}/>
-                                            </div>: ''
-                                        }
-
+                                      <div className="form_row">
+                                            <Field
+                                                name="status"
+                                                component={renderDropdownList}
+                                                label="Status:"
+                                                data={[ 'active', 'inactive' ]}/>
+                                        </div>
 
                                         <div className="form_buttons">
                                             <LaddaButton
@@ -150,8 +153,6 @@ class UserProfile extends Component {
                                                 Update Profile
                                             </LaddaButton>
                                         </div>
-
-                                        <Link className="logout-link" to="/" onClick={this.logout.bind(this)}>Logout</Link>
                                     </div>
 
                             </form>
@@ -168,20 +169,20 @@ class UserProfile extends Component {
   }
 
 
-UserProfile = reduxForm({
-      form: 'userProfileForm',
+OtherUserProfile = reduxForm({
+      form: 'otherUserProfileForm',
       validate,
       enableReinitialize: true,
-  })(UserProfile);
+  })(OtherUserProfile);
 
 
 function mapStateToProps(state){
     return {
-        user: state.user,
-        initialValues: state.user
+        user: state.otherUser,
+        initialValues: state.otherUser
     };
 };
 
 export default {
-  component: connect(mapStateToProps, {clearUserDetails})(UserProfile)
+  component: connect(mapStateToProps, {fetchOtherUserDetails})(OtherUserProfile)
 };

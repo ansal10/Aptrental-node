@@ -48,16 +48,17 @@ class Filter extends Component {
 
     submit(data) {
         console.log(data);
-        if(data.userId) {
-            data.userId = [this.props.user.id];
+        const dataCopy = Gen.objectCopy(data);
+        if(data.UserId) {
+            dataCopy.UserId = [this.props.user.id];
         } else {
-            data.userId = [];
+            dataCopy.UserId = [];
         }
-        data.rent = [this.state.rent.min, this.state.rent.max];
-        data.builtArea = [this.state.builtArea.min, this.state.builtArea.max];
-        data.carpetArea = [this.state.carpetArea.min, this.state.carpetArea.max];
+        dataCopy.rent = [this.state.rent.min, this.state.rent.max];
+        dataCopy.builtArea = [this.state.builtArea.min, this.state.builtArea.max];
+        dataCopy.carpetArea = [this.state.carpetArea.min, this.state.carpetArea.max];
 
-        this.props.applyFilter(data);
+        this.props.applyFilter(dataCopy);
     }
 
     render(){
@@ -163,7 +164,7 @@ class Filter extends Component {
 
                 <div className="form_row form_checkbox_row">
                     <Field
-                        name="userId"
+                        name="UserId"
                         component={renderTextField}
                         label="Listed by me only:"
                         type="checkbox"

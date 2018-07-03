@@ -51,7 +51,7 @@ class UploadImage extends Component {
                     }
                 }}
                 djsConfig={{
-                    addRemoveLinks: true
+                    // addRemoveLinks: true
                 }}
             />
         )

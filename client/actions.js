@@ -1,9 +1,21 @@
 import {
-    landingPageAPI, GET_PROPERTY_ENDPOINT, GET_PROPERTIES_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS,
-    LOGOUT_USER
+    GET_PROPERTY_ENDPOINT, GET_PROPERTIES_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS,
+    LOGOUT_USER, GET_OTHER_USER_DETAILS, GET_USERS_ENDPOINT
 } from './endpoints';
 import {actions} from './constants';
 
+export const fetchOtherUserDetails = (id) => async (dispatch, getState, api) => {
+
+    await api.get(GET_OTHER_USER_DETAILS + "/" + id).then(response => {
+        dispatch({
+            type: actions.FETCH_OTHER_USER_DATA,
+            payload: response.data
+        })
+    }).catch((err) => {
+        console.log('error', err.response.data.error.message);
+    })
+
+};
 
 export const fetchUserDetails = () => async (dispatch, getState, api) => {
 
@@ -13,7 +25,7 @@ export const fetchUserDetails = () => async (dispatch, getState, api) => {
             payload: response.data
         })
     }).catch((err) => {
-        console.log('error', err);
+        console.log('error', err.response.data.error.message);
     })
 
 };
@@ -26,7 +38,7 @@ export const clearUserDetails = () => async (dispatch, getState, api) => {
             payload: response.data
         })
     }).catch((err) => {
-        console.log('error', err);
+        console.log('error', err.response.data.error.message);
     })
 
 };
@@ -40,7 +52,28 @@ export const fetchPropertyAction = (productID) => async (dispatch, getState, api
             payload: response.data.success.data
         })
     }).catch((err) => {
-        console.log('error', err.data.error.data);
+        console.log('error', err.response.data.error.message);
+    })
+
+};
+
+export const fetchUsersAction = (data) => async (dispatch, getState, api) => {
+
+    const state = getState();
+    const nextUrl = state.users.nextUrl || null;
+
+    const endpoint = nextUrl ? nextUrl : GET_USERS_ENDPOINT;
+
+    const merge = nextUrl ? true : false;
+
+    await api.get(endpoint).then(response => {
+        dispatch({
+            type: 'FETCH_USERS',
+            payload: response.data,
+            merge: merge
+        })
+    }).catch((err) => {
+        console.log('error', err.response.data.error.message);
     })
 
 };
@@ -61,7 +94,7 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
             merge: merge
         })
     }).catch((err) => {
-        console.log('error', err.data.error.data);
+        console.log('error', err.response.data.error.message);
     })
 
 };
@@ -78,57 +111,9 @@ export const clearNextUrl = () => (dispatch) => {
     })
 };
 
-export const fetchPost = (postID) => async (dispatch, getState, api) => {
 
-    const _query = {
-        query: `{
-            Blog(slug: "${postID}"){
-                postTitle
-                post
-                imageURL
-            }
-        }`
-    };
-
-    await api.post(landingPageAPI, _query).then(response => {
-        dispatch({
-            type: 'FETCH_POST',
-            payload: response.data
-        })
-    }).catch((err) => {
-        console.log('error', err);
-    })
-    
-};
-
-export const fetchPosts = () => async (dispatch, getState, api) => {
-
-    const _query = {
-        query: `{
-            allBlogs {
-                postTitle
-                shortdescription
-                slug
-                imageURL
-              }
-        }`
-    };
-
-    await api.post(landingPageAPI, _query).then(response => {
-        dispatch({
-            type: 'FETCH_POSTS',
-            payload: response.data
-        })
-    }).catch((err) => {
-        console.log('error', err);
-    })
-    
-};
-
-export const clearPostData = () => (dispatch) => {
+export const clearUsersNextUrl = () => (dispatch) => {
     dispatch({
-        type: 'CLEAR_POST_DATA'
+        type: 'CLEAR_USERS_NEXT_URL'
     })
 };
-
-

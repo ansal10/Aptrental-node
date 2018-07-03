@@ -70,6 +70,12 @@ class Header extends Component {
                             <ul>
 
                                 {
+                                    Gen.isUserAdmin(user) ?
+                                        <li className="first">
+                                            <NavLink activeClassName="active" to="/users">Users</NavLink>
+                                        </li> : ''
+                                }{
+
                                     Gen.isUserRealorOrAdmin(user) ?
                                         <li className="first">
                                             <NavLink activeClassName="active" to="/property/add">List Property</NavLink>
