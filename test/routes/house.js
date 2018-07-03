@@ -150,9 +150,29 @@ describe('House', async () => {
             res.should.have.status(400);
             expect( (await models.House.findOne({where:{id: h.id}})) != null)
         });
-
-
     });
+
+    describe('/:id PUT', async () => {
+        it('should update the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .put('/api/v1/house/'+h.id)
+                .send({rent:1001});
+            res.should.have.status(200);
+            let h2 = await models.House.findOne({where:{id: h.id}})
+            expect(h2.rent === 1001)
+
+        });
+
+        it('should not delete the record successfully', async () => {
+            let h = await houseFactory();
+            let res = await chai.request(server)
+                .put('/api/v1/house/'+(h.id +1));
+            res.should.have.status(400);
+            expect( (await models.House.findOne({where:{id: h.id}})).rent === h.rent)
+        });
+    });
+
 
 
 
