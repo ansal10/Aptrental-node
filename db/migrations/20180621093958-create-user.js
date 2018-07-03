@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('users', {
+        return queryInterface.createTable('Users', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -48,17 +48,17 @@ module.exports = {
                 type: Sequelize.DATE
             }
         }).then( async () =>{
-            await queryInterface.addIndex('users', ['role'], {name: 'users_role_index'});
-            await queryInterface.addIndex('users', ['status'], {name: 'users_status_index'});
-            await queryInterface.addIndex('users', ['sex'], {name: 'users_sex_index'});
+            await queryInterface.addIndex('Users', ['role'], {name: 'Users_role_index'});
+            await queryInterface.addIndex('Users', ['status'], {name: 'Users_status_index'});
+            await queryInterface.addIndex('Users', ['sex'], {name: 'Users_sex_index'});
         });
     },
 
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('users').then( async ()=>{
-            await queryInterface.removeIndex('users', 'users_role_index');
-            await queryInterface.removeIndex('users', 'users_status_index');
-            await queryInterface.removeIndex('users', 'users_sex_index');
+        return queryInterface.dropTable('Users').then( async ()=>{
+            await queryInterface.removeIndex('Users', 'Users_role_index');
+            await queryInterface.removeIndex('Users', 'Users_status_index');
+            await queryInterface.removeIndex('Users', 'Users_sex_index');
         });
     }
 };

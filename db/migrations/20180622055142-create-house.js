@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('houses', {
+        return queryInterface.createTable('Houses', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -118,7 +118,7 @@ module.exports = {
             UserId:{
                 type: Sequelize.INTEGER,
                 references:{
-                    model: 'users',
+                    model: 'Users',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
@@ -134,26 +134,26 @@ module.exports = {
                 type: Sequelize.DATE
             }
         }).then( async () =>{
-            await queryInterface.addIndex('houses', ['rent'], {name: 'houses_rent_index'});
-            await queryInterface.addIndex('houses', ['builtArea'], {name: 'houses_builtArea_index'});
-            await queryInterface.addIndex('houses', ['carpetArea'], {name: 'houses_carpetArea_index'});
-            await queryInterface.addIndex('houses', ['availability'], {name: 'houses_availability_index'});
-            await queryInterface.addIndex('houses', ['availableFor'], {name: 'houses_availableFor_index'});
-            await queryInterface.addIndex('houses', ['powerBackup'], {name: 'houses_powerBackup_index'});
-            await queryInterface.addIndex('houses', ['furnishingStatus'], {name: 'houses_furnishingStatus_index'});
-            await queryInterface.addIndex('houses', ['UserId'], {name: 'houses_UserId_index'});
+            await queryInterface.addIndex('Houses', ['rent'], {name: 'Houses_rent_index'});
+            await queryInterface.addIndex('Houses', ['builtArea'], {name: 'Houses_builtArea_index'});
+            await queryInterface.addIndex('Houses', ['carpetArea'], {name: 'Houses_carpetArea_index'});
+            await queryInterface.addIndex('Houses', ['availability'], {name: 'Houses_availability_index'});
+            await queryInterface.addIndex('Houses', ['availableFor'], {name: 'Houses_availableFor_index'});
+            await queryInterface.addIndex('Houses', ['powerBackup'], {name: 'Houses_powerBackup_index'});
+            await queryInterface.addIndex('Houses', ['furnishingStatus'], {name: 'Houses_furnishingStatus_index'});
+            await queryInterface.addIndex('Houses', ['UserId'], {name: 'Houses_UserId_index'});
         });
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('houses').then( async () =>{
-            await queryInterface.removeIndex('houses', 'houses_rent_index' );
-            await queryInterface.removeIndex('houses', 'houses_builtArea_index' );
-            await queryInterface.removeIndex('houses', 'houses_carpetArea_index' );
-            await queryInterface.removeIndex('houses', 'houses_availability_index' );
-            await queryInterface.removeIndex('houses', 'houses_availableFor_index' );
-            await queryInterface.removeIndex('houses', 'houses_powerBackup_index' );
-            await queryInterface.removeIndex('houses', 'houses_furnishingStatus_index' );
-            await queryInterface.removeIndex('houses', 'houses_UserId_index' );
+        return queryInterface.dropTable('Houses').then( async () =>{
+            await queryInterface.removeIndex('Houses', 'Houses_rent_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_builtArea_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_carpetArea_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_availability_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_availableFor_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_powerBackup_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_furnishingStatus_index' );
+            await queryInterface.removeIndex('Houses', 'Houses_UserId_index' );
         });
     }
 };

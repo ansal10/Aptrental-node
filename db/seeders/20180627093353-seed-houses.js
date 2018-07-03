@@ -173,8 +173,8 @@ module.exports = {
                 "locality": faker.address.streetName(),
                 "country": faker.address.country(),
                 "address": faker.address.streetAddress(),
-                "latitude": Math.random() * (90 + 90 + 1) - 90,
-                "longitude": Math.random() * (180 + 180 + 1) - 180,
+                "latitude": 28.6289143 + Math.random()*(3)-1,
+                "longitude": 77.2065322 + Math.random()*(3)-1,
                 "type": _.sample(['1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+']),
                 "availability": _.sample(['yes', 'no', 'archive']),
                 "availableFor": _.sample(['all', 'family', 'couples', 'bachelors']),
@@ -190,12 +190,14 @@ module.exports = {
                 "updatedAt": moment().toISOString()
 
             };
-
             houses.push(data);
-
         }
 
-        return queryInterface.bulkInsert('Houses', houses, {});
+        try {
+         return await queryInterface.bulkInsert('Houses', houses, {});
+        }catch (e) {
+            console.error(e);
+        }
     },
 
     down: (queryInterface, Sequelize) => {
