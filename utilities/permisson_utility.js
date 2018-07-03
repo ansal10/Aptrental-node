@@ -26,7 +26,7 @@ const canSeeUserDetails = (user1, user2) => {
     if(user1.id === user2.id) // can edit himself
         return true;
     return user1.role === 'admin';
-}
+};
 
 module.exports.canSeeAllUsers = canSeeAllUsers;
 module.exports.canUpdateProperty = canUpdateProperty;

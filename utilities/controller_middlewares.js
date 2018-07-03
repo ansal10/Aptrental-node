@@ -8,12 +8,12 @@ const isAuthenticated = async ( req, res, next ) => {
         return next();
     }
     
-    let u = await models.User.findOne( { "where": {
-        "email": "manovagyanik1@gmail.com"
-    } } );
-
-    req.session.user = u;
-    return next();
+    // let u = await models.User.findOne( { "where": {
+    //     "email": "manovagyanik1@gmail.com"
+    // } } );
+    //
+    // req.session.user = u;
+    // return next();
     
 
     // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE

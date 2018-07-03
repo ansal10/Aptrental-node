@@ -57,7 +57,7 @@ describe('House', async () => {
             passwordAttributes: {salt: '1234', hash: md5('1234'+ '1234')},
             role: 'admin'
         });
-        sinon.stub(controllerMiddleware, 'isAuthenticated').callsFake((req, res, next) => {
+        sinon.stub(controllerMiddleware, 'isAuthenticated').callsFake(async (req, res, next) => {
             req.session.user = user;
             return next();
         });
@@ -69,7 +69,7 @@ describe('House', async () => {
         controllerMiddleware.isAuthenticated.restore();
     });
 
-    describe('/search POST Search Houses', () => {
+    describe('/search POST Search Houses', async () => {
 
         it('it should return all available property user successful', async () => {
             await houseFactory();
@@ -97,7 +97,7 @@ describe('House', async () => {
         });
     });
 
-    describe('/ POST House', () => {
+    describe('/ POST House', async () => {
         it('should create house with successfull parameters', async() => {
             let res = await chai.request(server).post('/api/v1/house').send(defaultHouseParams);
             res.should.have.status(201);
