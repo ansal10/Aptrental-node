@@ -26,7 +26,7 @@ export class MultipleMapContainer extends Component {
                      lat: coordinates[0].latitude,
                      lng: coordinates[0].longitude,
                  }}
-                 zoom={12}>
+                 zoom={8}>
                 {
                     coordinates.map((point, i) =>(
                         <Marker

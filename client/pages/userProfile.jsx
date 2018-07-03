@@ -10,6 +10,7 @@ import { renderTextField, renderTextarea } from './../common/forms/input-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from './../components/banners/internalTextBanner';
 import {appName} from '../constants';
+import { withRouter } from 'react-router-dom'
 
 import axios from 'axios';
 import {UPDATE_USER_ENDPOINT_PUT} from "../endpoints";
@@ -39,6 +40,7 @@ class UserProfile extends Component {
     logout(e) {
         e.preventDefault();
         this.props.clearUserDetails();
+        this.props.history.push(`/login`);
     }
 
     submit(data){
@@ -183,5 +185,5 @@ function mapStateToProps(state){
 };
 
 export default {
-  component: connect(mapStateToProps, {clearUserDetails})(UserProfile)
+  component: withRouter(connect(mapStateToProps, {clearUserDetails})(UserProfile))
 };

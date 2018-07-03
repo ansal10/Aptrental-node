@@ -91,6 +91,7 @@ class LoginPage extends Component {
                                         name="password"
                                         component={renderTextField}
                                         label="Password:"
+                                        type="password"
                                     />
                                 </div>
 

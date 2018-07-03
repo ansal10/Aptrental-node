@@ -162,14 +162,17 @@ class Filter extends Component {
                     </div>
                 </div>
 
-                <div className="form_row form_checkbox_row">
-                    <Field
-                        name="UserId"
-                        component={renderTextField}
-                        label="Listed by me only:"
-                        type="checkbox"
-                    />
-                </div>
+                    {
+                        Gen.isUserRealorOrAdmin(this.props.user) ?
+                        <div className="form_row form_checkbox_row">
+                            <Field
+                                name="UserId"
+                                component={renderTextField}
+                                label="Listed by me only:"
+                                type="checkbox"
+                            />
+                        </div> : null
+                    }
 
                 <div className="filter-button form_buttons">
                     <LaddaButton
