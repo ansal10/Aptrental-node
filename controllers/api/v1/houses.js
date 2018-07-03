@@ -16,8 +16,8 @@ router.post('/search', middlewares.isAuthenticated, async (req, res, next) => {
     let page = req.query.page || 0;
 
     let houses = await houseHelper.searchHouse(user, req.body || {}, page || 0);
-    let prevUrl = page > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) - 1}), true) : null;
-    let nextUrl = houses.length > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) + 1}), true) : null;
+    let prevUrl = page > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) - 1}), true) : null;
+    let nextUrl = houses.length > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) + 1}), true) : null;
 
     genUtil.sendJsonResponse(res, 200, '', houses, nextUrl, prevUrl);
 });
