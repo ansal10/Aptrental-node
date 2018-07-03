@@ -169,7 +169,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
 
             Object.assign(user, user, updateVals);
-            await user.validate({skip:['email']});
+            await user.validate({skip: ['email']});
             await user.save();
             return {
                 status: true,
@@ -218,7 +218,10 @@ const searchUsers = async (requester, searchParams) => {
             limit: config.pageLimit,
             offset: config.pageLimit * page,
             attributes: USER_DETAILS_FIELDS,
-            where: query
+            where: query,
+            order: [
+                ['id', 'DESC']
+            ]
         });
 
         return {status: true, message: '', args: {users: users}};

@@ -36,7 +36,11 @@ const listAllHouse = async (user, params, page) => {
         limit: config.pageLimit,
         offset: config.pageLimit * pageNumber,
         attributes: LIST_ALL_HOUSE_ATTRIBUTES,
-        where: params
+        where: params,
+        order: [
+            // Will escape id and validate DESC against a list of valid direction parameters
+            ['id', 'DESC'],
+        ]
     });
 
     houses = _.map(houses, (h) => {
