@@ -5,7 +5,7 @@ import Choose from "./choose";
 import { Field, reduxForm } from 'redux-form';
 import {notify} from 'react-notify-toast';
 import {Button} from 'react-bootstrap';
-import {renderDropdownList, renderMultiselect} from "../common/forms/input-types/index";
+import {renderDropdownList, renderMultiselect, renderTextField} from "../common/forms/input-types/index";
 import { validate_filters as validate }  from './../common/forms/validation';
 import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
 import {Gen} from "../helpers/gen";
@@ -63,6 +63,15 @@ class Filter extends Component {
 
                 <div className="form_row">
                     <Field
+                        name="searchString"
+                        component={renderTextField}
+                        label="Search:"
+                        type="text"
+                    />
+                </div>
+
+                <div className="form_row">
+                    <Field
                         name="type"
                         component={renderMultiselect}
                         label="type:"
@@ -84,7 +93,7 @@ class Filter extends Component {
                         label="powerBackup:"
                         data={[ 'full', 'partial', 'no' ]}/>
                 </div>
-                
+
                 <div className="form_row">
                     <Field
                         name="availableFor"
@@ -102,41 +111,48 @@ class Filter extends Component {
                 </div>
 
 
-                <div className="choose-container">
-                    <h1 className="choose-header">
-                        BUDGET
-                    </h1>
-                    <InputRange
-                        draggableTrack
-                        maxValue={999000}
-                        minValue={100}
-                        onChange={value => this.updateState({rent: value})}
-                        value={this.state.rent} />
+                <div className="form_row">
+                    <div className="form_item">
+                        <div className="form_label">
+                            <label>Rent</label>
+                        </div>
+                        <InputRange
+                            draggableTrack
+                            maxValue={999000}
+                            minValue={100}
+                            onChange={value => this.updateState({rent: value})}
+                            value={this.state.rent} />
+                    </div>
                 </div>
 
 
-                <div className="choose-container">
-                    <h1 className="choose-header">
-                        Built Area
-                    </h1>
+
+                <div className="form_row">
+                    <div className="form_item">
+                        <div className="form_label">
+                        <label>Built Area</label>
+                    </div>
                     <InputRange
                         draggableTrack
                         maxValue={100000}
                         minValue={250}
                         onChange={value => this.updateState({builtArea: value})}
                         value={this.state.builtArea} />
+                    </div>
                 </div>
 
-                <div className="choose-container">
-                    <h1 className="choose-header">
-                        Carpet Area
-                    </h1>
+                <div className="form_row">
+                    <div className="form_item">
+                        <div className="form_label">
+                        <label>Carpet Area</label>
+                    </div>
                     <InputRange
                         draggableTrack
                         maxValue={100000}
                         minValue={250}
                         onChange={value => this.updateState({carpetArea: value})}
                         value={this.state.carpetArea} />
+                    </div>
                 </div>
 
                 <div className="filter-button form_buttons">

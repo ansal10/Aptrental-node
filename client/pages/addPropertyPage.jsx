@@ -38,19 +38,11 @@ class AddPropertyPage extends Component {
 
     componentDidMount() {
         const id = this.props.match.params.id || null;
-        if(id && !this.props.propertyData) {
+        if(id) {
             this.props.fetchPropertyAction(id);
         }
     }
 
-    componentDidUpdate() {
-        if(this.props.propertyData && !this.state.initialized){
-            // this.props.initialize(this.props.propertyData);
-            const newState = Gen.objectCopy(this.state);
-            newState.initialized = true;
-            this.setState(newState);
-        }
-    }
 
     toggle() {
         this.setState({

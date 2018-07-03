@@ -8,6 +8,10 @@ export class Gen {
         return Math.round(num);
     }
 
+    static isUserAdmin(user) {
+        return user && user.role && (user.role === 'admin');
+    }
+
     static isUserRealorOrAdmin(user) {
         return user && user.role && (user.role === 'realtor' || user.role === 'admin');
     }

@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
 import PropertyCard from "../components/propertyCard";
 import Filter from "../components/filter";
+import MultipleMapContainer from "../components/mapMultiple";
+import MapContainer from "../components/map";
 
 class Properties extends Component {
 
@@ -27,10 +29,26 @@ class Properties extends Component {
         }
     }
 
+    renderPropertiesOnMap() {
+        if(this.props.properties) {
+            const coordinates = this.props.properties.map((property, i) => {
+               const {latitude, longitude, id} = property;
+               return {latitude, longitude, id};
+               // return {latitude: 40.741895, longitude: -73.989308};
+            });
+
+
+            return (
+                <MultipleMapContainer title="Property search" coordinates={coordinates} />
+            )
+
+        }
+    }
+
     head(){
         return (
             <Helmet bodyAttributes={{class: "postsPage"}}>
-                <title>{`Posts - React Starter Kit`}</title>
+                <title>{`Properties Page`}</title>
             </Helmet>
         );
     }
@@ -50,65 +68,44 @@ class Properties extends Component {
                                     <Filter applyFilter={fetchPropertiesAction}/>
                                 </Col>
                                 <Col xs={12} md={8}>
-                                    {this.renderProperties()}
+                                    {
+                                        (properties.length > 0) ?
+                                        this.renderPropertiesOnMap():
+                                           <div className="no-result">
+                                            <h2> Oops!!! No Results</h2>
+                                            <h2> Try to widen your search</h2>
+                                           </div>
+                                    }
                                 </Col>
                             </Row>
-
                         </Grid>
                     </div>
                     </ReactCSSTransitionGroup>
                 </div>
             );
-        }
-
-        if(this.props.properties == null){
+        } else {
             return (
                 <div>
                     {this.head()}
                     <InternalTextBanner Heading="" wrapperClass="posts" />
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
-                    <div className="main anim-appear">
-                        <div className="grid">
-                            <div className="column column_8_12">
-                                <div className="posts">
-                                    
+                        <div className="main anim-appear">
+                            <div className="grid">
+                                <div className="column column_8_12">
+                                    <div className="posts">
+
+                                    </div>
+                                </div>
+                                <div className="column column_4_12">
+
                                 </div>
                             </div>
-                            <div className="column column_4_12">
-                                
-                            </div>
                         </div>
-                    </div>
                     </ReactCSSTransitionGroup>
-                </div>
-            );
+                </div>);
         }
-
-        if(this.props.properties == false){
-            return (
-                <div>
-                    {this.head()}
-                    <InternalTextBanner Heading="404 Not found" wrapperClass="posts" />
-                    <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
-                    <div className="main anim-appear">
-                        <div className="grid">
-                            <div className="column column_8_12">
-                                <div className="posts">
-                                    
-                                </div>
-                            </div>
-                            <div className="column column_4_12">
-                                
-                            </div>
-                        </div>
-                    </div>
-                    </ReactCSSTransitionGroup>
-                </div>
-            );
-        }
-
-    }
   }
+}
 
 function mapStateToProps(state){
     return {

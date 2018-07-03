@@ -4,6 +4,7 @@
 
 
   background: $white;
+  padding: 10px;
 
 
   .input-range {
@@ -19,40 +20,33 @@
     }
   }
 
-  .choose-container {
+  .form_row {
 
-    padding: 10px 20px;
-    &.first {
-      margin-top: 0px;
-    }
-    .choose-header {
-      color: $black;
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-top: 0px;
-      padding-bottom: 20px;
-    }
+    .form_item {
 
-    .options-wrapper {
-      clear: both;
-      overflow: auto;
-
-      .option-container {
-
-        margin: 3px;
-        border: 1px $gray solid;
-        border-radius: 10px;
-        float: left;
-
-        .option-item {
-          color: $gray;
-          margin: 5px;
-        }
-
-
+      .form_label {
+        color: $black;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-top: 0px;
+        padding-bottom: 20px;
+        padding-top: 30px;
       }
+
+      .form_input{
+        input[type=text] {
+          width: 100%;
+          height: 2.429em;
+          background-color: #fff;
+          border: #ccc 1px solid;
+          border-radius: 4px;
+          padding-left: 15px;
+        }
+      }
+
     }
   }
+
   .filter-button {
     max-width: 300px;
     margin: 30px auto 0 auto;
