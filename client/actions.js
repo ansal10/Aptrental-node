@@ -51,7 +51,7 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
     await api.post(GET_PROPERTIES_ENDPOINT, data).then(response => {
         dispatch({
             type: 'FETCH_PROPERTIES',
-            payload: response.data.success.data
+            payload: response.data
         })
     }).catch((err) => {
         console.log('error', err.data.error.data);

@@ -57,7 +57,11 @@ const propertiesReducer = function(state = {
 }, action){
     switch(action.type){
         case 'FETCH_PROPERTIES':
-            return {...state, arr: action.payload|| false};
+            const data = {
+                arr: action.payload.success.data,
+                nextUrl: action.payload.nextUrl
+            };
+            return {...state, ...data || null};
         default:
             return state;
     }

@@ -41,6 +41,10 @@ class Feature extends Component {
                 icon = 'fc';
                 break;
 
+            default:
+                icon = "fs";
+                break;
+
         }
         return(
             <Col xs={12} md={4} lg={3} className="pdOtherFeatures icon-container">
@@ -52,7 +56,7 @@ class Feature extends Component {
 }
 
 Feature.propTypes = {
-    name: PropTypes.oneOf(['Water Purifier', 'Lift', 'Water storage', 'Visitor Parking', 'Park', 'Security Personnel', 'Waste disposal', 'Rain water harvesting', 'Gym']).isRequired,
+    name: PropTypes.any.isRequired,
 }
 
 export default Feature;

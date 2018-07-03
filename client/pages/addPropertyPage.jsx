@@ -316,7 +316,7 @@ class AddPropertyPage extends Component {
                                                 name="features"
                                                 component={renderMultiselect}
                                                 label="features:"
-                                                data={[ 'bathroom','bedroom','study room','ac installed','curtains','chimney','exhaust','fans','lights','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
+                                                data={[ 'Water Purifier','Lift','Water storage','Visitor Parking','Park','Security Personnel','Waste disposal','Rain water harvesting','Gym','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
                                         </div>
 
 
