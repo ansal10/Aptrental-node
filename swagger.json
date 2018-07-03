@@ -1069,6 +1069,8 @@
           "items":{
             "type": "string"
           },
+          "example":[
+          ],
           "description": "Search for houses with these users only"
         }
       }

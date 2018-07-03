@@ -99,8 +99,8 @@ router.get('/', middlewares.isAuthenticated, async (req, res, next) => {
     let retVal = await userHelper.searchUsers(req.session.user, req.query);
 
     if (retVal.status) {
-        let prevUrl = page>0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)-1}), true) : null;
-        let nextUrl = retVal.args.users.length > 0 ? req.baseUrl + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)+1}), true) : null;
+        let prevUrl = page>0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)-1}), true) : null;
+        let nextUrl = retVal.args.users.length > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page:Number(page)+1}), true) : null;
 
         genUtil.sendJsonResponse(res, 200, "Received list of users", retVal.args.users, nextUrl, prevUrl);
     }
