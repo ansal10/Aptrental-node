@@ -19,7 +19,7 @@ const lastFileNumberInDownloadDir = () =>{
     let files = fs.readdirSync(config[env].downloadDir);
     let numberedFiles = _.filter(files, (f) => {return Number(f.split(".")[0])});
     let sortedNames = _.sortBy(numberedFiles, (f) => {return f.toLowerCase()});
-    let lastName = sortedNames[sortedNames.length-1];
+    let lastName = sortedNames.length > 0 ? sortedNames[sortedNames.length-1] : "0.jpg";
     return Number(lastName.split(".")[0]) || 0;
 };
 
@@ -41,16 +41,18 @@ const readDataFromUrlsFile = () => {
 const downloadFilePromise = (url, destFilePath) =>{
     return download(url).then(data => {
         fs.writeFileSync(destFilePath, data);
+        console.log("Downloaded "+ destFilePath)
     }, error => {
+        console.log("Failed "+ destFilePath);
         console.log(error)
     });
 };
 
 const execute = async () => {
     let startIndex = lastFileNumberInDownloadDir() + 1;
-    let datas = readDataFromUrlsFile().slice(0, 2);
+    let datas = readDataFromUrlsFile();
 
-    await _.chunk(datas, 2).forEach( async (chunkData) => {
+    await _.chunk(datas, 100).forEach( async (chunkData) => {
         let promises = [];
         chunkData.forEach( (data) => {
             let destFileName = util.format(config[env].downloadDir + "%s.jpg", startIndex);
