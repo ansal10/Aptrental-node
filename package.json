@@ -35,6 +35,7 @@
     "decorator-router": "^1.3.1",
     "decorator-router-express": "^1.1.0",
     "decorator-wrap": "^1.2.4",
+    "download": "^7.1.0",
     "ejs": "~2.5.7",
     "eslint": "^5.0.1",
     "express": "^4.16.3",
