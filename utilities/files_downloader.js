@@ -5,7 +5,7 @@ const util = require('util');
 
 const config = {
     prod:{
-        downloadDir: "/var/www/html/hott/laughingcolours",
+        downloadDir: "/var/www/html/hott/laughingcolours/",
         dataFile: '../db/laughingcolorsposts'
     },
     dev:{
@@ -39,29 +39,27 @@ const readDataFromUrlsFile = () => {
 };
 
 const downloadFilePromise = (url, destFilePath) =>{
-    return download(url).then(data => {
-        fs.writeFileSync(destFilePath, data);
-        console.log("Downloaded "+ destFilePath)
-    }, error => {
-        console.log("Failed "+ destFilePath);
-        console.log(error)
-    });
+    return download(url);
 };
 
 const execute = async () => {
     let startIndex = lastFileNumberInDownloadDir() + 1;
     let datas = readDataFromUrlsFile();
 
-    await _.chunk(datas, 100).forEach( async (chunkData) => {
-        let promises = [];
-        chunkData.forEach( (data) => {
-            let destFileName = util.format(config[env].downloadDir + "%s.jpg", startIndex);
-            let url = data[0];
+    for (let i = 0 ; i < datas.length ; i++){
+        let destFilePath = util.format(config[env].downloadDir + "%s.jpg", startIndex);
+        let url = datas[i][0];
+        try {
+            let data = await downloadFilePromise(url, destFilePath);
+            fs.writeFileSync(destFilePath, data);
+            console.log("Downloaded "+ destFilePath);
             startIndex ++;
-            promises.push(downloadFilePromise(url, destFileName));
-        });
-        await Promise.all(promises);
-    });
+        }catch (e) {
+            console.log("Failed "+ destFilePath);
+            console.log(error);
+        }
+
+    }
 };
 
 execute();
