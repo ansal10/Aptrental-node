@@ -5,12 +5,12 @@ const util = require('util');
 
 const config = {
     prod: {
-        downloadDir: "/var/www/html/hott/laughingcolours/",
-        dataFile: '../db/laughingcolorsposts'
+        downloadDir: "/var/www/html/hott/sadcasm/",
+        dataFile: '../db/sadcasmposts'
     },
     dev: {
         downloadDir: "/Users/ansal/Downloads/",
-        dataFile: '../db/laughingcolorsposts'
+        dataFile: '../db/sadcasmposts'
     }
 };
 const env = process.env.NODE_ENV || 'dev';
@@ -49,6 +49,7 @@ const downloadFilePromise = (url) => {
 const execute = async () => {
     let startIndex = lastFileNumberInDownloadDir() + 1;
     let datas = readDataFromUrlsFile();
+    datas = _.uniq(datas, false, (p) => { return p[0] });
 
     await _.chunk(datas, 100).forEach(async (chunkData) => {
         let promises = [];
