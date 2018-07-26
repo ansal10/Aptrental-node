@@ -6,11 +6,11 @@ const util = require('util');
 const config = {
     prod: {
         downloadDir: "/var/www/html/hott/laughingcolours/",
-        dataFile: '../db/laughingcolourspost'
+        dataFile: '../db/laughingcolorsposts'
     },
     dev: {
         downloadDir: "/Users/ansal/Downloads/",
-        dataFile: '../db/laughingcolourspost'
+        dataFile: '../db/laughingcolorsposts'
     }
 };
 const env = process.env.NODE_ENV || 'dev';
