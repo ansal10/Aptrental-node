@@ -3,9 +3,9 @@ const request = require('request');
 const util = require('util');
 const rp = require('request-promise');
 const fs = require('fs');
+const _ = require('underscore');
 
-
-const startDelayWithMins = 11;
+const startDelayWithMins = 12;
 const delayEachPostByMinutes = 30;
 let startTime = moment().add(startDelayWithMins, 'minutes');
 
@@ -13,11 +13,11 @@ const scheduleFromServer = async (data, pageId, pageAccessToken) => {
 
     let imageUrl = data[0];
     let caption = data[1] || '';
-    caption += '\nChat ke liye डाउनलोड करें http://bit.ly/2uaTAE5';
+    caption += '\nFor funny and sarcastic memes \nमजाकिया और व्यंग्यात्मक memes के लिए \nDownload http://bit.ly/2Lmn1Oh';
 
     let scheduledTime = Number(Number(startTime.valueOf() / 1000).toFixed(0));
     await postToFB(pageAccessToken, imageUrl, scheduledTime, pageId, caption);
-    await sleep(100);
+    await sleep(1000);
 
 
 };
@@ -67,7 +67,7 @@ const shuffleArray = (originalArray) => {
 };
 
 const readDataFromPriyaPost = () => {
-    let content = fs.readFileSync('../db/priyapost.txt', 'utf8');
+    let content = fs.readFileSync('../db/sadcasmposts', 'utf8');
     let contents = content.split("\n");
     let datas = [];
     contents.forEach((c) => {
@@ -79,6 +79,7 @@ const readDataFromPriyaPost = () => {
         }
     });
 
+    datas = _.uniq(datas, false, (d) => {return d[0]});
     return datas;
 };
 
@@ -88,27 +89,13 @@ let datas = readDataFromPriyaPost();
 const schedulePostForMultiplePages = async (datas) => {
     let pagesIds = [
         [
-            "295998901139038",
-            "EAAEw28ggKzcBAHN7I0oE8ewbEKnKVVzSkZCzL9tWsMnZBjHRzv14qu1urSfKidZB19dNnRdhhZAsKEZB4UHPb5gbF8MFAHJNcfNyxGsDlv1NRiuKZBsZCZARvdTP4CywZBuncNAVTljZB0YBqZAA39fw1RhyRuJXfECf8019NnwYXDOxqnk05lEG5a1"],
-
-        [
-            "1796521323767833",
-            "EAAEw28ggKzcBAHxB5peUrvsAsP1IkD5VywxYap7mK50UXLsiXRinzmf8pNPt4nmTOIeLZBV6nadpuiWo68fstOTv2dUWiGPHqu08Ogc0jk4ydQHujaBdNgm7w48iIlg00woodRo4qmw31LKBEzLfDwaMhLXBOBO1ZBYr36UUmK5lUWpXge"
-        ],
-
-        [
-            "929874473877175",
-            "EAAEw28ggKzcBAIPbtkIZBfG0HziPJ9jFZCjDXuVBeFmXdaeLbaIQ62zhDZAXEnrinjOPOI0VAyfNnXoPT2B1Yfui9ZAAZA2pN2vAMxFdgWgkgRZBbh39i3pe2bWMgcVZB1u4DdZCFUPCi1IWWkhIzD8jmxmHspbHZBrBGcxtTTvULxSQZCGy9pGfnG"
-        ],
-
-        [
-            "2290600537633655",
-            "EAAEw28ggKzcBAKb5uAw9SpEOc10fDllmFE2lUasobqHqaKwSEUo9ZAd0n0jZCCoZByJnjFOrdrBLRVCJczNwZCZBl3oTfReB6tmIcewjVAMv1riYXECt2mEZBlwWZAhC77cTtnIHVKI5PZAEAA0WCxF84gIZA33WZAfDqMTZAI1TTKlUhAFSWvT7CLG"
+            "119554311935735",
+            "EAAEw28ggKzcBACc3g9mbO8HRvx4vb3z4xb3DU7YSqfcIaugZBDCBlZAlo5DAHtZBqfCjwNomN3EtLNumaJvzOUxo5r8QiBD0bPgQXLhDdG2B1tefN9pbssByw8ipqmCuB0ps4msXRVlZBlmJHS0W0SIuNcDsVdbFW5uCcpxTMQZDZD"
         ]
     ];
 
     for (let i = 0; i < pagesIds.length; i++)
-        pagesIds[i][2] = shuffleArray(datas);
+        pagesIds[i][2] = datas;
 
     for (let i = 0; i < datas.length; i++) {
         for (let j = 0; j < pagesIds.length; j++) {
