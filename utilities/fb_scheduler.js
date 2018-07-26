@@ -5,15 +5,17 @@ const rp = require('request-promise');
 const fs = require('fs');
 const _ = require('underscore');
 
-const startDelayWithMins = 12;
+const startDelayWithMins = process.env.START_DELAY_MINUTES || 12;
 const delayEachPostByMinutes = 30;
+const startFromIndex = process.env.START_FROM_INDEX || 0;
+
 let startTime = moment().add(startDelayWithMins, 'minutes');
 
 const scheduleFromServer = async (data, pageId, pageAccessToken) => {
 
     let imageUrl = data[0];
     let caption = data[1] || '';
-    caption += '\nFor funny and sarcastic memes \nमजाकिया और व्यंग्यात्मक memes के लिए \nDownload http://bit.ly/2Lmn1Oh';
+    caption += '\nNow our app is official 👉 http://bit.ly/2Lmn1Oh';
 
     let scheduledTime = Number(Number(startTime.valueOf() / 1000).toFixed(0));
     await postToFB(pageAccessToken, imageUrl, scheduledTime, pageId, caption);
@@ -67,7 +69,7 @@ const shuffleArray = (originalArray) => {
 };
 
 const readDataFromPriyaPost = () => {
-    let content = fs.readFileSync('../db/sadcasmposts', 'utf8');
+    let content = fs.readFileSync('../db/laughingcolorsposts', 'utf8');
     let contents = content.split("\n");
     let datas = [];
     contents.forEach((c) => {
@@ -80,7 +82,7 @@ const readDataFromPriyaPost = () => {
     });
 
     datas = _.uniq(datas, false, (d) => {return d[0]});
-    return datas.slice(17);
+    return datas.slice(startFromIndex);
 };
 
 
@@ -89,8 +91,8 @@ let datas = readDataFromPriyaPost();
 const schedulePostForMultiplePages = async (datas) => {
     let pagesIds = [
         [
-            "119554311935735",
-            "EAAEw28ggKzcBACc3g9mbO8HRvx4vb3z4xb3DU7YSqfcIaugZBDCBlZAlo5DAHtZBqfCjwNomN3EtLNumaJvzOUxo5r8QiBD0bPgQXLhDdG2B1tefN9pbssByw8ipqmCuB0ps4msXRVlZBlmJHS0W0SIuNcDsVdbFW5uCcpxTMQZDZD"
+            "668954333467298",
+            "EAAEw28ggKzcBAPRTEXhxMAQpiQ9b26EykSLriSSGZBN9ZC3NrFuC7vlJBZAF3pqVKhjL1ZA47f2nKYtoAnm6c02YyLGpMqME0EIPJKZBQJASpaDZCdaohqLT2GXBEZCdzPUZAWKzrRuZA7ZC5QpASYt6YTAvHnb0ZBBbgMwJKdAUDWmmmVF12szlE6H"
         ]
     ];
 
