@@ -80,7 +80,7 @@ const readDataFromPriyaPost = () => {
     });
 
     datas = _.uniq(datas, false, (d) => {return d[0]});
-    return datas;
+    return datas.slice(17);
 };
 
 
