@@ -5,12 +5,12 @@ const util = require('util');
 
 const config = {
     prod: {
-        downloadDir: "/var/www/html/hott/sadcasm/",
-        dataFile: '../db/sadcasmposts'
+        downloadDir: "/var/www/html/hott/laughingcolours/",
+        dataFile: '../db/laughingcolourspost'
     },
     dev: {
         downloadDir: "/Users/ansal/Downloads/",
-        dataFile: '../db/sadcasmposts'
+        dataFile: '../db/laughingcolourspost'
     }
 };
 const env = process.env.NODE_ENV || 'dev';
@@ -39,6 +39,8 @@ const readDataFromUrlsFile = () => {
             })
         }
     });
+    datas = _.uniq(datas, false, (d) => {return d[0]});
+    console.log("Loaded "+datas.length+" unique content");
     return datas;  // [ url, caption ]
 };
 
