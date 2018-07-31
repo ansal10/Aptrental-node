@@ -15,11 +15,12 @@ const scheduleFromServer = async (data, pageId, pageAccessToken) => {
 
     let imageUrl = data[0];
     let caption = data[1] || '';
-    caption += '\nNow our app is official 👉 http://bit.ly/2Lmn1Oh';
+    caption += '\nबातें करने और वीडियो देखने के लिए install करें  👉 http://bit.ly/2uaTAE5';
 
     let scheduledTime = Number(Number(startTime.valueOf() / 1000).toFixed(0));
-    await postToFB(pageAccessToken, imageUrl, scheduledTime, pageId, caption);
+    let res = await postToFB(pageAccessToken, imageUrl, scheduledTime, pageId, caption);
     await sleep(1000);
+    return res;
 
 
 };
@@ -50,10 +51,10 @@ const postToFB = async (pageAccessToken, imageUrl, scheduledTime, pageId, captio
     try {
         let res = await rp(params);
         console.log(util.format("Posted image  with caption %s", caption));
-        return res
+        return "success"
     } catch (e) {
-        console.log("error message, error publishing post");
-        return e;
+        console.exception(e);
+        return "error";
     }
 };
 
@@ -69,7 +70,7 @@ const shuffleArray = (originalArray) => {
 };
 
 const readDataFromPriyaPost = () => {
-    let content = fs.readFileSync('../db/laughingcolorsposts', 'utf8');
+    let content = fs.readFileSync('../db/priyapost.txt', 'utf8');
     let contents = content.split("\n");
     let datas = [];
     contents.forEach((c) => {
@@ -81,7 +82,7 @@ const readDataFromPriyaPost = () => {
         }
     });
 
-    datas = _.uniq(datas, false, (d) => {return d[0]});
+    // datas = _.uniq(datas, false, (d) => {return d[0]});
     return datas.slice(startFromIndex);
 };
 
@@ -91,21 +92,37 @@ let datas = readDataFromPriyaPost();
 const schedulePostForMultiplePages = async (datas) => {
     let pagesIds = [
         [
-            "668954333467298",
-            "EAAEw28ggKzcBAPRTEXhxMAQpiQ9b26EykSLriSSGZBN9ZC3NrFuC7vlJBZAF3pqVKhjL1ZA47f2nKYtoAnm6c02YyLGpMqME0EIPJKZBQJASpaDZCdaohqLT2GXBEZCdzPUZAWKzrRuZA7ZC5QpASYt6YTAvHnb0ZBBbgMwJKdAUDWmmmVF12szlE6H"
+            "295998901139038",
+            "EAAEw28ggKzcBAOErfyw4fPQISuZAeiK8vqmA3OT77KzNslkuI6kJKEa4HRSAZBVHgqovLGqrLdRwvO9ZBWzOqT7yeW7KAv7n8MMRb6DEJIppJbMe4aW0GkZAKq85iiujyJaVezpyDYvlxpxqIQvgKoVNeqg8Tp65ImKna0skJgoAgCKVqN8A"
+        ],
+        [
+            "1796521323767833",
+            "EAAEw28ggKzcBAIZANTEpAmDZAy8CEDWBi3VQEtnUuhzjYPHkTPLPufgRtCZCvDwBWJ6bVZCHBCtZCNm7jTCNk0lC4Bx9wdw6KmZApKZByXn9EWqmBNu3p7xzwMMmnAD4TsPxIKdqZApMoB8j5uQXilRBcTeiKXhGjdAy6dAJqQXcrzDIfRbyqQwT"
+        ],
+        [
+            "929874473877175",
+            "EAAEw28ggKzcBAM0etMBZAlspD2WZALXOerIZC3NlsBZCcsNUOQVhmlh6ktG7FD5ESnrZARIRLtOc1202H9UfZC2npbu3IVezriUAbZBIBlJU9WsR8VaRZCJ0Y4A1DBHDGJXg9XGBWsxLhVD6IfOPBFw4dMrSBE1Y2iNBZASUBhmmIYz0pMZCSLOSdP"
+        ],
+        [
+            "2290600537633655",
+            "EAAEw28ggKzcBAFgwMdwWEjisg3hRa9ktDh8ZCctgDOKn5ZCTLkZA1P2A5IJGqH80xeywhgz49BnAyqIZCSzkLvazPfS4AZAWOsbcaojWtEvicgZB3xfDZCj5OZBWXsFMkxsHH3DUy4TqKZA5jCriYJAm15afxaQKZCefsgZCwEAsxIBx2idwxmwef7A"
+        ],
+        [
+            "361903491004709",
+            "EAAEw28ggKzcBAOP5PpRiMVUqjsaDZBoRjhkRQ1vbqhM1BWZB9Wnm1BRdPo1Lk1qx2kNGNqXdJMjDlwGLxBUuDDdETZBAVNP5Yc2IrZCMJUdpP85MdtsozPhtJn2atC9t2cSWO4ORbTDBHEZCtmADWNgU6ZAVMeKUBlqE8DyVNg39J8EAX4nR2s"
         ]
     ];
 
     for (let i = 0; i < pagesIds.length; i++)
-        pagesIds[i][2] = datas;
+        pagesIds[i][2] = shuffleArray(datas);
 
     for (let i = 0; i < datas.length; i++) {
         for (let j = 0; j < pagesIds.length; j++) {
             let pageId = pagesIds[j][0];
             let pageAccessToken = pagesIds[j][1];
             let data = pagesIds[j][2][i];
-            await  scheduleFromServer(data, pageId, pageAccessToken);
-            console.log("Published post %s to page id %s", i, pageId);
+            let res = await  scheduleFromServer(data, pageId, pageAccessToken);
+            console.log("Published post %s to page id %s, status %s", i, pageId, res);
         }
         startTime = startTime.add(delayEachPostByMinutes, 'minutes');
     }
