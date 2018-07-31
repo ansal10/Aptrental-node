@@ -19,7 +19,7 @@ const scheduleFromServer = async (data, pageId, pageAccessToken) => {
 
     let scheduledTime = Number(Number(startTime.valueOf() / 1000).toFixed(0));
     let res = await postToFB(pageAccessToken, imageUrl, scheduledTime, pageId, caption);
-    await sleep(1000);
+    await sleep(2000);
     return res;
 
 
